@@ -222,6 +222,11 @@
 	"dependencies": {
 		"creator-design-system": "file:../design.imswarnil.com"
 	},
+	"designSystem": {
+		"comment": "The exact design-system commit assets/built/index.css is built from. CI clones this ref so the build is reproducible; bump it deliberately, rebuild, and commit the result.",
+		"repository": "https://github.com/imswarnil/Swarnil-Design-System.git",
+		"ref": "f84ccf751c6d4be782b9a7f0b7a2a1cb211c1386"
+	},
 	"devDependencies": {
 		"cssnano": "^7.0.6",
 		"esbuild": "^0.25.0",

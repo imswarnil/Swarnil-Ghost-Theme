@@ -40,20 +40,24 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
-      # The design system is a `file:` dependency resolved by a relative path —
+      # The design system is a `file:` dependency on a sibling folder —
       # ../design.imswarnil.com — because locally it sits beside this repository
-      # under the same umbrella folder. A runner has no such sibling, so the
-      # stylesheet build fails at the first @import.
+      # under the same umbrella. A runner has no such sibling, so the stylesheet
+      # build fails at the first @import.
       #
-      # Cloning it to exactly that path reproduces the local layout, which keeps
-      # one source of truth: CI builds the CSS from the real design system
-      # rather than from a copy that could drift. The folder name is the host it
-      # is served from, per the workspace convention.
+      # Cloning it to exactly that path reproduces the local layout, and the
+      # commit is pinned in package.json → designSystem.ref rather than taking
+      # whatever main happens to be. A product's compiled stylesheet must not
+      # change because a dependency's branch moved; updating it is a deliberate
+      # act — bump the ref, rebuild, commit.
       - name: Fetch the design system
         run: |
-          git clone --depth 1 \
-            https://github.com/imswarnil/Swarnil-Design-System.git \
-            "$(dirname "$GITHUB_WORKSPACE")/design.imswarnil.com"
+          repo=$(node -p "require('./package.json').designSystem.repository")
+          ref=$(node -p "require('./package.json').designSystem.ref")
+          target="$(dirname "$GITHUB_WORKSPACE")/design.imswarnil.com"
+          git clone --quiet --no-checkout "$repo" "$target"
+          git -C "$target" checkout --quiet "$ref"
+          echo "design system pinned at ${ref:0:12}"
 
       - name: Install
         run: npm ci --no-audit --no-fund || npm install --no-audit --no-fund
