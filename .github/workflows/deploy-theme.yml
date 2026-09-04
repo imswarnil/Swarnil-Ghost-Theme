@@ -66,11 +66,17 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
-      # The design system is a local file: dependency resolved by a relative
-      # path, which does not exist on a runner. The compiled stylesheet in
-      # assets/built/ already contains it, so a failed install is survivable.
+      # Same as CI: the design system is a `file:` dependency on a sibling
+      # folder that a runner does not have. Clone it to the path the manifest
+      # expects so the stylesheet is built from the real thing.
+      - name: Fetch the design system
+        run: |
+          git clone --depth 1 \
+            https://github.com/imswarnil/Swarnil-Design-System.git \
+            "$(dirname "$GITHUB_WORKSPACE")/design.imswarnil.com"
+
       - name: Install
-        run: npm ci --omit=optional || npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund || npm install --no-audit --no-fund
 
       - name: Build
         run: npm run build
