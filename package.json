@@ -56,7 +56,11 @@
 		"ghost:log": "cd .ghost && ghost log -f",
 		"ds:sync": "node scripts/ds-sync.mjs",
 		"ds:link": "node scripts/ds-sync.mjs --link",
-		"prebuild": "npm run ds:sync"
+		"prebuild": "npm run ds:sync",
+		"deploy": "npm run zip && node scripts/deploy.mjs",
+		"release:patch": "node scripts/release.mjs patch",
+		"release:minor": "node scripts/release.mjs minor",
+		"release:major": "node scripts/release.mjs major"
 	},
 	"config": {
 		"posts_per_page": 12,
@@ -229,6 +233,12 @@
 		"comment": "The exact design-system commit assets/built/index.css is built from. CI clones this ref so the build is reproducible; bump it deliberately, rebuild, and commit the result.",
 		"repository": "https://github.com/imswarnil/Swarnil-Design-System.git",
 		"ref": "f84ccf751c6d4be782b9a7f0b7a2a1cb211c1386"
+	},
+	"docsSite": {
+		"comment": "Where the generated documentation is published. `domain` writes a CNAME for GitHub Pages — leave it empty to publish on the github.io default domain, and never point it at a host already serving something else. theme.imswarnil.com is a live Ghost site, so it is deliberately not used here.",
+		"base": "/Swarnil-Ghost-Theme/docs/",
+		"origin": "https://imswarnil.github.io",
+		"domain": ""
 	},
 	"devDependencies": {
 		"cssnano": "^7.0.6",

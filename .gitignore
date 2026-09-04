@@ -14,6 +14,13 @@ node_modules/
 # The packaged theme, rebuilt by `npm run zip`
 *.zip
 
+# Credentials. The Ghost Admin API key is a site-wide write credential — it can
+# publish, edit and delete anything. It lives here and in GitHub Secrets, and
+# nowhere else. .env.example documents the shape without the values.
+.env
+.env.*
+!.env.example
+
 # OS noise
 .DS_Store
 Thumbs.db

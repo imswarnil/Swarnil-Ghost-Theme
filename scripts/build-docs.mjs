@@ -27,7 +27,7 @@
  *   npm run docs
  */
 
-import { readdir, readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readdir, readFile, writeFile, mkdir, rm } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { join } from 'node:path';
 import { marked } from 'marked';
@@ -37,16 +37,22 @@ const SRC = join(ROOT, 'docs', 'src');
 const OUT = join(ROOT, 'docs');
 const ASSETS = join(OUT, 'assets');
 
-const { version, description } = JSON.parse(
+const { version, description, docsSite } = JSON.parse(
 	await readFile(join(ROOT, 'package.json'), 'utf8'),
 );
 
-const SITE = 'https://theme.imswarnil.com';
-
-/* Where the documentation lives, relative to the domain root. Every internal
-   link, asset href and canonical URL is built from this, and the search script
-   reads it off <html data-base> — so moving the docs is one edit here. */
-const BASE = '/docs/';
+/* Where the documentation is published, from package.json → docsSite.
+ *
+ * This is configuration rather than a constant because the obvious domain is
+ * already taken: theme.imswarnil.com is a live Ghost site — the theme's own
+ * demo — not a static host. Pointing a GitHub Pages CNAME at it would fight
+ * the site it is meant to document.
+ *
+ * BASE is the path the docs live under, and every internal link, asset href and
+ * canonical URL is built from it. The search script reads it off <html
+ * data-base>, so moving the docs is one edit in package.json. */
+const SITE = docsSite.origin.replace(/\/+$/, '');
+const BASE = docsSite.base;
 
 /* Cache busting for the two hand-authored assets. Keyed to their contents, not
    to the theme version: during a docs session the version does not move, and a
@@ -530,11 +536,20 @@ for (const page of pages) {
 
 await writeFile(join(OUT, 'search-index.json'), JSON.stringify(entries));
 
-/* GitHub Pages serves the repository root, so the custom domain and the Jekyll
-   opt-out belong there rather than in docs/. Pages would otherwise try to build
-   the whole repository — including the theme's .hbs files — as a Jekyll site. */
-await writeFile(join(ROOT, 'CNAME'), 'theme.imswarnil.com\n');
+/* GitHub Pages serves the repository root, so these belong there rather than in
+   docs/. Without .nojekyll, Pages tries to build the whole repository —
+   including the theme's .hbs files — as a Jekyll site.
+
+   A CNAME is written only when docsSite.domain is set. It is empty by default
+   on purpose: writing one for a domain that already serves something else does
+   not fail loudly, it just quietly competes with the real site. */
 await writeFile(join(ROOT, '.nojekyll'), '');
+
+if (docsSite.domain) {
+	await writeFile(join(ROOT, 'CNAME'), `${docsSite.domain}\n`);
+} else {
+	await rm(join(ROOT, 'CNAME'), { force: true });
+}
 
 console.log(
 	`docs — ${pages.length} pages in ${groups.length} groups, ` +
