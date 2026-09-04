@@ -159,6 +159,77 @@ name. <code>video,notes</code> gives two shelves, above the main feed, each link
 to its tag archive.</p>
 <p>Use the slug, not the name — <code>how-to</code>, not <code>How To</code>. Find it in
 <strong>Tags → (your tag) → Tag slug</strong>. No spaces anywhere in the list.</p>
+<h2 id="the-header-module">The header module<a class="anchor" href="#the-header-module" aria-label="Link to this section">#</a></h2>
+<p><strong>Settings → Design → Site-wide → Header style</strong></p>
+<p>The header and the hero are one setting, not two, because on two of the five
+styles they are physically the same object: a transparent bar only works when
+there is something behind it, and the something is the hero.</p>
+<table>
+<thead>
+<tr>
+<th>Style</th>
+<th>Header</th>
+<th>Hero</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Rule</strong></td>
+<td>a hairline underneath</td>
+<td>title, description, actions — centred</td>
+</tr>
+<tr>
+<td><strong>Plate</strong></td>
+<td>a floating rounded bar, inset from the edges</td>
+<td>the same centred hero</td>
+</tr>
+<tr>
+<td><strong>Split</strong></td>
+<td>a hairline underneath</td>
+<td>words left, your publication cover right</td>
+</tr>
+<tr>
+<td><strong>Cover</strong></td>
+<td>transparent, over the image</td>
+<td>the cover image behind the whole band</td>
+</tr>
+<tr>
+<td><strong>Broadcast</strong></td>
+<td>transparent, over the video</td>
+<td>a looping video, with scanlines over it</td>
+</tr>
+</tbody></table>
+<p>Everything in the hero comes from things you have already filled in — your
+publication logo, title, description, cover image and social accounts. The only
+theme settings are the call to action and, for Broadcast, the video.</p>
+<blockquote>
+<p><strong>Each style degrades rather than breaking.</strong> Cover with no publication cover
+image, and Broadcast with no video URL, both render as the plain centred hero.
+A brand-new Ghost has neither, so that is what you see before you have
+uploaded anything.</p>
+</blockquote>
+<p>Cover and Broadcast are only transparent on the homepage, where the media
+actually is. On a post or an archive they fall back to Rule — a transparent
+header over a white page is an invisible header.</p>
+<h3 id="the-broadcast-video">The Broadcast video<a class="anchor" href="#the-broadcast-video" aria-label="Link to this section">#</a></h3>
+<p><strong>Settings → Design → Site-wide → Hero video URL</strong> takes either:</p>
+<ul>
+<li>a YouTube link, in any of its shapes — <code>youtube.com/watch?v=…</code>, <code>youtu.be/…</code>,
+<code>/embed/…</code> or <code>/shorts/…</code></li>
+<li>a direct file, <code>https://…/clip.mp4</code> or <code>.webm</code></li>
+</ul>
+<p>The theme works out which it is; you do not have to find a video ID.</p>
+<p>It is always muted, always looping, and has no controls — it is a background,
+not a player. Three things it deliberately will not do:</p>
+<ul>
+<li><strong>play for anyone who has asked for reduced motion.</strong> The video is never even
+requested in that case.</li>
+<li><strong>play sound.</strong> Ever.</li>
+<li><strong>keep playing off screen.</strong> It loads when the hero comes into view and stops
+when it leaves, so scrolling down your homepage does not leave a video running
+behind the rest of the page.</li>
+</ul>
+<p>Your publication cover shows underneath as the poster, so the hero looks
+finished while the video loads — or if it never loads at all.</p>
 <h2 id="the-sidebar">The sidebar<a class="anchor" href="#the-sidebar" aria-label="Link to this section">#</a></h2>
 <p><strong>Settings → Design → Site-wide → Sidebar on lists</strong> adds a second column beside
 the homepage and every archive, holding four widgets: a short about line, your
@@ -249,6 +320,8 @@ child, not as a grandchild.</p>
             <li class="toc__item toc__item--sub"><a class="toc__link" data-toc-link href="#the-video-layout">The Video layout</a></li>
             <li class="toc__item"><a class="toc__link" data-toc-link href="#homepage-shapes">Homepage shapes</a></li>
             <li class="toc__item toc__item--sub"><a class="toc__link" data-toc-link href="#shelves">Shelves</a></li>
+            <li class="toc__item"><a class="toc__link" data-toc-link href="#the-header-module">The header module</a></li>
+            <li class="toc__item toc__item--sub"><a class="toc__link" data-toc-link href="#the-broadcast-video">The Broadcast video</a></li>
             <li class="toc__item"><a class="toc__link" data-toc-link href="#the-sidebar">The sidebar</a></li>
             <li class="toc__item"><a class="toc__link" data-toc-link href="#navigation-dropdowns">Navigation dropdowns</a></li>
           </ul>

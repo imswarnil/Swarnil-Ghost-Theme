@@ -102,6 +102,22 @@
 				"default": "System",
 				"description": "The mode new visitors see. They can switch it in the header."
 			},
+			"header_style": {
+				"type": "select",
+				"options": [
+					"Rule",
+					"Plate",
+					"Split",
+					"Cover",
+					"Broadcast"
+				],
+				"default": "Rule",
+				"description": "Header and hero together. Cover and Broadcast put a transparent bar over media."
+			},
+			"hero_video_url": {
+				"type": "text",
+				"description": "YouTube link or a direct .mp4/.webm, for the Broadcast style. Muted and looping."
+			},
 			"typeface_pairing": {
 				"type": "select",
 				"options": [
@@ -114,17 +130,6 @@
 			"footer_note": {
 				"type": "text",
 				"description": "A short line above the footer navigation. Leave blank to hide it."
-			},
-			"hero_style": {
-				"type": "select",
-				"options": [
-					"Two Columns",
-					"Full Width",
-					"Simple"
-				],
-				"default": "Two Columns",
-				"group": "homepage",
-				"description": "Two Columns puts the cover beside the title, Full Width behind it, Simple uses no image."
 			},
 			"hero_cta_label": {
 				"type": "text",

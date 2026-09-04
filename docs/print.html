@@ -1445,7 +1445,7 @@ setting to turn off, and nothing to hide.</p>
   <div class="page-head">
     <p class="page-head__kicker slate">Reference · 03</p>
     <h1>Settings</h1>
-    <p class="page-head__summary">All seventeen settings, what each one changes, and which four to set on day one.</p>
+    <p class="page-head__summary">All sixteen settings, what each one changes, and which four to set on day one.</p>
   </div>
   <div class="prose">
 <p>Every setting is in <strong>Settings → Design</strong>, split into three groups. None of them
@@ -1466,11 +1466,6 @@ reasonably want to change it, it is here.</p>
 <td>What a first-time visitor sees. They can override it with the header toggle, and their choice is remembered.</td>
 </tr>
 <tr>
-<td><strong>Show colour scheme toggle</strong></td>
-<td>on / off</td>
-<td>The sun/moon control in the header. Turn it off to lock the site to your chosen scheme.</td>
-</tr>
-<tr>
 <td><strong>Typeface pairing</strong></td>
 <td>Grotesk &amp; Sans · Serif &amp; Sans · Mono &amp; Sans</td>
 <td>The display face used for headlines. Body text never changes.</td>
@@ -1483,7 +1478,7 @@ reasonably want to change it, it is here.</p>
 <tr>
 <td><strong>Sidebar on lists</strong></td>
 <td>on / off</td>
-<td>A second column beside the homepage and archives, with topics, recent posts and the newsletter. Compare the two at <code>/home/sidebar/</code> and <code>/home/full/</code>.</td>
+<td>A second column beside the homepage and archives, with topics, recent posts and the newsletter.</td>
 </tr>
 <tr>
 <td><strong>Footer note</strong></td>
@@ -1501,29 +1496,24 @@ reasonably want to change it, it is here.</p>
 </tr>
 </thead>
 <tbody><tr>
+<td><strong>Hero CTA label</strong></td>
+<td>text</td>
+<td>The button in the hero. Blank hides it.</td>
+</tr>
+<tr>
+<td><strong>Hero CTA URL</strong></td>
+<td>text</td>
+<td>Where that button goes. <code>#latest</code> jumps to the post list below.</td>
+</tr>
+<tr>
+<td><strong>Show hero signup</strong></td>
+<td>on / off</td>
+<td>The email form in the hero. Only appears if memberships are on.</td>
+</tr>
+<tr>
 <td><strong>Homepage layout</strong></td>
 <td>Call Sheet · Stacked · Grid</td>
 <td>Call Sheet is a numbered index with hairline rules. Stacked is one full-width card per row. Grid is three across.</td>
-</tr>
-<tr>
-<td><strong>Homepage lead</strong></td>
-<td>Featured Post · Latest Post · None</td>
-<td>What fills the large slot at the top. Featured Post falls back to your latest post when nothing is marked featured.</td>
-</tr>
-<tr>
-<td><strong>Homepage intro</strong></td>
-<td>text</td>
-<td>One or two sentences under the site title. Blank uses your site description instead.</td>
-</tr>
-<tr>
-<td><strong>Homepage shelf tags</strong></td>
-<td>text</td>
-<td>Tag slugs shown as horizontally scrolling shelves. <strong>Comma-separated, no spaces</strong> — <code>video,notes</code>, not <code>video, notes</code>.</td>
-</tr>
-<tr>
-<td><strong>Show subscribe band</strong></td>
-<td>on / off</td>
-<td>The newsletter block near the foot of the homepage. Only ever appears if memberships are on.</td>
 </tr>
 </tbody></table>
 <h2 id="post">Post<a class="anchor" href="#post" aria-label="Link to this section">#</a></h2>
@@ -1634,6 +1624,77 @@ name. <code>video,notes</code> gives two shelves, above the main feed, each link
 to its tag archive.</p>
 <p>Use the slug, not the name — <code>how-to</code>, not <code>How To</code>. Find it in
 <strong>Tags → (your tag) → Tag slug</strong>. No spaces anywhere in the list.</p>
+<h2 id="the-header-module">The header module<a class="anchor" href="#the-header-module" aria-label="Link to this section">#</a></h2>
+<p><strong>Settings → Design → Site-wide → Header style</strong></p>
+<p>The header and the hero are one setting, not two, because on two of the five
+styles they are physically the same object: a transparent bar only works when
+there is something behind it, and the something is the hero.</p>
+<table>
+<thead>
+<tr>
+<th>Style</th>
+<th>Header</th>
+<th>Hero</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Rule</strong></td>
+<td>a hairline underneath</td>
+<td>title, description, actions — centred</td>
+</tr>
+<tr>
+<td><strong>Plate</strong></td>
+<td>a floating rounded bar, inset from the edges</td>
+<td>the same centred hero</td>
+</tr>
+<tr>
+<td><strong>Split</strong></td>
+<td>a hairline underneath</td>
+<td>words left, your publication cover right</td>
+</tr>
+<tr>
+<td><strong>Cover</strong></td>
+<td>transparent, over the image</td>
+<td>the cover image behind the whole band</td>
+</tr>
+<tr>
+<td><strong>Broadcast</strong></td>
+<td>transparent, over the video</td>
+<td>a looping video, with scanlines over it</td>
+</tr>
+</tbody></table>
+<p>Everything in the hero comes from things you have already filled in — your
+publication logo, title, description, cover image and social accounts. The only
+theme settings are the call to action and, for Broadcast, the video.</p>
+<blockquote>
+<p><strong>Each style degrades rather than breaking.</strong> Cover with no publication cover
+image, and Broadcast with no video URL, both render as the plain centred hero.
+A brand-new Ghost has neither, so that is what you see before you have
+uploaded anything.</p>
+</blockquote>
+<p>Cover and Broadcast are only transparent on the homepage, where the media
+actually is. On a post or an archive they fall back to Rule — a transparent
+header over a white page is an invisible header.</p>
+<h3 id="the-broadcast-video">The Broadcast video<a class="anchor" href="#the-broadcast-video" aria-label="Link to this section">#</a></h3>
+<p><strong>Settings → Design → Site-wide → Hero video URL</strong> takes either:</p>
+<ul>
+<li>a YouTube link, in any of its shapes — <code>youtube.com/watch?v=…</code>, <code>youtu.be/…</code>,
+<code>/embed/…</code> or <code>/shorts/…</code></li>
+<li>a direct file, <code>https://…/clip.mp4</code> or <code>.webm</code></li>
+</ul>
+<p>The theme works out which it is; you do not have to find a video ID.</p>
+<p>It is always muted, always looping, and has no controls — it is a background,
+not a player. Three things it deliberately will not do:</p>
+<ul>
+<li><strong>play for anyone who has asked for reduced motion.</strong> The video is never even
+requested in that case.</li>
+<li><strong>play sound.</strong> Ever.</li>
+<li><strong>keep playing off screen.</strong> It loads when the hero comes into view and stops
+when it leaves, so scrolling down your homepage does not leave a video running
+behind the rest of the page.</li>
+</ul>
+<p>Your publication cover shows underneath as the poster, so the hero looks
+finished while the video loads — or if it never loads at all.</p>
 <h2 id="the-sidebar">The sidebar<a class="anchor" href="#the-sidebar" aria-label="Link to this section">#</a></h2>
 <p><strong>Settings → Design → Site-wide → Sidebar on lists</strong> adds a second column beside
 the homepage and every archive, holding four widgets: a short about line, your

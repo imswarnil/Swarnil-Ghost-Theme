@@ -15,6 +15,7 @@ import { initHeader } from './header.js';
 import { initDrawer } from './drawer.js';
 import { initToc } from './toc.js';
 import { initChapters } from './chapters.js';
+import { initHeroVideo } from './hero-video.js';
 
 /*
  * Each module is started in isolation. They are independent enhancements, and
@@ -28,6 +29,7 @@ const start = () => {
 		['drawer', initDrawer],
 		['toc', initToc],
 		['chapters', initChapters],
+		['hero video', initHeroVideo],
 	].forEach(([name, init]) => {
 		try {
 			init();

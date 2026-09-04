@@ -45,7 +45,26 @@ For a theme, the version boundaries are worth stating plainly:
 
 ### Added
 
-- `hero_style`, `hero_cta_label`, `hero_cta_url`, `show_hero_signup`.
+- **The header module.** `header_style` gives five appearances that pair the bar
+  and the hero as one decision, because on two of them they are the same object:
+  Rule, Plate, Split, Cover and Broadcast.
+- **Broadcast** puts a looping background video behind the hero with a
+  transparent bar over it and scanlines on top. `hero_video_url` takes a YouTube
+  link in any of its four shapes or a direct file — the theme works out which.
+  It never loads under `prefers-reduced-motion`, is never unmuted, and stops
+  when the hero scrolls out of view.
+- `hero_cta_label`, `hero_cta_url`, `show_hero_signup`.
+
+### Fixed
+
+- The current-page dot now sits after the label on items that have an icon and
+  before it on items that do not, using flex `order` on the pseudo-element
+  rather than a second element.
+- Headings set their own colour, so they never inherited the white the media
+  heroes put on their container — the headline rendered dark grey on dark
+  footage. Cover and Broadcast set it explicitly.
+- The Broadcast scrim stacked three darkening layers and turned the block into a
+  black rectangle. One layer now carries it.
 
 ### Removed
 

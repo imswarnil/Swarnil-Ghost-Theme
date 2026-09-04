@@ -1,0 +1,96 @@
+{{!--
+    The hero's contents, in whichever shape hero.hbs resolved.
+
+    Split out so the fallbacks in hero.hbs stay one line each: "Cover, or plain
+    if there is no cover image" is a decision, not a second copy of the markup.
+
+    Parameters
+      variant   plain | split | cover | broadcast
+--}}
+<section class="ghost-hero ghost-hero--{{variant}}">
+
+    {{#match variant "cover"}}
+        <img class="ghost-hero__backdrop" src="{{img_url @site.cover_image size="xxl"}}" alt="" aria-hidden="true" loading="eager" fetchpriority="high">
+    {{/match}}
+
+    {{#match variant "broadcast"}}
+        {{!-- The element is built by assets/js/hero-video.js, which works out
+             whether the URL is YouTube or a plain file. Handlebars cannot parse
+             a URL, and asking a publisher for a bare video ID is asking them to
+             do a computer's job.
+
+             Nothing here autoplays without being muted, and nothing loads at
+             all when the reader has asked for reduced motion — a looping video
+             is decoration, and decoration is exactly what that setting is for.
+             The cover image, or a flat plate, sits underneath as the poster. --}}
+        <div class="ghost-hero__video" data-hero-video="{{@custom.hero_video_url}}" aria-hidden="true">
+            {{#if @site.cover_image}}
+                <img class="ghost-hero__backdrop" src="{{img_url @site.cover_image size="xxl"}}" alt="" loading="eager">
+            {{/if}}
+        </div>
+        <div class="ghost-hero__scan" aria-hidden="true"></div>
+    {{/match}}
+
+    <div class="ghost-container ghost-hero__inner">
+
+        <div class="ghost-hero__body">
+
+            {{#if @site.logo}}
+                <img class="ghost-hero__logo" src="{{img_url @site.logo size="m"}}" alt="{{@site.title}}" loading="eager">
+            {{/if}}
+
+            <h1 class="ghost-hero__title">{{@site.title}}</h1>
+
+            {{#if @site.description}}
+                <p class="ghost-hero__lede">{{@site.description}}</p>
+            {{/if}}
+
+            {{!-- Ghost yields every platform with a username set, in a canonical
+                 order, so the theme never has to know which ones exist. --}}
+            <ul class="ghost-hero__social">
+                {{#social_accounts @site}}
+                    <li>
+                        <a class="ghost-hero__social-link" href="{{href}}" target="_blank" rel="noopener" aria-label="{{name}}">
+                            {{> "icon-social" type=type}}
+                        </a>
+                    </li>
+                {{/social_accounts}}
+            </ul>
+
+            <div class="ghost-hero__actions">
+                {{#if @custom.hero_cta_label}}
+                    <a class="ghost-button ghost-button--primary" href="{{#if @custom.hero_cta_url}}{{@custom.hero_cta_url}}{{else}}#latest{{/if}}">
+                        {{@custom.hero_cta_label}} {{> "icon" name="arrow-right"}}
+                    </a>
+                {{/if}}
+            </div>
+
+            {{!-- Never rendered on a site without memberships: a form that
+                 cannot work is the fastest way to make a theme feel broken. --}}
+            {{#if @custom.show_hero_signup}}
+                {{#if @site.members_enabled}}
+                    {{#unless @member}}
+                        <form class="ghost-hero__form ghost-subscribe__form" data-members-form="subscribe">
+                            <label class="ghost-sr" for="ghost-hero-email">Email address</label>
+                            <input class="ghost-subscribe__input" id="ghost-hero-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required data-members-email>
+                            <button class="ghost-button ghost-button--outline" type="submit">Subscribe</button>
+                            <p class="ghost-subscribe__message ghost-subscribe__message--loading">Sending…</p>
+                            <p class="ghost-subscribe__message ghost-subscribe__message--success">Check your inbox to confirm.</p>
+                            <p class="ghost-subscribe__message ghost-subscribe__message--error">That did not work. Try again?</p>
+                        </form>
+                    {{/unless}}
+                {{/if}}
+            {{/if}}
+
+        </div>
+
+        {{#match variant "split"}}
+            <div class="ghost-hero__media">
+                <div class="ghost-frame">
+                    <img class="ghost-frame__media" src="{{img_url @site.cover_image size="xl"}}" alt="" aria-hidden="true" loading="eager" fetchpriority="high">
+                </div>
+            </div>
+        {{/match}}
+
+    </div>
+</section>

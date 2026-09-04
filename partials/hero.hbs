@@ -1,92 +1,29 @@
 {{!--
-    The homepage hero.
+    The homepage hero — the other half of the header module.
 
-    Built entirely from things a publisher has already filled in — the
-    publication logo, title, description, cover image and social accounts — plus
-    two settings for the call to action. Nothing here asks them to write their
-    site's name a second time in a theme setting.
+    Five appearances, from the same header_style setting the bar uses, because
+    on two of them the bar sits inside this block rather than above it.
 
-    Three shapes, from hero_style:
+      Rule       words, centred, no media
+      Plate      words, centred, no media (the bar is what differs)
+      Split      words left, publication cover right
+      Cover      the cover image behind the whole band, words over a scrim
+      Broadcast  a looping video behind the band, scanlines over it
 
-      Two Columns   words left, publication cover right
-      Full Width    the cover behind the whole band, words over a scrim
-      Simple        no image at all
+    Everything is built from what the publisher already filled in: logo, title,
+    description, cover image, social accounts. Only the call to action and the
+    video URL are theme settings.
 
-    Every one of them degrades: without a cover image, Two Columns and Full
-    Width both render as Simple rather than leaving a hole or a grey rectangle.
-    A brand-new Ghost has no cover, so that is the state most people see first.
+    Every variant degrades. Cover with no cover image, and Broadcast with no
+    video URL, both render as the plain centred hero rather than leaving a hole
+    or a grey rectangle — which is the state a brand-new Ghost is in.
 --}}
-<section class="ghost-hero ghost-hero--{{#match @custom.hero_style "Full Width"}}{{#if @site.cover_image}}full{{else}}simple{{/if}}{{else match @custom.hero_style "Two Columns"}}{{#if @site.cover_image}}split{{else}}simple{{/if}}{{else}}simple{{/match}}">
-
-    {{#match @custom.hero_style "Full Width"}}
-        {{#if @site.cover_image}}
-            <img class="ghost-hero__backdrop" src="{{img_url @site.cover_image size="xxl"}}" alt="" aria-hidden="true" loading="eager" fetchpriority="high">
-        {{/if}}
-    {{/match}}
-
-    <div class="ghost-container ghost-hero__inner">
-
-        <div class="ghost-hero__body">
-
-            {{#if @site.logo}}
-                <img class="ghost-hero__logo" src="{{img_url @site.logo size="m"}}" alt="{{@site.title}}" loading="eager">
-            {{/if}}
-
-            <h1 class="ghost-hero__title">{{@site.title}}</h1>
-
-            {{#if @site.description}}
-                <p class="ghost-hero__lede">{{@site.description}}</p>
-            {{/if}}
-
-            {{!-- Ghost yields every platform with a username set, in a canonical
-                 order, so the theme never has to know which ones exist. --}}
-            <ul class="ghost-hero__social">
-                {{#social_accounts @site}}
-                    <li>
-                        <a class="ghost-hero__social-link" href="{{href}}" target="_blank" rel="noopener" aria-label="{{name}}">
-                            {{> "icon-social" type=type}}
-                        </a>
-                    </li>
-                {{/social_accounts}}
-            </ul>
-
-            <div class="ghost-hero__actions">
-                {{#if @custom.hero_cta_label}}
-                    <a class="ghost-button ghost-button--primary" href="{{#if @custom.hero_cta_url}}{{@custom.hero_cta_url}}{{else}}#latest{{/if}}">
-                        {{@custom.hero_cta_label}} {{> "icon" name="arrow-right"}}
-                    </a>
-                {{/if}}
-            </div>
-
-            {{!-- The signup form. Never rendered on a site without memberships:
-                 a form that cannot work is the fastest way to make a theme feel
-                 broken on first install. --}}
-            {{#if @custom.show_hero_signup}}
-                {{#if @site.members_enabled}}
-                    {{#unless @member}}
-                        <form class="ghost-hero__form ghost-subscribe__form" data-members-form="subscribe">
-                            <label class="ghost-sr" for="ghost-hero-email">Email address</label>
-                            <input class="ghost-subscribe__input" id="ghost-hero-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required data-members-email>
-                            <button class="ghost-button ghost-button--outline" type="submit">Subscribe</button>
-                            <p class="ghost-subscribe__message ghost-subscribe__message--loading">Sending…</p>
-                            <p class="ghost-subscribe__message ghost-subscribe__message--success">Check your inbox to confirm.</p>
-                            <p class="ghost-subscribe__message ghost-subscribe__message--error">That did not work. Try again?</p>
-                        </form>
-                    {{/unless}}
-                {{/if}}
-            {{/if}}
-
-        </div>
-
-        {{#match @custom.hero_style "Two Columns"}}
-            {{#if @site.cover_image}}
-                <div class="ghost-hero__media">
-                    <div class="ghost-frame">
-                        <img class="ghost-frame__media" src="{{img_url @site.cover_image size="xl"}}" alt="" aria-hidden="true" loading="eager" fetchpriority="high">
-                    </div>
-                </div>
-            {{/if}}
-        {{/match}}
-
-    </div>
-</section>
+{{#match @custom.header_style "Split"}}
+    {{#if @site.cover_image}}{{> "hero-body" variant="split"}}{{else}}{{> "hero-body" variant="plain"}}{{/if}}
+{{else match @custom.header_style "Cover"}}
+    {{#if @site.cover_image}}{{> "hero-body" variant="cover"}}{{else}}{{> "hero-body" variant="plain"}}{{/if}}
+{{else match @custom.header_style "Broadcast"}}
+    {{#if @custom.hero_video_url}}{{> "hero-body" variant="broadcast"}}{{else}}{{> "hero-body" variant="plain"}}{{/if}}
+{{else}}
+    {{> "hero-body" variant="plain"}}
+{{/match}}

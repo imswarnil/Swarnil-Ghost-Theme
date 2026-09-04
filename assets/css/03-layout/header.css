@@ -1,9 +1,17 @@
 /* =============================================================================
    3 · LAYOUT — site header
    =============================================================================
-   One style: a hairline underneath, no background, and a shadow once the page
-   has moved. There were three behind a setting; two of them earned their
-   complexity on about one page each.
+   Three appearances from one markup shape, chosen by header_style:
+
+     Rule    a hairline underneath, and a blurred plate once the page moves
+     Plate   a floating rounded bar, inset from the edges of the viewport
+     Over    transparent, sitting on the hero's media (Cover and Broadcast)
+
+   Split uses Rule; the difference is in the hero beneath it.
+
+   "Over" only applies on the homepage, where the media it needs actually
+   exists. site-header.hbs makes that decision with {{#is "home"}}, because a
+   transparent header on a white page is an invisible header.
 
    The scrolled state is a `data-scrolled` attribute set by assets/js/header.js.
    ========================================================================== */
@@ -15,10 +23,10 @@
 	height: var(--t-header-h);
 	display: flex;
 	align-items: center;
-	background-color: var(--t-bg);
 	border-bottom: var(--t-hair) solid transparent;
 	transition: background-color var(--t-duration) var(--t-ease),
-		border-color var(--t-duration) var(--t-ease);
+		border-color var(--t-duration) var(--t-ease),
+		box-shadow var(--t-duration) var(--t-ease);
 }
 
 /* Three tracks, not a flex row: the outer two are equal, so the navigation in
@@ -29,7 +37,7 @@
 	display: grid;
 	grid-template-columns: 1fr auto 1fr;
 	align-items: center;
-	gap: var(--t-space-5);
+	gap: var(--t-space-6);
 	width: 100%;
 }
 
@@ -38,8 +46,15 @@
 	justify-self: center;
 }
 
+.ghost-header__actions {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: var(--t-space-2);
+}
+
 /* Below the navigation breakpoint the middle track is empty, so the row
-   collapses to brand and actions with nothing stranded in between. */
+   collapses to brand and actions with nothing stranded between them. */
 @media (max-width: 55.99rem) {
 	.ghost-header__inner {
 		grid-template-columns: auto 1fr;
@@ -50,21 +65,102 @@
 	}
 }
 
-.ghost-header__actions {
-	display: flex;
-	align-items: center;
-	justify-content: flex-end;
-	gap: var(--t-space-2);
-}
+/* ── Rule ─────────────────────────────────────────────────────────────────── */
 
 .ghost-header--rule {
+	background-color: var(--t-bg);
 	border-bottom-color: var(--t-line);
 }
 
-/* A shadow only once the page has moved, so the header separates from content
-   scrolling under it without drawing a box at rest. */
+/* The blur only appears once there is something scrolling underneath it. At
+   rest the header should be part of the page, not a bar sitting on top of it. */
 .ghost-header--rule[data-scrolled='true'] {
 	background-color: color-mix(in srgb, var(--t-bg) 86%, transparent);
 	backdrop-filter: blur(12px);
 	box-shadow: var(--t-shadow-raised);
+}
+
+/* ── Plate ────────────────────────────────────────────────────────────────────
+   A floating bar rather than a full-width one. It is inset from the viewport,
+   so the page shows around it — which is the whole point, and also why it needs
+   a real background at rest rather than only when scrolled. */
+
+.ghost-header--plate {
+	height: auto;
+	padding-block: var(--t-space-3);
+	background: none;
+	border-bottom: 0;
+}
+
+.ghost-header--plate .ghost-header__inner {
+	max-width: calc(var(--t-w-site) - var(--t-space-8));
+	padding: var(--t-space-2) var(--t-space-5);
+	border: var(--t-hair) solid var(--t-line);
+	border-radius: var(--t-radius-pill);
+	background-color: color-mix(in srgb, var(--t-bg-raised) 88%, transparent);
+	backdrop-filter: blur(14px);
+	box-shadow: var(--t-shadow-raised);
+}
+
+.ghost-header--plate[data-scrolled='true'] .ghost-header__inner {
+	box-shadow: var(--t-shadow-overlay);
+}
+
+/* ── Over media ───────────────────────────────────────────────────────────────
+   Transparent, on top of the hero's image or video. The foreground is forced to
+   the light end rather than inherited: what is behind it is a publisher's
+   photograph or footage, and inheriting --t-fg would be a coin toss. The hero's
+   own scrim carries the contrast. */
+
+.ghost-header--over {
+	position: absolute;
+	inset-inline: 0;
+	background: none;
+	border-bottom: 0;
+	color: var(--pure-white);
+}
+
+.ghost-header--over .ghost-brand,
+.ghost-header--over .ghost-nav__link,
+.ghost-header--over .ghost-button {
+	color: var(--pure-white);
+}
+
+.ghost-header--over .ghost-nav__icon {
+	color: rgb(255 255 255 / 0.6);
+}
+
+.ghost-header--over .ghost-button--outline {
+	border-color: rgb(255 255 255 / 0.45);
+}
+
+.ghost-header--over .ghost-button--outline:hover,
+.ghost-header--over .ghost-button--icon:hover {
+	background-color: rgb(255 255 255 / 0.12);
+	border-color: var(--pure-white);
+	color: var(--pure-white);
+}
+
+/* Once the reader has scrolled past the media there is nothing left to be
+   transparent over, so it becomes an ordinary sticky bar. */
+.ghost-header--over[data-scrolled='true'] {
+	position: fixed;
+	background-color: color-mix(in srgb, var(--t-bg) 90%, transparent);
+	backdrop-filter: blur(12px);
+	border-bottom: var(--t-hair) solid var(--t-line);
+	color: var(--t-fg);
+}
+
+.ghost-header--over[data-scrolled='true'] .ghost-brand,
+.ghost-header--over[data-scrolled='true'] .ghost-nav__link,
+.ghost-header--over[data-scrolled='true'] .ghost-button {
+	color: var(--t-fg);
+}
+
+.ghost-header--over[data-scrolled='true'] .ghost-nav__icon {
+	color: var(--t-fg-faint);
+}
+
+.ghost-header--over[data-scrolled='true'] .ghost-button--outline {
+	border-color: var(--t-line-strong);
 }

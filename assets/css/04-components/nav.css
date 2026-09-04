@@ -16,9 +16,10 @@
 .ghost-nav__list {
 	display: flex;
 	align-items: center;
-	/* Roomier than it was. With icons in the row, tight gaps made the labels
-	   read as one run of text rather than as separate destinations. */
-	gap: var(--t-space-8);
+	/* The gap does the separating, so the links themselves carry no horizontal
+	   padding to double it up. With icons in the row, anything tighter than
+	   this reads as one run of text rather than as separate destinations. */
+	gap: var(--t-space-7);
 	margin: 0;
 	padding: 0;
 	list-style: none;
@@ -27,6 +28,8 @@
 .ghost-nav__link {
 	display: inline-flex;
 	align-items: center;
+	/* Tight between the icon and its label; the space between items comes from
+	   the list's gap, not from padding here. */
 	gap: var(--t-space-2);
 	padding-block: var(--t-space-3);
 	color: inherit;
@@ -37,14 +40,27 @@
 }
 
 /* The current page is marked with the record dot — the same mark that sits
-   beside the wordmark in the header. It is the theme's one piece of ornament,
-   so using it for "you are here" costs no new vocabulary and reads instantly.
-   An underline would have been a second idea doing the same job. */
+   beside the wordmark and opens the hero. One piece of ornament doing three
+   jobs, rather than inventing an underline to say the same thing.
+
+   Which side it sits on depends on whether the item has an icon:
+
+     with an icon      [icon] Label ·      the dot closes the group
+     without an icon   · Label            the dot opens it
+
+   Because the link is a flex row, the pseudo-element is a flex item and can be
+   re-ordered — no second element, no duplicate markup. The test is
+   :has(.ghost-nav__icon svg) rather than :not(:empty): nav-icon.hbs emits
+   whitespace for items it does not recognise, and :empty does not match an
+   element containing whitespace. The svg is only ever there when an icon
+   actually rendered. */
 .ghost-nav__link::before {
 	content: '';
 	width: 5px;
 	height: 5px;
 	flex: 0 0 auto;
+	/* Ahead of the icon and the label by default. */
+	order: -1;
 	border-radius: var(--t-radius-pill);
 	background-color: var(--t-accent);
 	/* Scaled rather than hidden, so the label never shifts as the dot appears
@@ -53,6 +69,11 @@
 	scale: 0.4;
 	transition: opacity var(--t-duration) var(--t-ease),
 		scale var(--t-duration) var(--t-ease);
+}
+
+.ghost-nav__link:has(.ghost-nav__icon svg)::before {
+	order: 1;
+	margin-left: var(--t-space-1);
 }
 
 .ghost-nav__link:hover::before {
@@ -125,11 +146,15 @@
 	font-size: var(--t-text-xl);
 }
 
-/* In the drawer the dot moves out into the margin, so the labels stay flush
-   left down the column whether or not one of them is current. */
-.ghost-nav--drawer .ghost-nav__link::before {
+/* In the drawer the dot always sits in the margin, whichever side the header
+   puts it on — the labels have to stay flush left down the column whether or
+   not one of them is current. */
+.ghost-nav--drawer .ghost-nav__link::before,
+.ghost-nav--drawer .ghost-nav__link:has(.ghost-nav__icon svg)::before {
 	position: absolute;
 	left: 0;
+	order: -1;
+	margin-left: 0;
 }
 
 /* ── Footer context ───────────────────────────────────────────────────────── */

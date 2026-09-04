@@ -4,7 +4,7 @@ slug: settings
 group: Reference
 icon: sliders
 order: 3
-summary: All seventeen settings, what each one changes, and which four to set on day one.
+summary: All sixteen settings, what each one changes, and which four to set on day one.
 ---
 
 Every setting is in **Settings → Design**, split into three groups. None of them
@@ -16,21 +16,19 @@ reasonably want to change it, it is here.
 | Setting | Options | What it does |
 | --- | --- | --- |
 | **Colour scheme** | System · Light · Dark | What a first-time visitor sees. They can override it with the header toggle, and their choice is remembered. |
-| **Show colour scheme toggle** | on / off | The sun/moon control in the header. Turn it off to lock the site to your chosen scheme. |
 | **Typeface pairing** | Grotesk & Sans · Serif & Sans · Mono & Sans | The display face used for headlines. Body text never changes. |
 | **Header style** | Rule · Plate · Over Media | Rule is a hairline underneath. Plate is a filled bar that lifts on scroll. Over Media sits transparently on a feature image and becomes a plate once you scroll past it. |
-| **Sidebar on lists** | on / off | A second column beside the homepage and archives, with topics, recent posts and the newsletter. Compare the two at `/home/sidebar/` and `/home/full/`. |
+| **Sidebar on lists** | on / off | A second column beside the homepage and archives, with topics, recent posts and the newsletter. |
 | **Footer note** | text | A short line above the footer navigation. Blank hides it. |
 
 ## Homepage
 
 | Setting | Options | What it does |
 | --- | --- | --- |
+| **Hero CTA label** | text | The button in the hero. Blank hides it. |
+| **Hero CTA URL** | text | Where that button goes. `#latest` jumps to the post list below. |
+| **Show hero signup** | on / off | The email form in the hero. Only appears if memberships are on. |
 | **Homepage layout** | Call Sheet · Stacked · Grid | Call Sheet is a numbered index with hairline rules. Stacked is one full-width card per row. Grid is three across. |
-| **Homepage lead** | Featured Post · Latest Post · None | What fills the large slot at the top. Featured Post falls back to your latest post when nothing is marked featured. |
-| **Homepage intro** | text | One or two sentences under the site title. Blank uses your site description instead. |
-| **Homepage shelf tags** | text | Tag slugs shown as horizontally scrolling shelves. **Comma-separated, no spaces** — `video,notes`, not `video, notes`. |
-| **Show subscribe band** | on / off | The newsletter block near the foot of the homepage. Only ever appears if memberships are on. |
 
 ## Post
 

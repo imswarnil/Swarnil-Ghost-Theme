@@ -1,15 +1,23 @@
 {{!--
     Site header.
 
-    One shape, on every page: brand left, navigation centred, actions right.
+    One markup shape, five appearances, chosen by the header_style setting. The
+    header and the hero are one decision rather than two, because on the media
+    variants they are physically the same object: a transparent bar only works
+    when there is something behind it, and the something is the hero.
 
-    There used to be three header styles behind a setting. Two of them —
-    a filled plate, and a transparent bar over a feature image — earned their
-    complexity on maybe one page each, and the third was the one everybody
-    kept. A theme that only does one thing with its header does that thing
-    better, and it is one less decision on a publisher's first day.
+      Rule       a hairline underneath. The default.
+      Plate      a floating rounded bar, inset from the edges.
+      Split      a hairline bar over a two-column hero.
+      Cover      transparent, over the publication cover image.
+      Broadcast  transparent, over a looping background video.
+
+    Cover and Broadcast can only be transparent where the media actually is —
+    the homepage. Everywhere else they fall back to Rule, because a transparent
+    header on a white page is an invisible header. That check is `{{#is "home"}}`
+    rather than a class on <body>, so it cannot drift from what the hero renders.
 --}}
-<header class="ghost-header ghost-header--rule" data-header>
+<header class="ghost-header {{#is "home"}}ghost-header--{{#match @custom.header_style "Plate"}}plate{{else match @custom.header_style "Cover"}}over{{else match @custom.header_style "Broadcast"}}over{{else}}rule{{/match}}{{else}}ghost-header--{{#match @custom.header_style "Plate"}}plate{{else}}rule{{/match}}{{/is}}" data-header>
     <div class="ghost-container ghost-header__inner">
 
         {{!-- Brand: the uploaded logo if there is one, the site title if not. --}}
@@ -28,19 +36,14 @@
 
         <div class="ghost-header__actions">
 
-            {{!-- Ghost's search is opened by any element carrying data-ghost-search.
+            {{!-- Ghost's search is opened by anything carrying data-ghost-search.
                  It is injected by {{ghost_foot}}, so there is nothing to build. --}}
             <button class="ghost-button ghost-button--icon" data-ghost-search aria-label="Search this site">
                 {{> "icon" name="search"}}
             </button>
 
             {{!-- Two modes. The icon shows what pressing it gives you, not what
-                 you are currently in — a sun while dark, a moon while light —
-                 which is the reading almost everyone applies to it.
-
-                 Always present: a control this small does not need a setting to
-                 turn it off, and the publisher's default mode is the setting
-                 that actually matters. --}}
+                 you are currently in — a sun while dark, a moon while light. --}}
             <button class="ghost-button ghost-button--icon ghost-scheme" data-scheme-toggle aria-label="Switch colour mode">
                 <span class="ghost-scheme__icon ghost-scheme__icon--light">{{> "icon" name="sun"}}</span>
                 <span class="ghost-scheme__icon ghost-scheme__icon--dark">{{> "icon" name="moon"}}</span>
