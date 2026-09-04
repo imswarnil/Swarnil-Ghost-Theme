@@ -66,15 +66,10 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
-      # Same as CI: the design system is a `file:` dependency on a sibling
-      # folder that a runner does not have. Clone it to the path the manifest
-      # expects so the stylesheet is built from the real thing.
-      - name: Fetch the design system
-        run: |
-          git clone --depth 1 \
-            https://github.com/imswarnil/Swarnil-Design-System.git \
-            "$(dirname "$GITHUB_WORKSPACE")/design.imswarnil.com"
-
+      # The design system is not a sibling folder any more: `npm run build` runs
+      # ds:sync first, which clones it to .ds/ at the exact commit recorded in
+      # package.json → designSystem.ref. So a runner needs no special setup, and
+      # what gets deployed is built from the pinned version.
       - name: Install
         run: npm ci --no-audit --no-fund || npm install --no-audit --no-fund
 

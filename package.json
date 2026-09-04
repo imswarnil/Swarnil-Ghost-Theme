@@ -34,7 +34,7 @@
 	},
 	"scripts": {
 		"build": "npm run build:css && npm run build:js",
-		"build:css": "postcss assets/css/index.css -o assets/built/index.css --env production",
+		"build:css": "npm run ds:sync && postcss assets/css/index.css -o assets/built/index.css --env production",
 		"build:js": "node scripts/build-js.mjs",
 		"dev": "node scripts/dev.mjs",
 		"lint:css": "stylelint \"assets/css/**/*.css\"",
@@ -53,7 +53,10 @@
 		"ghost:start": "cd .ghost && ghost start",
 		"ghost:stop": "cd .ghost && ghost stop",
 		"ghost:restart": "cd .ghost && ghost restart",
-		"ghost:log": "cd .ghost && ghost log -f"
+		"ghost:log": "cd .ghost && ghost log -f",
+		"ds:sync": "node scripts/ds-sync.mjs",
+		"ds:link": "node scripts/ds-sync.mjs --link",
+		"prebuild": "npm run ds:sync"
 	},
 	"config": {
 		"posts_per_page": 12,
@@ -220,7 +223,7 @@
 		"not dead"
 	],
 	"dependencies": {
-		"creator-design-system": "file:../design.imswarnil.com"
+		"creator-design-system": "file:.ds"
 	},
 	"designSystem": {
 		"comment": "The exact design-system commit assets/built/index.css is built from. CI clones this ref so the build is reproducible; bump it deliberately, rebuild, and commit the result.",
