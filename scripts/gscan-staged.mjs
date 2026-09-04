@@ -3,15 +3,13 @@
  *
  * Why not just `gscan .`:
  *
- * The development Ghost lives at .ghost/ inside this folder, so that everything
- * for the product is in one place. Ghost requires the theme to appear at
- * contentPath/themes/<name>, which makes .ghost/content/themes/swarnil a
- * symlink back to the repository root — and `gscan .` walks into it and fails
- * with "Symlinks in themes are not allowed". It would also try to validate
- * Ghost core's own Handlebars files.
+ * `gscan .` validates the folder. This validates the deliverable — the exact
+ * set of files build-zip.mjs packages, from the same list in lib/shipping.mjs.
+ * The two are not the same check: a template missing from the package once
+ * passed `gscan .` and produced a broken zip, because gscan had been pointed at
+ * the working directory rather than at what shipped.
  *
- * Staging first is stricter in the way that matters: it validates the exact set
- * of files that ship, rather than whatever happens to be lying in the folder.
+ * `gscan .` still works and is worth running; it just cannot catch that.
  *
  *   npm test          warnings shown, exit 0
  *   npm run test:ci   fatal, verbose

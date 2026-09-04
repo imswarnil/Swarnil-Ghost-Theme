@@ -6,11 +6,6 @@ node_modules/
 # dependency, and the ref in package.json is the thing under version control.
 .ds/
 
-# The development Ghost install. It lives inside this folder on purpose — one
-# folder for the whole product — and is roughly 400 MB of Ghost core, its
-# database and its uploaded images. None of it belongs in the theme's history.
-.ghost/
-
 # The packaged theme, rebuilt by `npm run zip`
 *.zip
 

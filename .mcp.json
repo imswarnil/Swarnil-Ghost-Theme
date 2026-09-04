@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "ghost-theme": {
+      "command": "node",
+      "args": ["tools/ghost-mcp/server.mjs"],
+      "env": {}
+    }
+  }
+}

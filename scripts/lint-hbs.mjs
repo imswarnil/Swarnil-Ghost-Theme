@@ -10,7 +10,7 @@ import { readdir, readFile } from 'node:fs/promises';
 import { join, relative } from 'node:path';
 
 const ROOT = process.cwd();
-const SKIP = new Set(['node_modules', '.git', '.ghost', 'assets', 'docs', 'demo', 'learn', 'abstract']);
+const SKIP = new Set(['node_modules', '.git', 'assets', 'docs', 'demo', 'learn', 'abstract']);
 
 const RULES = [
 	{

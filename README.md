@@ -147,6 +147,37 @@ claim can be checked in the file beside it. They also generate the demo content:
 
 Start at [what a Ghost theme actually is](https://github.com/imswarnil/Swarnil-Ghost-Theme/blob/main/learn/01-what-a-theme-is.md).
 
+## Driving Ghost from a tool
+
+`tools/ghost-mcp/server.mjs` is an MCP server scoped to exactly two Ghost
+instances and nothing else:
+
+| Instance | Site | Credentials |
+| --- | --- | --- |
+| `live` | the public demo | `API_URL` / `ADMIN_API_KEY` |
+| `local` | the development install on :2370 | `LOCAL_API_URL` / `LOCAL_ADMIN_API_KEY` |
+
+It is registered for this project in `.mcp.json`, so an MCP-aware editor picks
+it up automatically. Tools: inspect a site, list posts and pages, create or
+update a page, read and write settings, and upload and activate the built theme.
+
+Scope is the point. There is no way to aim it at an arbitrary host, so a
+mistaken or injected URL cannot turn it into a general-purpose HTTP client.
+Every write names its instance explicitly — there is no implicit default, so
+"update the page" can never quietly mean the live site — and nothing deletes.
+
+Get a key for the local instance with:
+
+```bash
+npm run ghost:key      # creates a custom integration and writes it to .env
+npm run ghost:restart
+```
+
+Two endpoints are closed to Admin API keys on Ghost 6.62, whatever the key:
+`GET /themes/` and `GET /custom_theme_settings/`. Uploading and activating a
+theme both work; listing installed themes and reading the Design settings have
+to happen in Ghost admin.
+
 ## Deploying
 
 `.github/workflows/deploy-theme.yml` pushes the theme straight to a Ghost site

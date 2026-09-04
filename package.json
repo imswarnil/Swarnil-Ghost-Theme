@@ -50,17 +50,18 @@
 		"zip": "node scripts/build-zip.mjs",
 		"demo:covers": "node scripts/build-demo-covers.mjs",
 		"docs:capture": "node scripts/capture-preview.mjs",
-		"ghost:start": "cd .ghost && ghost start",
-		"ghost:stop": "cd .ghost && ghost stop",
-		"ghost:restart": "cd .ghost && ghost restart",
-		"ghost:log": "cd .ghost && ghost log -f",
+		"ghost:start": "cd ../ghost-theme-dev && ghost start",
+		"ghost:stop": "cd ../ghost-theme-dev && ghost stop",
+		"ghost:restart": "cd ../ghost-theme-dev && ghost restart",
+		"ghost:log": "cd ../ghost-theme-dev && ghost log -f",
 		"ds:sync": "node scripts/ds-sync.mjs",
 		"ds:link": "node scripts/ds-sync.mjs --link",
 		"prebuild": "npm run ds:sync",
 		"deploy": "npm run zip && node scripts/deploy.mjs",
 		"release:patch": "node scripts/release.mjs patch",
 		"release:minor": "node scripts/release.mjs minor",
-		"release:major": "node scripts/release.mjs major"
+		"release:major": "node scripts/release.mjs major",
+		"ghost:key": "node scripts/ghost-key.mjs"
 	},
 	"config": {
 		"posts_per_page": 12,
@@ -241,6 +242,7 @@
 		"domain": ""
 	},
 	"devDependencies": {
+		"@modelcontextprotocol/sdk": "^1.30.0",
 		"cssnano": "^7.0.6",
 		"esbuild": "^0.25.0",
 		"gscan": "^6.4.1",
