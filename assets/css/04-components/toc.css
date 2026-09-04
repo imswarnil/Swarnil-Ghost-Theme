@@ -61,6 +61,9 @@
 
 @media (min-width: 64rem) {
 	.ghost-toc {
+		/* Aligns the list's first entry with the first line of the post rather
+		   than with the top of the grid row. */
+		padding-top: 0.35rem;
 		position: sticky;
 		top: calc(var(--t-header-h) + var(--t-space-8));
 		max-height: calc(100vh - var(--t-header-h) - var(--t-space-16));

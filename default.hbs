@@ -7,35 +7,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{meta_title}}</title>
 
-    {{!-- Colour scheme, resolved before first paint.
+    {{!-- Colour mode, resolved before first paint.
 
          This script has to stay inline and synchronous. Deferring it, or moving
-         it to the bundle, means the browser paints the default scheme first and
-         then repaints — a white flash on every navigation for anyone reading in
-         dark mode. It is small enough to be worth the render-blocking cost.
+         it into the bundle, means the browser paints one mode and then repaints
+         — a white flash on every navigation for anyone reading in dark. It is
+         small enough to be worth the render-blocking cost.
 
-         data-scheme is the reader's choice (system | light | dark).
-         data-theme  is what actually gets painted (light | dark), and is what
-                     the stylesheet keys off. --}}
+         Two modes only. A stored choice wins; without one, the publisher's
+         default decides, and "System" means asking the operating system. --}}
     <script>
         (function () {
             var fallback = "{{#match @custom.color_scheme "Light"}}light{{else match @custom.color_scheme "Dark"}}dark{{else}}system{{/match}}";
-            var scheme = fallback;
+            var mode = null;
 
             try {
-                var stored = localStorage.getItem('ghost-theme-scheme');
-                if (stored) { scheme = stored; }
+                mode = localStorage.getItem('ghost-theme-scheme');
             } catch (e) {
-                /* storage blocked — fall back to the publisher's default */
+                /* storage blocked — fall through to the publisher's default */
             }
 
-            var resolved = scheme;
-            if (scheme === 'system') {
-                resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            if (!mode) {
+                mode = fallback === 'system'
+                    ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+                    : fallback;
             }
 
-            document.documentElement.setAttribute('data-scheme', scheme);
-            document.documentElement.setAttribute('data-theme', resolved);
+            document.documentElement.setAttribute('data-theme', mode);
         })();
     </script>
 

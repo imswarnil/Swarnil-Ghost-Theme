@@ -25,25 +25,40 @@
 		border-color var(--t-duration) var(--t-ease);
 }
 
+/* Three tracks, not a flex row: the outer two are equal, so the navigation in
+   the middle is centred on the page rather than on whatever is left over after
+   the brand. A flex layout centres the *remaining* space, which drifts as the
+   site title or the number of actions changes. */
 .ghost-header__inner {
-	display: flex;
+	display: grid;
+	grid-template-columns: 1fr auto 1fr;
 	align-items: center;
 	gap: var(--t-space-5);
 	width: 100%;
 }
 
 .ghost-header__nav {
-	/* Takes the slack, so the brand stays left and the actions stay right
-	   whatever the navigation contains. */
-	flex: 1 1 auto;
 	min-width: 0;
+	justify-self: center;
+}
+
+/* Below the navigation breakpoint the middle track is empty, so the row
+   collapses to brand and actions with nothing stranded in between. */
+@media (max-width: 55.99rem) {
+	.ghost-header__inner {
+		grid-template-columns: auto 1fr;
+	}
+
+	.ghost-header__nav {
+		display: none;
+	}
 }
 
 .ghost-header__actions {
 	display: flex;
 	align-items: center;
+	justify-content: flex-end;
 	gap: var(--t-space-2);
-	flex: 0 0 auto;
 }
 
 /* ── Rule ─────────────────────────────────────────────────────────────────── */

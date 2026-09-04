@@ -1,0 +1,31 @@
+{{!--
+    An icon for a navigation item.
+
+    Ghost's navigation is whatever a publisher types, so there is nothing to
+    look up — the icon is inferred, first from the URL, then from words in the
+    label. Anything unrecognised gets none, which is a normal-looking link
+    rather than a placeholder.
+
+    Matching the URL first matters: it is the part a publisher is least likely
+    to translate or rename, so "/blog/" keeps its icon whether the label reads
+    Blog, Journal or Écrits.
+
+    `~` is the match helper's "contains" operator, and it is case-sensitive —
+    hence the pairs.
+--}}
+{{#match this.url "/"}}{{> "icon" name="home"}}
+{{else match this.url "~" "/blog"}}{{> "icon" name="book"}}
+{{else match this.url "~" "/archive"}}{{> "icon" name="book"}}
+{{else match this.url "~" "/about"}}{{> "icon" name="user"}}
+{{else match this.url "~" "/contact"}}{{> "icon" name="mail"}}
+{{else match this.url "~" "/preview"}}{{> "icon" name="layout"}}
+{{else match this.url "~" "/tag/"}}{{> "icon" name="tag"}}
+{{else match this.url "~" "/author/"}}{{> "icon" name="user"}}
+{{else match this.label "~" "Home"}}{{> "icon" name="home"}}
+{{else match this.label "~" "Blog"}}{{> "icon" name="book"}}
+{{else match this.label "~" "Writing"}}{{> "icon" name="book"}}
+{{else match this.label "~" "About"}}{{> "icon" name="user"}}
+{{else match this.label "~" "Contact"}}{{> "icon" name="mail"}}
+{{else match this.label "~" "Video"}}{{> "icon" name="play"}}
+{{else match this.label "~" "Preview"}}{{> "icon" name="layout"}}
+{{/match}}

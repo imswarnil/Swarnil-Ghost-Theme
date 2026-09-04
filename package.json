@@ -61,7 +61,9 @@
 		"release:patch": "node scripts/release.mjs patch",
 		"release:minor": "node scripts/release.mjs minor",
 		"release:major": "node scripts/release.mjs major",
-		"ghost:key": "node scripts/ghost-key.mjs"
+		"ghost:key": "node scripts/ghost-key.mjs",
+		"covers": "node scripts/apply-covers.mjs",
+		"docs:publish": "node scripts/publish-docs-page.mjs"
 	},
 	"config": {
 		"posts_per_page": 12,
@@ -155,6 +157,11 @@
 				"default": "Featured Post",
 				"group": "homepage",
 				"description": "What occupies the large lead slot at the top."
+			},
+			"homepage_kicker": {
+				"type": "text",
+				"group": "homepage",
+				"description": "A short label above the site title in the hero, e.g. \"Ghost theme\". Leave blank to hide it."
 			},
 			"homepage_intro": {
 				"type": "text",

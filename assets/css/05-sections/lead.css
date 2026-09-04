@@ -9,30 +9,99 @@
    words on the left, and the site introduction sharing the block.
    ========================================================================== */
 
-.ghost-lead {
-	padding-block: var(--t-space-12) var(--t-space-16);
+/* =============================================================================
+   5 · SECTION — hero
+   =============================================================================
+   The band at the top of the homepage. One statement, centred, with the accent
+   dot above it and two actions below — the theme's own front door rather than a
+   post that happens to be first.
+
+   Centred rather than ranged left, because it is the one block on the site with
+   no column to align to: everything below it sits in the call-sheet grid, and
+   the hero's job is to be the thing that is not that.
+   ========================================================================== */
+
+.ghost-hero {
+	padding-block: var(--t-space-24) var(--t-space-16);
 	border-bottom: var(--t-hair) solid var(--t-line);
+	text-align: center;
 }
 
-.ghost-lead__intro {
-	max-width: 46rem;
-	margin-bottom: var(--t-space-12);
+.ghost-hero__inner {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--t-space-5);
 }
 
-.ghost-lead__site-title {
-	margin: 0 0 var(--t-space-4);
-	font-size: var(--t-text-5xl);
-	letter-spacing: var(--t-display-tracking, var(--t-tracking-tight));
-}
-
-.ghost-lead__site-description {
+.ghost-hero__kicker {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--t-space-3);
 	margin: 0;
-	max-width: var(--t-w-prose);
+	max-width: 40ch;
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-2xs);
+	text-transform: uppercase;
+	letter-spacing: var(--t-tracking-slate);
+	color: var(--t-fg-subtle);
+}
+
+/* The record dot again — the mark in the wordmark, the mark on the current nav
+   item, and the mark that opens the page. One idea, used three times. */
+.ghost-hero__dot {
+	width: 6px;
+	height: 6px;
+	flex: 0 0 auto;
+	border-radius: var(--t-radius-pill);
+	background-color: var(--t-accent);
+}
+
+.ghost-hero__title {
+	margin: 0;
+	max-width: 16ch;
+	/* Fluid rather than stepped: the hero is the one place where a headline
+	   should fill the width it is given at any viewport. The ceiling is lower
+	   than it could be because this is a site title, not a sentence — at 8rem a
+	   two-word name stops reading as type and starts reading as a logo. */
+	font-size: clamp(2.5rem, 1.4rem + 4.4vw, 4.5rem);
+	line-height: 0.98;
+	letter-spacing: -0.04em;
+	text-wrap: balance;
+}
+
+.ghost-hero__lede {
+	margin: 0;
+	max-width: 46ch;
 	color: var(--t-fg-muted);
 	font-size: var(--t-text-lg);
 	line-height: var(--t-leading-relaxed);
 	text-wrap: pretty;
 }
+
+.ghost-hero__actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: var(--t-space-3);
+	margin-top: var(--t-space-4);
+}
+
+/* =============================================================================
+   5 · SECTION — lead
+   =============================================================================
+   The post directly beneath the hero: media on one side, words on the other.
+   The only place in the theme where a post gets a genuinely different shape
+   rather than a larger version of the same one.
+   ========================================================================== */
+
+.ghost-lead {
+	padding-block: var(--t-space-16);
+	border-bottom: var(--t-hair) solid var(--t-line);
+}
+
+
+
 
 .ghost-lead__post {
 	position: relative;

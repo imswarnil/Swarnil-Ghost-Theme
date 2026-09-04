@@ -27,13 +27,18 @@
  *
  *   GET  /themes/                  403 — cannot list installed themes
  *   GET  /custom_theme_settings/   403 — cannot read the Design settings
+ *   PUT  /settings/                403 — cannot change title, navigation, accent
+ *   GET  /settings/                allowed
  *   POST /themes/upload/           allowed
  *   PUT  /themes/<name>/activate/  allowed
+ *   POST /images/upload/           allowed
+ *   POST/PUT /posts/, /pages/      allowed
  *
- * So there is no tool here for listing themes or reading custom settings: they
- * could only ever return 403. Deploying reports the version and any gscan
- * warnings Ghost recorded, which is what those tools were wanted for. Read the
- * Design settings in Ghost admin.
+ * So settings are readable and not writable here, and there is no tool for
+ * listing themes or reading the Design settings: they could only ever return
+ * 403. Deploying reports the version and any gscan warnings Ghost recorded,
+ * which is what those tools were wanted for. Site settings and Design settings
+ * are changed in Ghost admin.
  *
  * Registered for this project in .mcp.json.
  */
@@ -291,52 +296,6 @@ const TOOLS = [
 			return Object.fromEntries(
 				settings.filter((s) => wanted.has(s.key)).map((s) => [s.key, s.value]),
 			);
-		},
-	},
-
-	{
-		name: 'ghost_settings_update',
-		description:
-			'Update site settings. Navigation is an array of {label, url}; a label ' +
-			'starting with "- " becomes a dropdown child of the item above it in ' +
-			'this theme. Changes are visible on the site immediately.',
-		inputSchema: {
-			type: 'object',
-			properties: {
-				instance: INSTANCE,
-				title: { type: 'string' },
-				description: { type: 'string' },
-				accent_color: { type: 'string', description: 'Hex, e.g. #f04e2e' },
-				navigation: {
-					type: 'array',
-					items: {
-						type: 'object',
-						properties: { label: { type: 'string' }, url: { type: 'string' } },
-						required: ['label', 'url'],
-					},
-				},
-				secondary_navigation: {
-					type: 'array',
-					items: {
-						type: 'object',
-						properties: { label: { type: 'string' }, url: { type: 'string' } },
-						required: ['label', 'url'],
-					},
-				},
-			},
-			required: ['instance'],
-			additionalProperties: false,
-		},
-		handler: async ({ instance, ...changes }) => {
-			const ghost = await instanceFor(instance);
-			const settings = Object.entries(changes).map(([key, value]) => ({
-				key,
-				// Ghost stores the navigation arrays as JSON strings.
-				value: Array.isArray(value) ? JSON.stringify(value) : value,
-			}));
-			if (!settings.length) throw new Error('Nothing to update.');
-			await ghost.json('/settings/', 'PUT', { settings });
-			return { updated: settings.map((s) => s.key) };
 		},
 	},
 

@@ -32,8 +32,10 @@
             </button>
 
             {{#if @custom.show_color_scheme_toggle}}
-                <button class="ghost-button ghost-button--icon ghost-scheme" data-scheme-toggle aria-label="Change colour scheme">
-                    <span class="ghost-scheme__icon ghost-scheme__icon--system">{{> "icon" name="system"}}</span>
+                {{!-- Two modes. The icon shows what pressing it gives you, not
+                     what you are currently in — a sun while dark, a moon while
+                     light — which is the reading almost everyone applies to it. --}}
+                <button class="ghost-button ghost-button--icon ghost-scheme" data-scheme-toggle aria-label="Switch colour mode">
                     <span class="ghost-scheme__icon ghost-scheme__icon--light">{{> "icon" name="sun"}}</span>
                     <span class="ghost-scheme__icon ghost-scheme__icon--dark">{{> "icon" name="moon"}}</span>
                 </button>

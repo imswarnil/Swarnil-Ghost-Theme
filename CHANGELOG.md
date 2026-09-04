@@ -22,6 +22,29 @@ For a theme, the version boundaries are worth stating plainly:
 
 ## [Unreleased]
 
+### Changed
+
+- The colour control is two modes, light and dark, instead of cycling through a
+  third "system" position. The system preference still decides what a first-time
+  visitor sees; it is just not a position on the switch, because pressing a
+  three-state control from "system" often changes nothing visible.
+- The header navigation is centred in its own grid track, so it sits on the
+  centre of the page rather than on whatever space the brand left over.
+- Navigation items carry an inferred icon — from the URL first, then from words
+  in the label — and unrecognised items simply get none.
+- The homepage opens with a stated hero: the site title as the headline, the
+  intro as a lede, and two actions. The lead post follows beneath it.
+- The post contents rail moved to the right of the reading column. A left-hand
+  rail competes with the text for the eye's return point on every line.
+
+### Added
+
+- `homepage_kicker` — an optional short label above the site title in the hero.
+- `npm run covers` applies the generated SVG cover art to every post on an
+  instance, skipping any that already has an image.
+- `npm run docs:publish` publishes the documentation as a page on a Ghost site,
+  from the same Markdown as the static site and the PDF.
+
 ## [1.0.0] — 2026-09-04
 
 First release.

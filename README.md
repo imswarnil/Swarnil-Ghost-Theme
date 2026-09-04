@@ -173,10 +173,11 @@ npm run ghost:key      # creates a custom integration and writes it to .env
 npm run ghost:restart
 ```
 
-Two endpoints are closed to Admin API keys on Ghost 6.62, whatever the key:
-`GET /themes/` and `GET /custom_theme_settings/`. Uploading and activating a
-theme both work; listing installed themes and reading the Design settings have
-to happen in Ghost admin.
+Some endpoints are closed to Admin API keys on Ghost 6.62, whatever the key:
+`GET /themes/`, `GET /custom_theme_settings/` and `PUT /settings/`. Uploading a
+theme, activating it, uploading images and writing posts and pages all work.
+Listing installed themes, and changing site or Design settings, have to happen
+in Ghost admin.
 
 ## Deploying
 

@@ -67,6 +67,7 @@
                     {{#unless @first}}</ul></li>{{/unless}}
                     <li class="ghost-nav__item">
                         <a class="ghost-nav__link{{link_class for=this.url activeClass=" ghost-nav__link--current"}}" href="{{this.url}}">
+                            <span class="ghost-nav__icon">{{> "nav-icon"}}</span>
                             {{label}}
                             <span class="ghost-nav__chevron" aria-hidden="true">{{> "icon" name="chevron-down"}}</span>
                         </a>

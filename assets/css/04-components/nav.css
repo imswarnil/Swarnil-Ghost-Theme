@@ -67,6 +67,36 @@
 	font-weight: var(--t-weight-medium);
 }
 
+/* The icon sits between the dot and the label. It is empty for any item
+   nav-icon.hbs did not recognise, and :empty collapses it so unrecognised
+   links do not carry a gap where an icon would have been. */
+.ghost-nav__icon {
+	display: inline-flex;
+	align-items: center;
+	color: var(--t-fg-faint);
+	transition: color var(--t-duration) var(--t-ease);
+}
+
+.ghost-nav__icon:empty {
+	display: none;
+}
+
+.ghost-nav__icon .ghost-icon {
+	width: 1em;
+	height: 1em;
+	vertical-align: -0.12em;
+}
+
+.ghost-nav__link:hover .ghost-nav__icon,
+.ghost-nav__link--current .ghost-nav__icon {
+	color: var(--t-accent);
+}
+
+/* The footer row is dense and secondary — labels alone read better there. */
+.ghost-nav--footer .ghost-nav__icon {
+	display: none;
+}
+
 /* ── Header context: hidden on small screens in favour of the drawer ──────── */
 .ghost-nav--header {
 	display: none;

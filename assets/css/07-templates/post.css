@@ -145,17 +145,19 @@
 
 @media (min-width: 64rem) {
 	.ghost-post--with-toc .ghost-post__layout {
-		/* The outer 1fr columns keep the reading column optically centred on the
-		   page rather than pushed right by the rail. */
-		grid-template-columns: minmax(0, 1fr) minmax(0, var(--t-w-prose)) minmax(0, 1fr);
+		/* Reading column first, contents on the right. Left-hand rails compete
+		   with the text for the eye's return point at the start of every line;
+		   on the right the list is available without ever being in the way.
+		   The leading 1fr keeps the reading column optically centred rather than
+		   shunted left by the rail. */
+		grid-template-columns: minmax(0, 1fr) minmax(0, var(--t-w-prose)) minmax(0, 15rem);
 		gap: var(--t-space-10);
 		align-items: start;
 	}
 
 	.ghost-post--with-toc .ghost-post__rail {
-		grid-column: 1;
-		justify-self: end;
-		width: min(15rem, 100%);
+		grid-column: 3;
+		grid-row: 1;
 	}
 
 	.ghost-post--with-toc .ghost-post__body,

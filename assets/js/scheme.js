@@ -1,63 +1,69 @@
 /*
- * Colour scheme.
+ * Colour scheme: two modes, light and dark.
  *
- * Three states cycled by one button: system → light → dark → system.
+ * The button flips between them and nothing else. A three-state control that
+ * cycles system → light → dark reads as broken to most people: pressing it once
+ * from "system" often changes nothing visible, because the system value already
+ * matched. Two states always change something.
+ *
+ * The system preference still decides what a first-time visitor sees — it is
+ * the starting point, just not a position on the switch. Once someone chooses,
+ * the choice is remembered and the system stops being consulted.
  *
  * The value is applied to <html> before first paint by an inline script in
- * default.hbs — it has to be inline and synchronous, or a reader who chose dark
- * gets a white flash on every navigation. This module only handles the button;
- * it never applies the initial value.
- *
- *   data-scheme  what the reader chose        (system | light | dark)
- *   data-theme   what is actually being shown (light | dark)
- *
- * They are separate because "system" is a choice, not an appearance, and the
- * design system's dark rules key off data-theme.
+ * default.hbs; deferring it means a white flash on every navigation for anyone
+ * reading in dark mode. This module only handles the button.
  */
 
-const ORDER = ['system', 'light', 'dark'];
 const STORAGE_KEY = 'ghost-theme-scheme';
 
-const resolve = (scheme) => {
-	if (scheme !== 'system') return scheme;
-	return window.matchMedia('(prefers-color-scheme: dark)').matches
-		? 'dark'
-		: 'light';
-};
+const systemPrefers = () =>
+	window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
 const apply = (scheme) => {
-	const root = document.documentElement;
-	root.setAttribute('data-scheme', scheme);
-	root.setAttribute('data-theme', resolve(scheme));
+	document.documentElement.setAttribute('data-theme', scheme);
 };
 
 export const initScheme = () => {
 	const button = document.querySelector('[data-scheme-toggle]');
 	const media = window.matchMedia('(prefers-color-scheme: dark)');
 
-	// Follow the OS while, and only while, the reader is on "system".
+	let stored = null;
+	try {
+		stored = localStorage.getItem(STORAGE_KEY);
+	} catch {
+		/* storage blocked — the toggle still works for this page */
+	}
+
+	// Follow the system only until someone has expressed a preference.
 	media.addEventListener('change', () => {
-		if (document.documentElement.getAttribute('data-scheme') === 'system') {
-			apply('system');
+		let chosen = null;
+		try {
+			chosen = localStorage.getItem(STORAGE_KEY);
+		} catch {
+			/* as above */
 		}
+		if (!chosen) apply(systemPrefers());
 	});
 
 	if (!button) return;
 
+	const label = (scheme) =>
+		scheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+
+	const current = () =>
+		document.documentElement.getAttribute('data-theme') || stored || systemPrefers();
+
+	button.setAttribute('aria-label', label(current()));
+
 	button.addEventListener('click', () => {
-		const current = document.documentElement.getAttribute('data-scheme') || 'system';
-		const next = ORDER[(ORDER.indexOf(current) + 1) % ORDER.length];
-
+		const next = current() === 'dark' ? 'light' : 'dark';
 		apply(next);
-
-		// Private browsing and blocked storage both throw here. The toggle still
-		// works for the current page; it just will not be remembered.
+		button.setAttribute('aria-label', label(next));
 		try {
 			localStorage.setItem(STORAGE_KEY, next);
 		} catch {
-			/* no persistence available */
+			/* not remembered, but applied */
 		}
-
-		button.setAttribute('aria-label', `Colour scheme: ${next}. Click to change.`);
 	});
 };
