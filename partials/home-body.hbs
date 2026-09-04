@@ -1,0 +1,53 @@
+{{!--
+    The homepage, assembled.
+
+    Split out of home.hbs so the same page can be rendered three ways without
+    three copies: with the publisher's chosen sidebar setting, and — for the
+    preview routes — with it forced on or off.
+
+      home.hbs          sidebar=@custom.list_sidebar   (the site's setting)
+      home-sidebar.hbs  sidebar=true
+      home-full.hbs     sidebar=false
+
+    Parameters
+      sidebar   whether to show the list sidebar
+--}}
+<div class="ghost-home">
+
+    {{> "lead"}}
+
+    {{!-- Shelves, one per tag slug in the setting. --}}
+    {{#if @custom.homepage_shelf_tags}}
+        {{#foreach (split @custom.homepage_shelf_tags)}}
+            {{> "shelf" slug=this}}
+        {{/foreach}}
+    {{/if}}
+
+    <div class="ghost-container">
+        <div class="ghost-list{{#if sidebar}} ghost-list--with-sidebar{{/if}}">
+            <div class="ghost-list__main">
+                {{!-- {{#get}} renders its else block, not its body, when the query
+                     comes back empty — so the no-posts state has to live there. --}}
+                {{#get "posts" limit=12 include="authors,tags" as |feed|}}
+                    {{> "post-list" posts=feed title="Latest" layout=@custom.homepage_layout}}
+                {{else}}
+                    <section class="ghost-index">
+                        <div class="ghost-index__head">
+                            <h2 class="ghost-index__title">Latest</h2>
+                        </div>
+                        {{> "empty"
+                            title="Nothing published yet"
+                            text="This is where posts will appear. Write one in Ghost admin and it will show up here."}}
+                    </section>
+                {{/get}}
+            </div>
+
+            {{#if sidebar}}{{> "sidebar"}}{{/if}}
+        </div>
+    </div>
+
+    {{#if @custom.show_subscribe_band}}
+        {{> "subscribe"}}
+    {{/if}}
+
+</div>

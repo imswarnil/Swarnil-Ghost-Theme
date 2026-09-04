@@ -1,0 +1,71 @@
+# Continuous integration for the Swarnil theme.
+#
+# Three checks, in the order that fails fastest:
+#   1. the Handlebars linter, for the Ghost traps that render nothing and
+#      report no error
+#   2. stylelint, which enforces the ghost-* BEM class pattern
+#   3. gscan, which decides whether Ghost will accept the theme at all
+#
+# The build runs first because both gscan and the linters need the compiled
+# stylesheet, and because a build that fails is the cheapest signal there is.
+#
+# Deployment is deliberately not here. Publishing the docs and cutting a
+# release are separate, and will be added when the release process is settled.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Build, lint and validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      # The design system is a local file: dependency resolved by a relative
+      # path from this repository. On a runner that path does not exist, so the
+      # install has to be able to proceed without it — the compiled stylesheet
+      # in assets/built/ already contains it.
+      - name: Install
+        run: npm ci --omit=optional || npm install --no-audit --no-fund
+
+      - name: Build
+        run: npm run build
+
+      - name: Lint templates
+        run: npm run lint:hbs
+
+      - name: Lint styles
+        run: npm run lint:css
+
+      - name: Validate with gscan
+        run: npm run test:ci
+
+      # A stylesheet that differs from its source means someone edited the
+      # built file, or forgot to rebuild before committing. Either way the next
+      # build would silently revert their change.
+      - name: Check assets/built is up to date
+        run: |
+          if ! git diff --quiet -- assets/built; then
+            echo "assets/built/ is out of date. Run 'npm run build' and commit the result."
+            git diff --stat -- assets/built
+            exit 1
+          fi

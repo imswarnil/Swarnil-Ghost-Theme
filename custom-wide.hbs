@@ -1,0 +1,12 @@
+{{!--
+    Post template: Wide.
+
+    Selectable per post in Ghost admin under Post settings → Template. Broadens
+    the reading column and lets the feature image run at 21:9, for posts that
+    are carried by pictures rather than by paragraphs.
+--}}
+{{!< default}}
+
+{{#post}}
+    {{> "post-shell" layout="Wide"}}
+{{/post}}

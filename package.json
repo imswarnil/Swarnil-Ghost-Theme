@@ -1,0 +1,238 @@
+{
+	"name": "swarnil",
+	"version": "1.0.0",
+	"description": "An editorial Ghost theme for creators who publish in more than one shape — writing, video and notes — held together by a call-sheet grid and a single signal colour.",
+	"keywords": [
+		"ghost",
+		"ghost-theme",
+		"theme",
+		"editorial",
+		"creator",
+		"video",
+		"newsletter"
+	],
+	"license": "SEE LICENSE IN LICENSE",
+	"homepage": "https://theme.imswarnil.com",
+	"bugs": "https://github.com/imswarnil/Swarnil-Ghost-Theme/issues",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/imswarnil/Swarnil-Ghost-Theme.git"
+	},
+	"author": {
+		"name": "Swarnil Singhai",
+		"email": "swarnilsinghaicse@gmail.com",
+		"url": "https://imswarnil.com"
+	},
+	"engines": {
+		"ghost": ">=6.0.0"
+	},
+	"demo": "https://theme.imswarnil.com/demo/",
+	"docs": "https://theme.imswarnil.com/docs/",
+	"screenshots": {
+		"desktop": "assets/screenshot-desktop.jpg",
+		"mobile": "assets/screenshot-mobile.jpg"
+	},
+	"scripts": {
+		"build": "npm run build:css && npm run build:js",
+		"build:css": "postcss assets/css/index.css -o assets/built/index.css --env production",
+		"build:js": "node scripts/build-js.mjs",
+		"dev": "node scripts/dev.mjs",
+		"lint:css": "stylelint \"assets/css/**/*.css\"",
+		"lint:hbs": "node scripts/lint-hbs.mjs",
+		"lint": "npm run lint:css && npm run lint:hbs",
+		"demo": "node scripts/build-demo.mjs",
+		"docs": "node scripts/build-docs.mjs",
+		"docs:pdf": "node scripts/build-docs-pdf.mjs",
+		"pretest": "npm run build",
+		"test": "node scripts/gscan-staged.mjs",
+		"test:ci": "node scripts/gscan-staged.mjs --fatal",
+		"verify": "npm run build && npm run lint && npm run test:ci",
+		"zip": "node scripts/build-zip.mjs",
+		"demo:covers": "node scripts/build-demo-covers.mjs",
+		"docs:capture": "node scripts/capture-preview.mjs",
+		"ghost:start": "cd .ghost && ghost start",
+		"ghost:stop": "cd .ghost && ghost stop",
+		"ghost:restart": "cd .ghost && ghost restart",
+		"ghost:log": "cd .ghost && ghost log -f"
+	},
+	"config": {
+		"posts_per_page": 12,
+		"card_assets": true,
+		"image_sizes": {
+			"xxs": {
+				"width": 60
+			},
+			"xs": {
+				"width": 120
+			},
+			"s": {
+				"width": 320
+			},
+			"m": {
+				"width": 640
+			},
+			"l": {
+				"width": 960
+			},
+			"xl": {
+				"width": 1200
+			},
+			"xxl": {
+				"width": 2000
+			}
+		},
+		"custom": {
+			"color_scheme": {
+				"type": "select",
+				"options": [
+					"System",
+					"Light",
+					"Dark"
+				],
+				"default": "System",
+				"description": "Which colour scheme new visitors see before they choose one."
+			},
+			"show_color_scheme_toggle": {
+				"type": "boolean",
+				"default": true,
+				"description": "Let readers switch between light and dark from the header."
+			},
+			"typeface_pairing": {
+				"type": "select",
+				"options": [
+					"Grotesk & Sans",
+					"Serif & Sans",
+					"Mono & Sans"
+				],
+				"default": "Grotesk & Sans",
+				"description": "The display face used for headlines. Body text stays the same."
+			},
+			"header_style": {
+				"type": "select",
+				"options": [
+					"Rule",
+					"Plate",
+					"Over Media"
+				],
+				"default": "Rule",
+				"description": "How the site header sits on the page."
+			},
+			"list_sidebar": {
+				"type": "boolean",
+				"default": false,
+				"description": "Show a sidebar beside the homepage and archives, with topics, recent posts and the newsletter."
+			},
+			"footer_note": {
+				"type": "text",
+				"description": "A short line above the footer navigation. Leave blank to hide it."
+			},
+			"homepage_layout": {
+				"type": "select",
+				"options": [
+					"Call Sheet",
+					"Stacked",
+					"Grid"
+				],
+				"default": "Call Sheet",
+				"group": "homepage",
+				"description": "The overall shape of the homepage."
+			},
+			"homepage_lead": {
+				"type": "select",
+				"options": [
+					"Latest Post",
+					"Featured Post",
+					"None"
+				],
+				"default": "Featured Post",
+				"group": "homepage",
+				"description": "What occupies the large lead slot at the top."
+			},
+			"homepage_intro": {
+				"type": "text",
+				"group": "homepage",
+				"description": "One or two sentences under the site title. Leave blank to hide it."
+			},
+			"homepage_shelf_tags": {
+				"type": "text",
+				"group": "homepage",
+				"description": "Tag slugs shown as horizontal shelves. Comma-separated, no spaces, e.g. video,notes"
+			},
+			"show_subscribe_band": {
+				"type": "boolean",
+				"default": true,
+				"group": "homepage",
+				"description": "Show the newsletter band near the foot of the homepage."
+			},
+			"post_layout": {
+				"type": "select",
+				"options": [
+					"Standard",
+					"Wide",
+					"Immersive"
+				],
+				"default": "Standard",
+				"group": "post",
+				"description": "Default layout for posts. Individual posts can override this with an internal tag."
+			},
+			"feature_image_ratio": {
+				"type": "select",
+				"options": [
+					"auto",
+					"16/9",
+					"3/2",
+					"4/3",
+					"1/1",
+					"21/9"
+				],
+				"default": "16/9",
+				"group": "post",
+				"description": "Crop applied to feature images."
+			},
+			"show_reading_time": {
+				"type": "boolean",
+				"default": true,
+				"group": "post",
+				"description": "Show estimated reading time in the post byline."
+			},
+			"show_table_of_contents": {
+				"type": "boolean",
+				"default": true,
+				"group": "post",
+				"description": "Build a contents list from the headings in each post."
+			},
+			"show_author_card": {
+				"type": "boolean",
+				"default": true,
+				"group": "post",
+				"description": "Show the author card beneath the post."
+			},
+			"show_read_next": {
+				"type": "boolean",
+				"default": true,
+				"group": "post",
+				"description": "Show related posts beneath the post."
+			}
+		}
+	},
+	"browserslist": [
+		"defaults",
+		"not dead"
+	],
+	"dependencies": {
+		"creator-design-system": "file:../design.imswarnil.com"
+	},
+	"devDependencies": {
+		"cssnano": "^7.0.6",
+		"esbuild": "^0.25.0",
+		"gscan": "^6.4.1",
+		"marked": "^15.0.12",
+		"postcss": "^8.5.3",
+		"postcss-cli": "^11.0.1",
+		"postcss-import": "^16.1.0",
+		"postcss-nested": "^7.0.2",
+		"postcss-preset-env": "^10.1.5",
+		"stylelint": "^16.14.1",
+		"stylelint-config-standard": "^37.0.0"
+	}
+}

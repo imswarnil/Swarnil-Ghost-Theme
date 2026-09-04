@@ -1,0 +1,132 @@
+/* =============================================================================
+   4 · COMPONENT — frame
+   =============================================================================
+   The viewfinder. Four corner brackets drawn over media, the way a camera
+   marks the edges of a shot. This is the theme's signature and the reason the
+   cards read as footage rather than as thumbnails.
+
+   Drawn with two pseudo-elements and gradients rather than eight divs: no extra
+   markup, and it costs nothing when `--t-bracket-size` is set to 0 to turn it
+   off. `pointer-events: none` keeps it out of the way of the link underneath.
+   ========================================================================== */
+
+.ghost-frame {
+	position: relative;
+	display: block;
+	overflow: hidden;
+	background-color: var(--t-bg-media);
+	border-radius: var(--t-radius-media);
+	aspect-ratio: var(--t-feature-ratio);
+}
+
+.ghost-frame__media {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform var(--t-duration-slow) var(--t-ease);
+}
+
+/* Top-left and bottom-right brackets. */
+.ghost-frame::before,
+/* Top-right and bottom-left brackets. */
+.ghost-frame::after {
+	content: '';
+	position: absolute;
+	inset: var(--t-bracket-inset);
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity var(--t-duration) var(--t-ease);
+}
+
+.ghost-frame::before {
+	border-top: var(--t-bracket-weight) solid var(--t-bracket-color);
+	border-left: var(--t-bracket-weight) solid var(--t-bracket-color);
+	/* Clip everything but the two corners, leaving an L at each end. */
+	clip-path: polygon(
+		0 0,
+		var(--t-bracket-size) 0,
+		var(--t-bracket-size) var(--t-bracket-weight),
+		var(--t-bracket-weight) var(--t-bracket-weight),
+		var(--t-bracket-weight) var(--t-bracket-size),
+		0 var(--t-bracket-size)
+	);
+}
+
+.ghost-frame::after {
+	border-bottom: var(--t-bracket-weight) solid var(--t-bracket-color);
+	border-right: var(--t-bracket-weight) solid var(--t-bracket-color);
+	clip-path: polygon(
+		100% 100%,
+		calc(100% - var(--t-bracket-size)) 100%,
+		calc(100% - var(--t-bracket-size)) calc(100% - var(--t-bracket-weight)),
+		calc(100% - var(--t-bracket-weight)) calc(100% - var(--t-bracket-weight)),
+		calc(100% - var(--t-bracket-weight)) calc(100% - var(--t-bracket-size)),
+		100% calc(100% - var(--t-bracket-size))
+	);
+}
+
+/* The brackets appear on hover, not at rest — a resting page of framed cards
+   would be all ornament. Focus counts as hover so keyboard users see it too. */
+.ghost-frame:hover::before,
+.ghost-frame:hover::after,
+:focus-visible .ghost-frame::before,
+:focus-visible .ghost-frame::after {
+	opacity: 1;
+}
+
+.ghost-frame:hover .ghost-frame__media {
+	transform: scale(1.02);
+}
+
+/* Play badge for video entries. */
+.ghost-frame__play {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	pointer-events: none;
+}
+
+.ghost-frame__play span {
+	display: grid;
+	place-items: center;
+	width: 3.25rem;
+	height: 3.25rem;
+	border-radius: var(--t-radius-pill);
+	background-color: color-mix(in srgb, var(--pure-black) 55%, transparent);
+	color: var(--pure-white);
+	backdrop-filter: blur(4px);
+	transition: background-color var(--t-duration) var(--t-ease);
+}
+
+.ghost-frame:hover .ghost-frame__play span {
+	background-color: var(--t-accent);
+}
+
+/* Duration, bottom-right, over the footage. */
+.ghost-frame__duration {
+	position: absolute;
+	right: var(--t-space-3);
+	bottom: var(--t-space-3);
+	padding: 0.125rem var(--t-space-2);
+	border-radius: var(--t-radius-control);
+	background-color: color-mix(in srgb, var(--pure-black) 70%, transparent);
+	color: var(--pure-white);
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-2xs);
+	font-variant-numeric: tabular-nums;
+}
+
+/* No feature image. Rather than hiding the slot and letting the grid collapse,
+   the frame stays and shows the hairline hatch — a deliberate empty plate. */
+.ghost-frame--empty {
+	background-color: var(--t-bg-sunken);
+	background-image: repeating-linear-gradient(
+		135deg,
+		var(--t-line-subtle) 0,
+		var(--t-line-subtle) 1px,
+		transparent 1px,
+		transparent 10px
+	);
+}

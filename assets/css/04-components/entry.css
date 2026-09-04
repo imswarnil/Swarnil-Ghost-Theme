@@ -1,0 +1,104 @@
+/* =============================================================================
+   4 · COMPONENT — entry
+   =============================================================================
+   A post as a line in a call sheet rather than as a card: a number, a rule, the
+   title, and the metadata pushed to the right. This is the theme's default way
+   of listing posts, and the thing that most distinguishes the homepage from a
+   grid of thumbnails.
+
+   Media is optional and small — a strip, not a hero. A list of entries with no
+   images at all still looks intentional, which matters for a publication that
+   writes more than it shoots.
+   ========================================================================== */
+
+.ghost-entry {
+	position: relative;
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	gap: var(--t-space-3) var(--t-space-5);
+	padding-block: var(--t-space-6);
+	border-bottom: var(--t-hair) solid var(--t-line);
+	align-items: start;
+}
+
+/* The number column. Counter rather than markup, so the templates never have to
+   pass an index and the numbering stays right when a list is filtered. */
+.ghost-entry__index {
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-xs);
+	color: var(--t-fg-faint);
+	font-variant-numeric: tabular-nums;
+	padding-top: 0.35em;
+	min-width: 2ch;
+}
+
+.ghost-entry__body {
+	display: flex;
+	flex-direction: column;
+	gap: var(--t-space-2);
+	min-width: 0;
+}
+
+.ghost-entry__title {
+	margin: 0;
+	font-size: var(--t-text-xl);
+	line-height: var(--t-leading-snug);
+}
+
+.ghost-entry__link {
+	color: inherit;
+	text-decoration: none;
+}
+
+.ghost-entry__link::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+}
+
+.ghost-entry:hover .ghost-entry__link {
+	color: var(--t-accent);
+}
+
+.ghost-entry__excerpt {
+	margin: 0;
+	max-width: var(--t-w-prose);
+	color: var(--t-fg-muted);
+	font-size: var(--t-text-sm);
+	line-height: var(--t-leading-relaxed);
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+/* Optional media strip, third column on wide screens only. */
+.ghost-entry__media {
+	display: none;
+	margin: 0;
+}
+
+@media (min-width: 52rem) {
+	.ghost-entry {
+		grid-template-columns: auto minmax(0, 1fr) 9rem;
+	}
+
+	.ghost-entry__media {
+		display: block;
+		grid-column: 3;
+		grid-row: 1;
+	}
+
+	/* When a post has no image, the third column stays empty rather than
+	   letting the text reflow — the numbers and titles must stay aligned down
+	   the page whatever the images do. */
+	.ghost-entry--no-media .ghost-entry__body {
+		grid-column: 2;
+	}
+}
+
+.ghost-entry__tags {
+	position: relative;
+	z-index: 2;
+}

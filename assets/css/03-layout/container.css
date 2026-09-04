@@ -1,0 +1,32 @@
+/* =============================================================================
+   3 · LAYOUT — container
+   =============================================================================
+   The only thing in the theme allowed to set a horizontal bound. Every other
+   component fills the width it is given, which is what keeps a card usable in
+   the reading column, in a grid and inside a shelf without variants.
+   ========================================================================== */
+
+.ghost-container {
+	width: 100%;
+	max-width: var(--t-w-site);
+	margin-inline: auto;
+	padding-inline: var(--t-gutter);
+}
+
+/* The reading column. Used for post and page bodies, and for anything that is
+   primarily text — an author bio, an error message. */
+.ghost-container--prose {
+	max-width: var(--t-w-prose);
+}
+
+/* Wider than prose, narrower than the site. For grids that would look thin in
+   the reading column but sparse at full width. */
+.ghost-container--wide {
+	max-width: var(--t-w-wide);
+}
+
+/* Edge to edge, gutters kept. For shelves, which are meant to run off the side
+   of the screen as a hint that they scroll. */
+.ghost-container--full {
+	max-width: none;
+}

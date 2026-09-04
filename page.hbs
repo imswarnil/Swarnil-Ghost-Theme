@@ -1,0 +1,39 @@
+{{!--
+    A single page.
+
+    A page is a post without a byline, tags or read-next — it is not part of the
+    chronology. The body styling is identical so that anything pasted into the
+    editor behaves the same way in both.
+--}}
+{{!< default}}
+
+{{#post}}
+<article class="ghost-post ghost-page">
+    <div class="ghost-container">
+
+        {{!-- Ghost's page editor has a "Show title and feature image" switch.
+             When a publisher turns it off they are building a landing page whose
+             own first block is the headline, so the theme must not print a
+             second one above it. --}}
+        {{#if @page.show_title_and_feature_image}}
+            <header>
+                <h1 class="ghost-page__title">{{title}}</h1>
+            </header>
+
+            {{#if feature_image}}
+                <figure class="ghost-post__feature">
+                    {{> "frame" src=feature_image alt=title eager=true}}
+                    {{#if feature_image_caption}}
+                        <figcaption class="ghost-post__feature-caption">{{feature_image_caption}}</figcaption>
+                    {{/if}}
+                </figure>
+            {{/if}}
+        {{/if}}
+
+        <div class="ghost-post__body ghost-prose">
+            {{content}}
+        </div>
+
+    </div>
+</article>
+{{/post}}

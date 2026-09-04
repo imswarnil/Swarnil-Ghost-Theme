@@ -1,0 +1,63 @@
+{{!--
+    Post template: Video.
+
+    Selectable per post in Ghost admin under Post settings → Template. The
+    player leads, the writing becomes a description panel beside it, and the
+    rest of the series follows.
+
+    Ghost puts an embedded player inside the post body as a Koenig embed card.
+    This template does not try to lift it out of the content — moving nodes
+    around after render is fragile and breaks the moment Ghost changes its
+    markup. Instead the feature image becomes the poster, linking through to
+    wherever the video lives, and the embed plays inline in the body where the
+    author placed it.
+
+    Chapters are ordinary list items in the post that begin with a timestamp.
+    assets/js/chapters.js copies them into the panel. Written that way they
+    still make sense in the RSS feed, in an email, and with scripting off.
+--}}
+{{!< default}}
+
+{{#post}}
+<article class="ghost-post ghost-video">
+    <div class="ghost-container">
+
+        {{#if feature_image}}
+            <div class="ghost-video__player" data-video-player>
+                <img class="ghost-video__poster" src="{{img_url feature_image size="xxl"}}" alt="{{title}}" loading="eager" fetchpriority="high">
+                <span class="ghost-frame__play"><span>{{> "icon" name="play"}}</span></span>
+            </div>
+        {{/if}}
+
+        <div class="ghost-video__panel">
+
+            <div>
+                <div class="ghost-video__meta">
+                    {{> "tags"}}
+                    <h1 class="ghost-video__title">{{title}}</h1>
+                    {{> "byline"}}
+                </div>
+
+                <div class="ghost-post__body ghost-prose" data-chapters-source data-toc-source>
+                    {{content}}
+                </div>
+
+                <div class="ghost-post__footer">
+                    {{> "author-card"}}
+                    {{> "comments"}}
+                </div>
+            </div>
+
+            <aside>
+                <h2 class="ghost-index__title">Chapters</h2>
+                <ol class="ghost-video__chapters" data-chapters></ol>
+            </aside>
+
+        </div>
+
+    </div>
+
+    {{> "read-next"}}
+
+</article>
+{{/post}}

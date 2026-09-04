@@ -1,0 +1,110 @@
+# Deploys the theme to a Ghost site.
+#
+# Uses Ghost's own action, which talks to the Admin API: it zips the working
+# directory, uploads it as a theme, and activates it. There is no SSH, no FTP
+# and nothing on the server to configure.
+#
+# ── Required secrets ────────────────────────────────────────────────────────
+#
+#   GHOST_ADMIN_API_URL   the site's URL, e.g. https://imswarnil.com
+#                         No trailing path — just the origin Ghost is served on.
+#
+#   GHOST_ADMIN_API_KEY   a Custom Integration's Admin API key, in the form
+#                         <id>:<secret>. Ghost shows it as one string; paste it
+#                         whole, including the colon.
+#
+# ── Creating the key ────────────────────────────────────────────────────────
+#
+#   1. In Ghost admin: Settings → Advanced → Integrations → Add custom integration
+#   2. Name it something you will recognise later, e.g. "Theme deploy"
+#   3. Copy the **Admin API key** — not the Content API key, which cannot write
+#   4. Also copy the API URL shown beside it
+#   5. In GitHub: Settings → Secrets and variables → Actions → New repository secret
+#
+# The Admin API key is a write credential for the whole site. Keep it in GitHub
+# Secrets, never in this file, and revoke the integration in Ghost if it leaks.
+#
+# ── When it runs ────────────────────────────────────────────────────────────
+#
+# On a published release, and on demand. Deliberately not on every push to main:
+# activating a theme changes a live site, and that should be a decision rather
+# than a side effect of a commit. Use the manual run to push work in progress.
+
+name: Deploy theme
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Which site to deploy to
+        type: environment
+        required: true
+        default: production
+
+permissions:
+  contents: read
+
+# Never let two deploys overwrite each other. In-progress runs finish, because
+# cancelling half way through an upload leaves Ghost with a partial theme.
+concurrency:
+  group: deploy-theme
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment || 'production' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      # The design system is a local file: dependency resolved by a relative
+      # path, which does not exist on a runner. The compiled stylesheet in
+      # assets/built/ already contains it, so a failed install is survivable.
+      - name: Install
+        run: npm ci --omit=optional || npm install --no-audit --no-fund
+
+      - name: Build
+        run: npm run build
+
+      # Deploying a theme Ghost would reject wastes a release and leaves the
+      # site on the old version with no clear reason why.
+      - name: Validate with gscan
+        run: npm run test:ci
+
+      - name: Deploy to Ghost
+        uses: TryGhost/action-deploy-theme@v1
+        with:
+          api-url: ${{ secrets.GHOST_ADMIN_API_URL }}
+          api-key: ${{ secrets.GHOST_ADMIN_API_KEY }}
+          # The name Ghost files it under. It must match package.json's `name`,
+          # or each deploy installs a second theme instead of replacing the
+          # first.
+          theme-name: swarnil
+          # Everything that is not the theme. The action zips the working
+          # directory, so without this the buyer documentation, the lessons and
+          # the demo content would all be uploaded to the site.
+          exclude: |
+            .github
+            .git
+            docs
+            learn
+            demo
+            scripts
+            abstract
+            node_modules
+            assets/css
+            assets/js
+            package-lock.json
+            CHANGELOG.md
+            *.zip
+            .stylelintrc.json
+            postcss.config.mjs

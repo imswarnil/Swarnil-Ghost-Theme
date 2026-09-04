@@ -1,0 +1,44 @@
+/* =============================================================================
+   3 · LAYOUT — shell
+   =============================================================================
+   The page frame: header, main, footer, stacked, with the footer pinned to the
+   bottom of short pages. Using a grid rather than flex here means an empty
+   `main` (a tag with no posts, a filtered archive) still pushes the footer down
+   instead of stranding it mid-screen.
+   ========================================================================== */
+
+.ghost-shell {
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+	min-height: 100vh;
+	min-height: 100dvh;
+}
+
+.ghost-shell__main {
+	/* Establishes a containing block so full-bleed sections inside a template
+	   can escape the container without escaping the page. */
+	position: relative;
+	min-width: 0;
+}
+
+/* Skip links. Present on every page and visually hidden until focused — the
+   first thing a keyboard user meets, and a marketplace accessibility item. */
+.ghost-skip {
+	position: absolute;
+	top: var(--t-space-3);
+	left: var(--t-space-3);
+	z-index: calc(var(--t-z-nav) + 1);
+	padding: var(--t-space-2) var(--t-space-4);
+	background-color: var(--t-bg-raised);
+	color: var(--t-fg);
+	border: var(--t-hair) solid var(--t-line-strong);
+	border-radius: var(--t-radius-control);
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-xs);
+	text-decoration: none;
+	transform: translateY(-200%);
+}
+
+.ghost-skip:focus {
+	transform: translateY(0);
+}

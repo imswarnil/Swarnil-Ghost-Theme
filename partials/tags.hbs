@@ -1,0 +1,22 @@
+{{!--
+    Public tags for a post.
+
+    visibility="public" filters out Ghost's internal tags — the ones written
+    `#video`, `#wide` and so on, which this theme uses to switch layouts. They
+    are configuration and must never reach the reader.
+
+    Renders nothing at all when a post has no public tags, rather than an empty
+    list element that would still occupy a gap in the grid.
+--}}
+{{#if tags}}
+    <ul class="ghost-tags {{class}}">
+        {{#foreach tags visibility="public"}}
+            <li class="ghost-tags__item">
+                <a class="ghost-tags__link" href="{{url}}">
+                    {{name}}
+                    {{#if ../showCount}}<span class="ghost-tags__count">{{count.posts}}</span>{{/if}}
+                </a>
+            </li>
+        {{/foreach}}
+    </ul>
+{{/if}}

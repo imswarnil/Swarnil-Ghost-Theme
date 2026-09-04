@@ -1,0 +1,194 @@
+/* =============================================================================
+   1 · CONTRACT — the theme's private token vocabulary
+   =============================================================================
+
+   Every `--t-*` token below is an alias onto a design-system token. That
+   indirection is the whole point:
+
+     · Component CSS never names a design-system token, so the design system
+       can be re-versioned or replaced by editing only this file.
+     · Light and dark need no work here. The design system re-points its own
+       semantic aliases when `data-theme` changes on <html>, and because these
+       are `var()` references rather than copied values, `--t-*` follows along
+       automatically. There is no dark-mode block in this file, and there
+       should never need to be one.
+
+   The exceptions are at the bottom: a handful of tokens the design system has
+   no opinion about because they are specific to a Ghost theme — feature-image
+   crop, header height, the width of the reading column.
+   ========================================================================== */
+
+:root {
+	/* ── Surfaces ─────────────────────────────────────────────────────────────
+	   canvas is the page itself; raised is anything that sits above it
+	   (a card, a dropdown); sunken is a well (code block, input, table head). */
+	--t-bg: var(--bg-canvas);
+	--t-bg-raised: var(--bg-raised);
+	--t-bg-sunken: var(--bg-sunken);
+	--t-bg-muted: var(--bg-muted);
+	--t-bg-inverse: var(--bg-inverse);
+	--t-bg-media: var(--bg-media);
+	--t-bg-scrim: var(--bg-scrim);
+
+	/* ── Foreground ───────────────────────────────────────────────────────────
+	   Four steps only. If a fifth seems necessary, the layout is doing the work
+	   that hierarchy should be doing. */
+	--t-fg: var(--fg-default);
+	--t-fg-muted: var(--fg-muted);
+	--t-fg-subtle: var(--fg-subtle);
+	--t-fg-faint: var(--fg-faint);
+	--t-fg-on-inverse: var(--fg-on-inverse);
+	--t-fg-on-accent: var(--fg-on-accent);
+
+	/* ── Lines ────────────────────────────────────────────────────────────────
+	   This theme is built out of hairlines, so these carry unusual weight.
+	   `--t-line` is the default rule between entries; `--t-line-strong` is
+	   reserved for edges that must survive a screenshot. */
+	--t-line: var(--line-default);
+	--t-line-subtle: var(--line-subtle);
+	--t-line-strong: var(--line-strong);
+	--t-line-inverse: var(--line-inverse);
+	--t-hair: var(--border-hair);
+
+	/* ── Accent ───────────────────────────────────────────────────────────────
+	   One colour, rationed. It marks what is live, new, or under the cursor —
+	   never decoration. Ghost's own `accent_color` setting overrides it in
+	   default.hbs, so a publisher can rebrand without touching CSS. */
+	--t-accent: var(--accent);
+	--t-accent-hover: var(--accent-hover);
+	--t-accent-soft: var(--accent-soft);
+	--t-accent-ring: var(--accent-ring);
+	--t-link: var(--fg-default);
+	--t-link-hover: var(--t-accent);
+
+	/* ── Type ─────────────────────────────────────────────────────────────────
+	   Three roles. `slate` is the monospaced voice used for metadata — dates,
+	   counts, entry numbers — named after the clapperboard slate. The display
+	   face is re-pointed by the typeface_pairing setting in 01-contract/typography.css. */
+	--t-font-display: var(--font-display);
+	--t-font-body: var(--font-body);
+	--t-font-slate: var(--font-slate);
+	--t-text-2xs: var(--text-2xs);
+	--t-text-xs: var(--text-xs);
+	--t-text-sm: var(--text-sm);
+	--t-text-base: var(--text-base);
+	--t-text-md: var(--text-md);
+	--t-text-lg: var(--text-lg);
+	--t-text-xl: var(--text-xl);
+	--t-text-2xl: var(--text-2xl);
+	--t-text-3xl: var(--text-3xl);
+	--t-text-4xl: var(--text-4xl);
+	--t-text-5xl: var(--text-5xl);
+	--t-weight-regular: var(--weight-regular);
+	--t-weight-medium: var(--weight-medium);
+	--t-weight-semibold: var(--weight-semibold);
+	--t-weight-bold: var(--weight-bold);
+	--t-leading-tight: var(--leading-tight);
+	--t-leading-snug: var(--leading-snug);
+	--t-leading-normal: var(--leading-normal);
+	--t-leading-relaxed: var(--leading-relaxed);
+	--t-tracking-tight: var(--tracking-tight);
+	--t-tracking-normal: var(--tracking-normal);
+	--t-tracking-slate: var(--tracking-slate);
+
+	/* ── Space ────────────────────────────────────────────────────────────────
+	   The ladder is the design system's. Aliased so components never reach for
+	   a raw step they were not given. */
+	--t-space-1: var(--space-1);
+	--t-space-2: var(--space-2);
+	--t-space-3: var(--space-3);
+	--t-space-4: var(--space-4);
+	--t-space-5: var(--space-5);
+	--t-space-6: var(--space-6);
+	--t-space-8: var(--space-8);
+	--t-space-10: var(--space-10);
+	--t-space-12: var(--space-12);
+	--t-space-16: var(--space-16);
+	--t-space-20: var(--space-20);
+	--t-space-24: var(--space-24);
+
+	/* ── Shape ────────────────────────────────────────────────────────────────
+	   Squarer than most themes on purpose. Round corners read as "app"; this
+	   one is meant to read as print. */
+	--t-radius-media: var(--radius-media);
+	--t-radius-card: var(--radius-card);
+	--t-radius-control: var(--radius-control);
+	--t-radius-pill: var(--radius-pill);
+
+	/* ── Elevation & motion ───────────────────────────────────────────────── */
+	--t-shadow-raised: var(--shadow-1);
+	--t-shadow-overlay: var(--shadow-4);
+	--t-ring-focus: var(--ring-focus);
+	--t-ease: cubic-bezier(0.2, 0, 0, 1);
+	--t-duration: 180ms;
+	--t-duration-slow: 320ms;
+
+	/* ── Z-index ──────────────────────────────────────────────────────────── */
+	--t-z-nav: var(--z-nav);
+	--t-z-dropdown: var(--z-dropdown);
+	--t-z-overlay: var(--z-overlay);
+
+	/* =========================================================================
+	   Theme-only tokens — no design-system equivalent exists for these.
+	   ====================================================================== */
+
+	/* Page measures. `--t-w-prose` is the reading column; `--t-w-site` is the
+	   outer bound; `--t-w-wide` is for grids that may exceed the reading column
+	   without going full-bleed. */
+	--t-w-prose: 42rem;
+	--t-w-site: 78rem;
+	--t-w-wide: 62rem;
+	--t-gutter: clamp(1.25rem, 4vw, 2.5rem);
+
+	/* Header. Kept as a variable because sticky offsets, the scroll-margin on
+	   heading anchors, and the table-of-contents all have to agree with it. */
+	--t-header-h: 4rem;
+
+	/* Feature images. Overwritten inline in default.hbs from the
+	   feature_image_ratio custom setting; this is the fallback. */
+	--t-feature-ratio: 16 / 9;
+
+	/* The viewfinder bracket drawn on media by .ghost-frame. */
+	--t-bracket-size: 0.875rem;
+	--t-bracket-weight: 2px;
+	--t-bracket-inset: 0.5rem;
+	--t-bracket-color: var(--t-accent);
+}
+
+/* =============================================================================
+   Publisher accent
+   =============================================================================
+   Ghost injects whatever colour the publisher picked in Design settings as
+   `--ghost-accent-color`. Honouring it is what makes that screen actually do
+   something, so it wins over the design system's own signal colour.
+
+   The three derived accents are computed from whichever one won, rather than
+   aliased to the design system's ramp steps. If they were aliased, a publisher
+   who set a blue accent would get a blue button with a vermilion hover — the
+   base would follow their choice and the states would not.
+
+   `color-mix()` is supported by every browser in the browserslist target; the
+   fallback declaration before each one covers anything older. */
+/* The repeated declarations below are the point, not an oversight. Each pair is
+   a plain fallback followed by the color-mix() version, so a browser that does
+   not understand color-mix keeps the first value rather than dropping the
+   property altogether. stylelint cannot tell that apart from a copy-paste slip,
+   so the two rules are switched off for this block only. */
+/* stylelint-disable no-duplicate-selectors, declaration-block-no-duplicate-custom-properties */
+:root {
+	--t-accent: var(--ghost-accent-color, var(--accent));
+	--t-accent-hover: var(--accent-hover);
+	--t-accent-hover: color-mix(in oklab, var(--t-accent) 88%, black);
+	--t-accent-soft: var(--accent-soft);
+	--t-accent-soft: color-mix(in oklab, var(--t-accent) 12%, transparent);
+	--t-accent-ring: var(--accent-ring);
+	--t-accent-ring: color-mix(in oklab, var(--t-accent) 32%, transparent);
+}
+/* stylelint-enable no-duplicate-selectors, declaration-block-no-duplicate-custom-properties */
+
+/* In dark mode the hover step has to go lighter, not darker, or it disappears
+   into the surface it sits on. */
+:root[data-theme='dark'] {
+	--t-accent-hover: color-mix(in oklab, var(--t-accent) 82%, white);
+	--t-accent-soft: color-mix(in oklab, var(--t-accent) 18%, transparent);
+}

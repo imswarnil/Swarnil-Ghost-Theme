@@ -1,0 +1,48 @@
+{{!--
+    Author archive.
+
+    Same header shape as the tag archive, plus a portrait when the author has
+    uploaded one. Keeping the two archives visually identical is deliberate: a
+    reader arriving from a byline and a reader arriving from a tag should not
+    feel they have landed on two different sites.
+--}}
+{{!< default}}
+
+<div class="ghost-container">
+
+    {{#author}}
+        <header class="ghost-archive__header">
+            <p class="ghost-archive__kicker">Author</p>
+
+            <div class="ghost-archive__profile">
+                {{#if profile_image}}
+                    <img src="{{img_url profile_image size="s"}}" alt="{{name}}" loading="eager" width="72" height="72">
+                {{/if}}
+                <h1 class="ghost-archive__title">{{name}}</h1>
+            </div>
+
+            {{#if bio}}
+                <p class="ghost-archive__description">{{bio}}</p>
+            {{/if}}
+
+            <div class="ghost-archive__meta ghost-slate">
+                {{#if location}}<span class="ghost-slate__item">{{location}}</span>{{/if}}
+                {{#if website}}
+                    <span class="ghost-slate__item">
+                        <a href="{{website}}" target="_blank" rel="noopener">Website</a>
+                    </span>
+                {{/if}}
+                <span class="ghost-slate__item">{{plural ../pagination.total empty="No posts" singular="% post" plural="% posts"}}</span>
+            </div>
+        </header>
+    {{/author}}
+
+    {{> "post-list"
+        posts=posts
+        layout=@custom.homepage_layout
+        emptyTitle="Nothing published yet"
+        emptyText="Posts by this author will be listed here."}}
+
+    {{pagination}}
+
+</div>

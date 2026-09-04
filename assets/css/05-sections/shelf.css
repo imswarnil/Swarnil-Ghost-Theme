@@ -1,0 +1,74 @@
+/* =============================================================================
+   5 · SECTION — shelf
+   =============================================================================
+   A horizontally scrolling row of cards for one tag. The `homepage_shelf_tags`
+   setting names which tags get one, so a publisher can put "video" and "notes"
+   on the homepage without touching a template.
+
+   Scroll snapping and `overflow-x` do the work; there is no carousel script,
+   no autoplay, and no arrows that stop existing on touch. The row bleeds past
+   the container on the right so the cut-off card advertises that it scrolls.
+   ========================================================================== */
+
+.ghost-shelf {
+	padding-block: var(--t-space-12);
+	border-bottom: var(--t-hair) solid var(--t-line);
+}
+
+.ghost-shelf__head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: var(--t-space-4);
+	margin-bottom: var(--t-space-6);
+}
+
+.ghost-shelf__title {
+	margin: 0;
+	font-size: var(--t-text-2xl);
+}
+
+.ghost-shelf__more {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--t-space-2);
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-2xs);
+	text-transform: uppercase;
+	letter-spacing: var(--t-tracking-slate);
+	color: var(--t-fg-muted);
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.ghost-shelf__more:hover {
+	color: var(--t-accent);
+}
+
+.ghost-shelf__track {
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: minmax(15rem, 20rem);
+	gap: var(--t-space-6);
+	overflow-x: auto;
+	scroll-snap-type: x proximity;
+	/* Room for the focus ring on the last card, which would otherwise be
+	   clipped by the scroll container. */
+	padding-block: var(--t-space-1);
+	/* Bleed to the right edge of the viewport. */
+	margin-right: calc(var(--t-gutter) * -1);
+	padding-right: var(--t-gutter);
+	scrollbar-width: thin;
+	scrollbar-color: var(--t-line-strong) transparent;
+}
+
+.ghost-shelf__item {
+	scroll-snap-align: start;
+	min-width: 0;
+}
+
+/* A scroll container is focusable and must be reachable and labelled, or the
+   cards past the fold are unreachable by keyboard. */
+.ghost-shelf__track:focus-visible {
+	outline-offset: 4px;
+}

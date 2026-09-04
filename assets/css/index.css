@@ -1,0 +1,102 @@
+/* =============================================================================
+   SWARNIL — stylesheet manifest
+   =============================================================================
+
+   This file is the only entry point. `npm run build:css` runs it through
+   PostCSS and writes a single flat file to assets/built/index.css, which is
+   what Ghost serves and what ships to a buyer. Nothing here is loaded at
+   runtime by the browser — every @import below is inlined at build time.
+
+   THE LAYER ORDER IS THE ARCHITECTURE. Read it top to bottom:
+
+     0 · design system   Tokens only, from the Frame & Signal design system.
+                         Provides the colour ramps, the type scale, spacing,
+                         and the light/dark machinery. No component classes.
+
+     1 · contract        Re-publishes those primitives under `--t-*` names.
+                         This is the theme's private vocabulary and the ONLY
+                         thing component CSS is allowed to read. Swap the
+                         design system underneath and only this layer changes.
+
+     2 · base            Element defaults: the document, headings, links.
+
+     3 · layout          The page skeleton — shell, header, footer, containers.
+
+     4 · components      Reusable objects with parts and states.
+
+     5 · sections        Full-width bands assembled from components.
+
+     6 · content         Styles for what the Ghost editor emits — prose and
+                         Koenig cards. A publisher never writes these classes;
+                         Ghost does.
+
+     7 · templates       The few rules that only make sense on one route.
+
+     8 · utilities       Single-purpose helpers. Last, so they can win.
+
+   RULE: a file in layers 3–8 may read `--t-*` tokens and nothing else. Reaching
+   past the contract into a design-system primitive is what makes light/dark and
+   the typeface settings quietly stop working.
+   ========================================================================== */
+
+/* 0 · Design system — tokens only. Component layers are deliberately not
+   imported: this theme brings its own components under the `ghost-` prefix. */
+@import url('creator-design-system/src/1-foundation/00-reset.css');
+@import url('creator-design-system/src/1-foundation/01-color.css');
+@import url('creator-design-system/src/1-foundation/02-typography.css');
+@import url('creator-design-system/src/1-foundation/03-space.css');
+@import url('creator-design-system/src/1-foundation/04-elevation.css');
+@import url('creator-design-system/src/1-foundation/05-motion.css');
+@import url('creator-design-system/src/1-foundation/08-a11y.css');
+
+/* 1 · Contract */
+@import url('01-contract/tokens.css');
+@import url('01-contract/typography.css');
+
+/* 2 · Base */
+@import url('02-base/document.css');
+@import url('02-base/typography.css');
+
+/* 3 · Layout */
+@import url('03-layout/container.css');
+@import url('03-layout/shell.css');
+@import url('03-layout/header.css');
+@import url('03-layout/sidebar.css');
+@import url('03-layout/footer.css');
+
+/* 4 · Components */
+@import url('04-components/icon.css');
+@import url('04-components/brand.css');
+@import url('04-components/nav.css');
+@import url('04-components/button.css');
+@import url('04-components/slate.css');
+@import url('04-components/frame.css');
+@import url('04-components/card.css');
+@import url('04-components/entry.css');
+@import url('04-components/tag-list.css');
+@import url('04-components/author.css');
+@import url('04-components/pagination.css');
+@import url('04-components/toc.css');
+@import url('04-components/toggle.css');
+@import url('04-components/empty.css');
+
+/* 5 · Sections */
+@import url('05-sections/lead.css');
+@import url('05-sections/shelf.css');
+@import url('05-sections/index.css');
+@import url('05-sections/subscribe.css');
+@import url('05-sections/read-next.css');
+
+/* 6 · Content */
+@import url('06-content/prose.css');
+@import url('06-content/cards.css');
+
+/* 7 · Templates */
+@import url('07-templates/home.css');
+@import url('07-templates/post.css');
+@import url('07-templates/archive.css');
+@import url('07-templates/video.css');
+@import url('07-templates/error.css');
+
+/* 8 · Utilities */
+@import url('08-utilities/helpers.css');

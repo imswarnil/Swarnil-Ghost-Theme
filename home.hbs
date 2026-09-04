@@ -1,0 +1,13 @@
+{{!--
+    The homepage.
+
+    Ghost uses this file for "/" automatically when it exists — no routing
+    configuration is needed for that.
+
+    The body lives in a partial so the two preview routes, /home/sidebar/ and
+    /home/full/, can render the identical page with the sidebar forced on or
+    off. See partials/home-body.hbs.
+--}}
+{{!< default}}
+
+{{> "home-body" sidebar=@custom.list_sidebar}}

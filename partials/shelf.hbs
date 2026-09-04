@@ -1,0 +1,51 @@
+{{!--
+    A horizontal shelf of posts for one tag.
+
+    Driven by the homepage_shelf_tags setting — a comma-separated list of tag
+    slugs. This partial renders one shelf; home.hbs decides how many there are.
+
+    Two Ghost quirks meet in this file, and they pull in opposite directions.
+
+    {{#get}} invokes its body with the API response as the context. So inside the
+    inner query, a bare {{name}} resolves against that response and comes out
+    empty — the shelf headings render blank. Block parameters are lexically
+    scoped and survive the switch, which is why the heading reads
+    {{shelfTag.name}}.
+
+    But a {{#get}} `filter` string is resolved against the *context*, by Ghost's
+    own path resolver, which cannot see block parameters at all. So the filter
+    has to use the bare {{slug}} from the surrounding foreach.
+
+    Hence the apparent inconsistency below: block parameter for display, plain
+    context path inside the filter. Both are required, and swapping either one
+    fails silently.
+
+    The row is a scroll container, so it is focusable and labelled — cards past
+    the edge have to stay reachable by keyboard, which a carousel with hidden
+    slides would not be.
+
+    Parameters
+      slug   the tag to draw from (required)
+--}}
+{{#get "tags" filter="slug:{{slug}}" limit="1" as |shelfTags|}}
+    {{#foreach shelfTags as |shelfTag|}}
+        {{#get "posts" filter="tag:{{slug}}" limit="8" include="authors,tags" as |shelfPosts|}}
+            <section class="ghost-shelf">
+                <div class="ghost-container">
+                    <div class="ghost-shelf__head">
+                        <h2 class="ghost-shelf__title">{{shelfTag.name}}</h2>
+                        <a class="ghost-shelf__more" href="{{shelfTag.url}}">
+                            All {{shelfTag.name}} {{> "icon" name="arrow-right"}}
+                        </a>
+                    </div>
+
+                    <ul class="ghost-shelf__track" tabindex="0" aria-label="{{shelfTag.name}} posts, scrollable">
+                        {{#foreach shelfPosts}}
+                            <li class="ghost-shelf__item">{{> "card"}}</li>
+                        {{/foreach}}
+                    </ul>
+                </div>
+            </section>
+        {{/get}}
+    {{/foreach}}
+{{/get}}

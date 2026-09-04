@@ -1,0 +1,95 @@
+/* =============================================================================
+   7 · TEMPLATE — video
+   =============================================================================
+   A post tagged `#video` gets a player-first layout: the embed runs full width
+   at the top, the title and description sit under it like a description panel,
+   and the rest of the series follows as a shelf.
+
+   The tag is internal (`#video`) rather than public, so choosing this layout
+   does not add a visible tag to the post. That is the standard Ghost idiom for
+   "layout switch", and it is documented for buyers in docs/.
+   ========================================================================== */
+
+.ghost-video {
+	padding-block: var(--t-space-8) var(--t-space-16);
+}
+
+.ghost-video__player {
+	position: relative;
+	background-color: var(--pure-black);
+	border-radius: var(--t-radius-media);
+	overflow: hidden;
+	aspect-ratio: 16 / 9;
+}
+
+/* Ghost wraps an embedded player in .kg-embed-card inside the post body. On this
+   template the player is lifted out of the body and placed here instead, so the
+   iframe has to be told to fill the box. */
+.ghost-video__player iframe,
+.ghost-video__player video {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	border: 0;
+}
+
+/* No embed on the post: fall back to the feature image with a play badge, which
+   links through to wherever the video actually lives. */
+.ghost-video__poster {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.ghost-video__panel {
+	display: grid;
+	gap: var(--t-space-8);
+	padding-top: var(--t-space-8);
+}
+
+@media (min-width: 64rem) {
+	.ghost-video__panel {
+		grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+		gap: var(--t-space-12);
+	}
+}
+
+.ghost-video__title {
+	margin: 0 0 var(--t-space-4);
+	font-size: var(--t-text-3xl);
+}
+
+.ghost-video__meta {
+	padding-bottom: var(--t-space-5);
+	border-bottom: var(--t-hair) solid var(--t-line);
+	margin-bottom: var(--t-space-6);
+}
+
+/* The chapter list, if the post supplies one. Built from timestamps in the
+   post body by assets/js/chapters.js; absent without it. */
+.ghost-video__chapters {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	border-top: var(--t-hair) solid var(--t-line);
+}
+
+.ghost-video__chapter {
+	display: flex;
+	gap: var(--t-space-4);
+	padding-block: var(--t-space-3);
+	border-bottom: var(--t-hair) solid var(--t-line-subtle);
+	font-size: var(--t-text-sm);
+}
+
+.ghost-video__stamp {
+	flex: 0 0 auto;
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-2xs);
+	color: var(--t-accent);
+	font-variant-numeric: tabular-nums;
+	padding-top: 0.2em;
+}

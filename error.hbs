@@ -1,0 +1,21 @@
+{{!--
+    Errors.
+
+    Ghost renders this for any status it does not have a more specific template
+    for. error-404.hbs handles the common case; this one covers the rest.
+
+    The stack trace only exists in development — Ghost does not pass it in
+    production — so the block simply does not render on a live site.
+--}}
+{{!< default}}
+
+<div class="ghost-container ghost-error">
+    <p class="ghost-error__code">{{error.statusCode}}</p>
+    <h1 class="ghost-error__title">{{error.message}}</h1>
+    <p class="ghost-error__message">Something went wrong at our end. The address may be right — it just could not be served.</p>
+    <a class="ghost-button ghost-button--outline" href="{{@site.url}}">Back to {{@site.title}}</a>
+
+    {{#if error.stack}}
+        <pre class="ghost-error__stack">{{error.stack}}</pre>
+    {{/if}}
+</div>

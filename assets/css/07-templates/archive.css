@@ -1,0 +1,54 @@
+/* =============================================================================
+   7 · TEMPLATE — archives
+   =============================================================================
+   Tag, author and the paginated post index share one header block: a slate
+   kicker naming what kind of archive this is, the title, an optional
+   description, and a count. The kicker is what stops a tag page and an author
+   page from looking like two different websites.
+   ========================================================================== */
+
+.ghost-archive__header {
+	padding-block: var(--t-space-16) var(--t-space-10);
+	border-bottom: 2px solid var(--t-fg);
+}
+
+.ghost-archive__kicker {
+	margin-bottom: var(--t-space-4);
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-2xs);
+	text-transform: uppercase;
+	letter-spacing: var(--t-tracking-slate);
+	color: var(--t-accent);
+}
+
+.ghost-archive__title {
+	margin: 0;
+	font-size: var(--t-text-5xl);
+}
+
+.ghost-archive__description {
+	margin: var(--t-space-5) 0 0;
+	max-width: var(--t-w-prose);
+	color: var(--t-fg-muted);
+	font-size: var(--t-text-lg);
+	line-height: var(--t-leading-relaxed);
+}
+
+.ghost-archive__meta {
+	margin-top: var(--t-space-6);
+}
+
+/* The author archive adds a portrait beside the header text. */
+.ghost-archive__profile {
+	display: flex;
+	align-items: center;
+	gap: var(--t-space-5);
+	margin-bottom: var(--t-space-6);
+}
+
+.ghost-archive__profile img {
+	width: 4.5rem;
+	height: 4.5rem;
+	border-radius: var(--t-radius-pill);
+	object-fit: cover;
+}

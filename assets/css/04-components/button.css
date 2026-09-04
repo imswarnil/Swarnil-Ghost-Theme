@@ -1,0 +1,88 @@
+/* =============================================================================
+   4 · COMPONENT — button
+   =============================================================================
+   One shape, four intents. Applied to <button> and <a> alike, so the element is
+   chosen by what it does (navigates vs acts) rather than by how it looks.
+   ========================================================================== */
+
+.ghost-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--t-space-2);
+	/* Never smaller than the 44px touch target, whatever the font size does. */
+	min-height: var(--tap-min, 2.75rem);
+	padding: var(--t-space-2) var(--t-space-5);
+	border: var(--t-hair) solid transparent;
+	border-radius: var(--t-radius-control);
+	background-color: transparent;
+	color: var(--t-fg);
+	font-family: var(--t-font-body);
+	font-size: var(--t-text-sm);
+	font-weight: var(--t-weight-medium);
+	line-height: 1;
+	text-decoration: none;
+	cursor: pointer;
+	transition: background-color var(--t-duration) var(--t-ease),
+		border-color var(--t-duration) var(--t-ease),
+		color var(--t-duration) var(--t-ease);
+}
+
+.ghost-button:disabled,
+.ghost-button[aria-disabled='true'] {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+/* Primary — the accent, used at most once per view. */
+.ghost-button--primary {
+	background-color: var(--t-accent);
+	color: var(--t-fg-on-accent);
+}
+
+.ghost-button--primary:hover {
+	background-color: var(--t-accent-hover);
+	color: var(--t-fg-on-accent);
+}
+
+/* Outline — the workhorse. */
+.ghost-button--outline {
+	border-color: var(--t-line-strong);
+}
+
+.ghost-button--outline:hover {
+	border-color: var(--t-accent);
+	color: var(--t-accent);
+}
+
+/* Quiet — for anything that must be available but not offered. */
+.ghost-button--quiet {
+	color: var(--t-fg-muted);
+	padding-inline: var(--t-space-3);
+}
+
+.ghost-button--quiet:hover {
+	background-color: var(--t-bg-muted);
+	color: var(--t-fg);
+}
+
+/* Icon-only. Always needs an aria-label — there is no visible text to read. */
+.ghost-button--icon {
+	width: var(--tap-min, 2.75rem);
+	min-height: var(--tap-min, 2.75rem);
+	padding: 0;
+	color: var(--t-fg-muted);
+}
+
+.ghost-button--icon:hover {
+	color: var(--t-fg);
+}
+
+.ghost-button--icon svg {
+	width: 1.125rem;
+	height: 1.125rem;
+}
+
+.ghost-button--block {
+	width: 100%;
+}

@@ -1,0 +1,56 @@
+/* =============================================================================
+   8 · UTILITIES
+   =============================================================================
+   Last in the cascade so they win. Kept to the few that genuinely have no
+   component home — a utility layer that grows is a sign a component is missing.
+   ========================================================================== */
+
+/* Visible to screen readers, not to the eye. Used for the labels on icon-only
+   controls and for the headings that give each landmark a name. */
+.ghost-sr {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* Hidden from everyone, including assistive technology. */
+.ghost-hidden {
+	display: none !important;
+}
+
+/* Escapes the container to the full viewport width while keeping the gutter. */
+.ghost-bleed {
+	width: 100vw;
+	max-width: 100vw;
+	margin-inline: calc(50% - 50vw);
+	padding-inline: var(--t-gutter);
+}
+
+/* Print. Not a marketplace requirement, but a reader who prints a post should
+   get the post, not the navigation. */
+@media print {
+	.ghost-header,
+	.ghost-footer,
+	.ghost-read-next,
+	.ghost-subscribe,
+	.ghost-toc,
+	.ghost-drawer {
+		display: none !important;
+	}
+
+	.ghost-post__body {
+		max-width: none;
+	}
+
+	.ghost-prose a::after {
+		content: ' (' attr(href) ')';
+		font-size: 0.8em;
+		color: #555;
+	}
+}

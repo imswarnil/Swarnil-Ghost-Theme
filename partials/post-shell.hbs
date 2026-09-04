@@ -1,0 +1,76 @@
+{{!--
+    The body of a post, in whichever layout it was given.
+
+    post.hbs and the custom-*.hbs templates all delegate here so the three
+    layouts cannot drift apart. The only thing the callers decide is the value
+    of `layout`:
+
+      post.hbs             layout=@custom.post_layout   (the site-wide default)
+      custom-wide.hbs      layout="Wide"
+      custom-immersive.hbs layout="Immersive"
+
+    Called from inside a {{#post}} block, so the post is on the context.
+
+    Parameters
+      layout   Standard | Wide | Immersive
+--}}
+<article class="ghost-post {{#match layout "Wide"}}ghost-post--wide{{/match}}{{#match layout "Immersive"}}{{#if feature_image}} ghost-post--immersive{{/if}}{{/match}}{{#if @custom.show_table_of_contents}} ghost-post--with-toc{{/if}}">
+
+    {{#match layout "Immersive"}}
+        {{#if feature_image}}
+            {{!-- Title set over the image. --}}
+            <div class="ghost-post__cover">
+                <img class="ghost-post__cover-image" src="{{img_url feature_image size="xxl"}}" alt="{{title}}" loading="eager" fetchpriority="high">
+                <div class="ghost-post__cover-inner">
+                    <div class="ghost-container">
+                        <h1 class="ghost-post__title">{{title}}</h1>
+                        {{#if custom_excerpt}}
+                            <p class="ghost-post__excerpt">{{custom_excerpt}}</p>
+                        {{/if}}
+                        <div class="ghost-post__byline">{{> "byline"}}</div>
+                    </div>
+                </div>
+            </div>
+        {{/if}}
+    {{/match}}
+
+    {{!-- The hero is its own block, outside the reading grid.
+
+         It used to be a child of .ghost-post__layout, which on wide screens is
+         a three-column grid — narrow rail, reading column, empty gutter. The
+         header landed in the rail and set the headline in a 15rem column. The
+         hero and the reading area are different shapes and belong in different
+         containers. --}}
+    <div class="ghost-container">
+        {{!-- Every layout except a working Immersive gets the standard hero.
+             Ghost has no `and` helper, so the two conditions are nested. --}}
+        {{#match layout "Immersive"}}
+            {{#unless feature_image}}
+                {{> "post-header"}}
+            {{/unless}}
+        {{else}}
+            {{> "post-header"}}
+        {{/match}}
+    </div>
+
+    <div class="ghost-container ghost-post__layout">
+
+        {{#if @custom.show_table_of_contents}}
+            <div class="ghost-post__rail">{{> "toc"}}</div>
+        {{/if}}
+
+        <div class="ghost-post__body ghost-prose" data-toc-source>
+            {{content}}
+        </div>
+
+        <div class="ghost-post__footer">
+            {{> "tags"}}
+            {{> "author-card"}}
+            {{> "comments"}}
+        </div>
+
+    </div>
+
+    {{> "read-next"}}
+
+</article>

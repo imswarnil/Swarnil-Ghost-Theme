@@ -1,0 +1,16 @@
+{{!--
+    Native Ghost comments.
+
+    {{#if comments}} is the entire gate. The helper renders nothing at all when
+    comments are off for the site or closed for this post, so there is no
+    settings check to duplicate here and no way for the two to disagree.
+
+    Ghost injects the comment UI itself through {{ghost_foot}}; this only
+    provides the heading and the box it lands in.
+--}}
+{{#if comments}}
+    <section class="ghost-comments">
+        <h2 class="ghost-comments__title">Comments</h2>
+        {{comments}}
+    </section>
+{{/if}}

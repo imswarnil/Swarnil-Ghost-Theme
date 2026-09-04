@@ -1,0 +1,28 @@
+{{!--
+    Site footer.
+
+    Carries the "Published with Ghost" credit, which the marketplace requires and
+    which should not be removed by a buyer.
+--}}
+<footer class="ghost-footer">
+    <div class="ghost-container">
+
+        {{#if @custom.footer_note}}
+            <p class="ghost-footer__note">{{@custom.footer_note}}</p>
+        {{/if}}
+
+        <div class="ghost-footer__inner">
+            <div>
+                {{> "navigation" variant="footer" type="secondary" label="Footer navigation"}}
+            </div>
+
+            <div class="ghost-footer__meta">
+                <span>&copy; {{date format="YYYY"}} {{@site.title}}</span>
+                <span class="ghost-footer__credit">
+                    <a href="https://ghost.org/" target="_blank" rel="noopener">Published with Ghost</a>
+                </span>
+            </div>
+        </div>
+
+    </div>
+</footer>

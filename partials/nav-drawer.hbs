@@ -1,0 +1,29 @@
+{{!--
+    Mobile navigation.
+
+    A native <dialog>. showModal() in drawer.js provides the focus trap, the
+    Escape key and background inertness, none of which are worth reimplementing.
+--}}
+<dialog class="ghost-drawer" id="ghost-drawer" data-drawer aria-label="Site navigation">
+    <div class="ghost-drawer__inner">
+
+        <div class="ghost-drawer__head">
+            <span class="ghost-brand">
+                <span class="ghost-brand__dot"></span>
+                <span class="ghost-brand__title">{{@site.title}}</span>
+            </span>
+            <button class="ghost-button ghost-button--icon" data-drawer-close aria-label="Close navigation">
+                {{> "icon" name="close"}}
+            </button>
+        </div>
+
+        {{> "navigation" variant="drawer" type="primary" label="Main navigation"}}
+
+        {{#if @site.members_enabled}}
+            {{#unless @member}}
+                <a class="ghost-button ghost-button--primary ghost-button--block" href="#/portal/signup">Subscribe</a>
+            {{/unless}}
+        {{/if}}
+
+    </div>
+</dialog>

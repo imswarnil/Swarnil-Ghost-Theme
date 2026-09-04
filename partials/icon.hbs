@@ -1,0 +1,36 @@
+{{!--
+    Icon set.
+
+    One partial rather than one file per glyph. The theme uses ten icons in
+    total, so a folder of nine near-identical files would be filing for its own
+    sake — the marketplace guidance is explicit about not making a partial of
+    every snippet. Adding an icon means adding a branch here.
+
+    Every icon is decorative: the control that contains it carries the label.
+    aria-hidden keeps them out of the accessibility tree entirely.
+
+    Usage:  {{> "icon" name="menu"}}
+--}}
+<svg class="ghost-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+    {{#match name "menu"}}
+        <path d="M4 7h16M4 12h16M4 17h16"/>
+    {{else match name "close"}}
+        <path d="M6 6l12 12M18 6L6 18"/>
+    {{else match name "search"}}
+        <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
+    {{else match name "sun"}}
+        <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+    {{else match name "moon"}}
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+    {{else match name "system"}}
+        <rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>
+    {{else match name "chevron-down"}}
+        <path d="M6 9.5l6 6 6-6"/>
+    {{else match name "play"}}
+        <path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/>
+    {{else match name "arrow-left"}}
+        <path d="M19 12H5M11 6l-6 6 6 6"/>
+    {{else match name "arrow-right"}}
+        <path d="M5 12h14M13 6l6 6-6 6"/>
+    {{/match}}
+</svg>

@@ -1,0 +1,100 @@
+/* =============================================================================
+   5 · SECTION — lead
+   =============================================================================
+   The large slot at the top of the homepage. Which post fills it is the
+   `homepage_lead` setting: the featured one, the latest one, or nothing.
+
+   It is the only place in the theme where a post gets a genuinely different
+   layout rather than a bigger version of the same one — media on the right,
+   words on the left, and the site introduction sharing the block.
+   ========================================================================== */
+
+.ghost-lead {
+	padding-block: var(--t-space-12) var(--t-space-16);
+	border-bottom: var(--t-hair) solid var(--t-line);
+}
+
+.ghost-lead__intro {
+	max-width: 46rem;
+	margin-bottom: var(--t-space-12);
+}
+
+.ghost-lead__site-title {
+	margin: 0 0 var(--t-space-4);
+	font-size: var(--t-text-5xl);
+	letter-spacing: var(--t-display-tracking, var(--t-tracking-tight));
+}
+
+.ghost-lead__site-description {
+	margin: 0;
+	max-width: var(--t-w-prose);
+	color: var(--t-fg-muted);
+	font-size: var(--t-text-lg);
+	line-height: var(--t-leading-relaxed);
+	text-wrap: pretty;
+}
+
+.ghost-lead__post {
+	position: relative;
+	display: grid;
+	gap: var(--t-space-6);
+	align-items: center;
+}
+
+@media (min-width: 56rem) {
+	.ghost-lead__post {
+		grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+		gap: var(--t-space-12);
+	}
+
+	/* Media second in the source order but first visually on wide screens: the
+	   heading should come first for a screen reader and for the crawler. */
+	.ghost-lead__media {
+		grid-column: 2;
+		grid-row: 1;
+	}
+}
+
+.ghost-lead__body {
+	display: flex;
+	flex-direction: column;
+	gap: var(--t-space-4);
+	min-width: 0;
+}
+
+.ghost-lead__title {
+	margin: 0;
+	font-size: var(--t-text-4xl);
+	line-height: var(--t-leading-tight);
+}
+
+.ghost-lead__link {
+	color: inherit;
+	text-decoration: none;
+}
+
+.ghost-lead__link::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+}
+
+.ghost-lead__post:hover .ghost-lead__link {
+	color: var(--t-accent);
+}
+
+.ghost-lead__excerpt {
+	margin: 0;
+	max-width: 38ch;
+	color: var(--t-fg-muted);
+	font-size: var(--t-text-md);
+	line-height: var(--t-leading-relaxed);
+}
+
+/* The lead frame keeps its brackets permanently — it is the one piece of media
+   on the page that is meant to look like it is being looked at. */
+.ghost-lead__media .ghost-frame::before,
+.ghost-lead__media .ghost-frame::after {
+	opacity: 1;
+}

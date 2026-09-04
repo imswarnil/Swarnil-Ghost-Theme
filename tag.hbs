@@ -1,0 +1,33 @@
+{{!--
+    Tag archive.
+
+    Ghost supplies the tag in the {{#tag}} block. The description and feature
+    image are both optional and frequently unset, so the header is built to look
+    finished with nothing but a name.
+--}}
+{{!< default}}
+
+<div class="ghost-container">
+
+    {{#tag}}
+        <header class="ghost-archive__header">
+            <p class="ghost-archive__kicker">Tag</p>
+            <h1 class="ghost-archive__title">{{name}}</h1>
+            {{#if description}}
+                <p class="ghost-archive__description">{{description}}</p>
+            {{/if}}
+            <div class="ghost-archive__meta ghost-slate">
+                <span class="ghost-slate__item">{{plural ../pagination.total empty="No posts" singular="% post" plural="% posts"}}</span>
+            </div>
+        </header>
+    {{/tag}}
+
+    {{> "post-list"
+        posts=posts
+        layout=@custom.homepage_layout
+        emptyTitle="Nothing tagged yet"
+        emptyText="Posts filed under this tag will be listed here."}}
+
+    {{pagination}}
+
+</div>

@@ -1,0 +1,49 @@
+/* =============================================================================
+   4 · COMPONENT — tag list
+   =============================================================================
+   Tags as small outlined chips. Used in cards, in post headers and on the tag
+   index page, where a count is appended.
+   ========================================================================== */
+
+.ghost-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--t-space-2);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.ghost-tags__link {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--t-space-2);
+	padding: 0.1875rem var(--t-space-3);
+	border: var(--t-hair) solid var(--t-line);
+	border-radius: var(--t-radius-pill);
+	color: var(--t-fg-muted);
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-2xs);
+	text-transform: uppercase;
+	letter-spacing: var(--t-tracking-slate);
+	text-decoration: none;
+	transition: border-color var(--t-duration) var(--t-ease),
+		color var(--t-duration) var(--t-ease);
+}
+
+.ghost-tags__link:hover {
+	border-color: var(--t-accent);
+	color: var(--t-accent);
+}
+
+.ghost-tags__count {
+	color: var(--t-fg-faint);
+	font-variant-numeric: tabular-nums;
+}
+
+/* Internal Ghost tags (`#slug`) are never rendered — they are configuration,
+   not taxonomy. The templates filter them with `visibility="public"`, so this
+   is a safety net rather than the mechanism. */
+.ghost-tags__item--internal {
+	display: none;
+}

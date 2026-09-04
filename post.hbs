@@ -1,0 +1,12 @@
+{{!--
+    A single post, in the layout chosen site-wide by the post_layout setting.
+
+    An individual post can override that by picking a custom template — Wide,
+    Immersive or Video — in the post settings sidebar. Those templates are
+    thin: all three end up in partials/post-shell.hbs.
+--}}
+{{!< default}}
+
+{{#post}}
+    {{> "post-shell" layout=@custom.post_layout}}
+{{/post}}

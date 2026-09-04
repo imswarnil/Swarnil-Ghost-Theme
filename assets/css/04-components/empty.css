@@ -1,0 +1,43 @@
+/* =============================================================================
+   4 · COMPONENT — empty state
+   =============================================================================
+   Shown wherever a list has nothing in it: a fresh site with no posts, a tag
+   with everything unpublished, a search with no result.
+
+   Every template that loops has one. A publisher's first hour with a theme is
+   spent looking at empty states, and "deliberate" versus "broken" is decided
+   entirely here.
+   ========================================================================== */
+
+.ghost-empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--t-space-3);
+	padding: var(--t-space-20) var(--t-gutter);
+	text-align: center;
+	border: var(--t-hair) dashed var(--t-line);
+	border-radius: var(--t-radius-card);
+	color: var(--t-fg-muted);
+}
+
+.ghost-empty__mark {
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-2xs);
+	text-transform: uppercase;
+	letter-spacing: var(--t-tracking-slate);
+	color: var(--t-accent);
+}
+
+.ghost-empty__title {
+	margin: 0;
+	font-size: var(--t-text-xl);
+	color: var(--t-fg);
+}
+
+.ghost-empty__text {
+	margin: 0;
+	max-width: 34rem;
+	font-size: var(--t-text-sm);
+	line-height: var(--t-leading-relaxed);
+}

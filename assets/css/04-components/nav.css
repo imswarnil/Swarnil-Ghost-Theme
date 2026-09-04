@@ -1,0 +1,318 @@
+/* =============================================================================
+   4 · COMPONENT — navigation
+   =============================================================================
+   One list of links, three contexts: the header, the mobile drawer, and the
+   footer. The drawer is a native <dialog>, so open/close, focus trapping and
+   Escape are the platform's job rather than ours.
+
+   Ghost's `{{navigation}}` helper emits its own markup, so this theme overrides
+   it with partials/navigation.hbs to get BEM classes instead.
+   ========================================================================== */
+
+.ghost-nav {
+	min-width: 0;
+}
+
+.ghost-nav__list {
+	display: flex;
+	align-items: center;
+	gap: var(--t-space-5);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.ghost-nav__link {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--t-space-2);
+	padding-block: var(--t-space-2);
+	color: inherit;
+	text-decoration: none;
+	font-size: var(--t-text-sm);
+	white-space: nowrap;
+	position: relative;
+}
+
+/* The current page is marked with the record dot — the same mark that sits
+   beside the wordmark in the header. It is the theme's one piece of ornament,
+   so using it for "you are here" costs no new vocabulary and reads instantly.
+   An underline would have been a second idea doing the same job. */
+.ghost-nav__link::before {
+	content: '';
+	width: 5px;
+	height: 5px;
+	flex: 0 0 auto;
+	border-radius: var(--t-radius-pill);
+	background-color: var(--t-accent);
+	/* Scaled rather than hidden, so the label never shifts as the dot appears
+	   and the row stays on one baseline. */
+	opacity: 0;
+	scale: 0.4;
+	transition: opacity var(--t-duration) var(--t-ease),
+		scale var(--t-duration) var(--t-ease);
+}
+
+.ghost-nav__link:hover::before {
+	opacity: 0.45;
+	scale: 1;
+}
+
+.ghost-nav__link--current::before {
+	opacity: 1;
+	scale: 1;
+}
+
+.ghost-nav__link--current {
+	font-weight: var(--t-weight-medium);
+}
+
+/* ── Header context: hidden on small screens in favour of the drawer ──────── */
+.ghost-nav--header {
+	display: none;
+}
+
+@media (min-width: 56rem) {
+	.ghost-nav--header {
+		display: block;
+	}
+}
+
+/* ── Drawer context ───────────────────────────────────────────────────────── */
+.ghost-nav--drawer .ghost-nav__list {
+	flex-direction: column;
+	align-items: stretch;
+	gap: 0;
+}
+
+.ghost-nav--drawer .ghost-nav__link {
+	position: relative;
+	padding: var(--t-space-4) 0 var(--t-space-4) var(--t-space-5);
+	border-bottom: var(--t-hair) solid var(--t-line-subtle);
+	font-family: var(--t-font-display);
+	font-size: var(--t-text-xl);
+}
+
+/* In the drawer the dot moves out into the margin, so the labels stay flush
+   left down the column whether or not one of them is current. */
+.ghost-nav--drawer .ghost-nav__link::before {
+	position: absolute;
+	left: 0;
+}
+
+/* ── Footer context ───────────────────────────────────────────────────────── */
+.ghost-nav--footer .ghost-nav__list {
+	flex-wrap: wrap;
+	gap: var(--t-space-2) var(--t-space-5);
+}
+
+.ghost-nav--footer .ghost-nav__link {
+	font-size: var(--t-text-sm);
+	color: var(--t-fg-muted);
+}
+
+.ghost-nav--footer .ghost-nav__link:hover {
+	color: var(--t-fg);
+}
+
+/* ── Drawer ───────────────────────────────────────────────────────────────────
+   A native dialog, full height on the right. `::backdrop` is styled rather than
+   a hand-rolled overlay div, so the inert-background behaviour comes free. */
+.ghost-drawer {
+	width: min(24rem, 100vw);
+	max-width: 100%;
+	height: 100dvh;
+	max-height: 100dvh;
+	margin: 0 0 0 auto;
+	padding: 0;
+	border: 0;
+	border-left: var(--t-hair) solid var(--t-line);
+	background-color: var(--t-bg);
+	color: var(--t-fg);
+}
+
+.ghost-drawer::backdrop {
+	background-color: var(--t-bg-scrim);
+	backdrop-filter: blur(2px);
+}
+
+.ghost-drawer__inner {
+	display: flex;
+	flex-direction: column;
+	gap: var(--t-space-6);
+	height: 100%;
+	padding: var(--t-space-5) var(--t-gutter) var(--t-space-10);
+	overflow-y: auto;
+}
+
+.ghost-drawer__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--t-space-4);
+}
+
+/* ── Hiding the toggle above the breakpoint ───────────────────────────────────
+   Two things here are load-bearing.
+
+   The selector is `.ghost-header .ghost-nav-toggle`, not `.ghost-nav-toggle`.
+   The button also carries .ghost-button, which sets `display: inline-flex`, and
+   button.css is imported after this file — so a single class could not win, and
+   the hamburger stayed visible on desktop.
+
+   The drawer itself is deliberately NOT hidden here. It used to be, and that
+   was the bug: `display: none` beat the UA's `dialog[open] { display: block }`,
+   so pressing the hamburger opened a dialog that rendered nothing — while
+   showModal() made the rest of the document inert. The whole site became
+   unclickable, with no visible modal to explain why. A closed dialog is already
+   hidden by the UA stylesheet; an open one must be allowed to show at any
+   width, and drawer.js closes it when the viewport grows past the breakpoint. */
+@media (min-width: 56rem) {
+	.ghost-header .ghost-nav-toggle {
+		display: none;
+	}
+}
+
+/* =============================================================================
+   Dropdowns
+   =============================================================================
+   One level, opened on hover and on focus-within. No JavaScript: a link that
+   only works with a script is a link that sometimes does not work, and keyboard
+   users get the same behaviour as mouse users for free.
+
+   navigation.hbs opens a panel inside every top-level item because Handlebars
+   cannot look ahead to see whether a child follows. Most of those panels end up
+   with nothing in them, so the test below is what actually decides which items
+   are dropdowns — and it is why the chevron is hidden by default rather than
+   shown.
+
+   The test is :has(> li), not :empty. A panel emitted by a formatted template
+   contains whitespace text nodes, and :empty matches only elements with no
+   child nodes at all — whitespace included. Every item would have kept its
+   chevron.
+   ========================================================================== */
+
+.ghost-nav__item {
+	position: relative;
+}
+
+.ghost-nav__chevron {
+	display: none;
+	margin-left: 0.25rem;
+}
+
+.ghost-nav__chevron .ghost-icon {
+	width: 0.9em;
+	height: 0.9em;
+	vertical-align: -0.12em;
+}
+
+.ghost-nav__panel {
+	display: none;
+	margin: 0;
+	padding: var(--t-space-2);
+	list-style: none;
+}
+
+.ghost-nav__panel:not(:has(> li)) {
+	display: none !important;
+}
+
+/* :has is what lets an item style itself from the state of its own panel.
+   Without support the chevron simply never appears, which is a missing hint
+   rather than a broken menu — the parent link still works. */
+.ghost-nav--header .ghost-nav__item:has(.ghost-nav__panel > li) .ghost-nav__chevron {
+	display: inline-block;
+}
+
+.ghost-nav--header .ghost-nav__panel {
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	translate: -50% 0;
+	min-width: 12rem;
+	background-color: var(--t-bg-raised);
+	border: var(--t-hair) solid var(--t-line);
+	border-radius: var(--t-radius-card);
+	box-shadow: var(--t-shadow-overlay);
+	z-index: var(--t-z-dropdown);
+	/* Bridges the gap between the link and the panel so the pointer can cross
+	   without the panel closing underneath it. */
+	margin-top: calc(var(--t-space-2) * -1);
+	padding-top: var(--t-space-3);
+}
+
+.ghost-nav--header .ghost-nav__item:hover > .ghost-nav__panel:has(> li),
+.ghost-nav--header .ghost-nav__item:focus-within > .ghost-nav__panel:has(> li) {
+	display: block;
+}
+
+.ghost-nav__sub-link {
+	display: flex;
+	align-items: center;
+	gap: var(--t-space-2);
+	padding: var(--t-space-2) var(--t-space-3);
+	border-radius: var(--t-radius-control);
+	color: var(--t-fg-muted);
+	font-size: var(--t-text-sm);
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.ghost-nav__sub-link:hover {
+	background-color: var(--t-bg-muted);
+	color: var(--t-fg);
+}
+
+.ghost-nav__sub-link::before {
+	content: '';
+	width: 5px;
+	height: 5px;
+	flex: 0 0 auto;
+	border-radius: var(--t-radius-pill);
+	background-color: var(--t-accent);
+	opacity: 0;
+	scale: 0.4;
+	transition: opacity var(--t-duration) var(--t-ease),
+		scale var(--t-duration) var(--t-ease);
+}
+
+.ghost-nav__sub-link:hover::before {
+	opacity: 0.45;
+	scale: 1;
+}
+
+.ghost-nav__sub-link--current::before {
+	opacity: 1;
+	scale: 1;
+}
+
+.ghost-nav__sub-link--current {
+	color: var(--t-accent);
+}
+
+/* ── Drawer and footer ────────────────────────────────────────────────────
+   No panel to open on a phone: children are simply indented under their parent
+   and always visible. A dropdown inside a drawer is a menu inside a menu. */
+.ghost-nav--drawer .ghost-nav__panel,
+.ghost-nav--footer .ghost-nav__panel {
+	display: block;
+	padding: 0;
+}
+
+.ghost-nav--drawer .ghost-nav__chevron,
+.ghost-nav--footer .ghost-nav__chevron {
+	display: none;
+}
+
+.ghost-nav--drawer .ghost-nav__sub-link {
+	padding: var(--t-space-3) 0 var(--t-space-3) var(--t-space-5);
+	border-bottom: var(--t-hair) solid var(--t-line-subtle);
+	border-radius: 0;
+	font-size: var(--t-text-base);
+}
+
+.ghost-nav--footer .ghost-nav__sub-link {
+	padding: 0;
+	font-size: var(--t-text-sm);
+}

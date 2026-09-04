@@ -1,0 +1,33 @@
+/* =============================================================================
+   4 · COMPONENT — pagination
+   =============================================================================
+   Previous / page count / next. Ghost paginates server-side, so these are real
+   links: they work without JavaScript and they are crawlable, which is the
+   whole SEO argument for not replacing them with infinite scroll.
+   ========================================================================== */
+
+.ghost-pagination {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--t-space-4);
+	margin-top: var(--t-space-12);
+	padding-top: var(--t-space-6);
+	border-top: var(--t-hair) solid var(--t-line);
+}
+
+.ghost-pagination__position {
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-2xs);
+	text-transform: uppercase;
+	letter-spacing: var(--t-tracking-slate);
+	color: var(--t-fg-subtle);
+	font-variant-numeric: tabular-nums;
+}
+
+/* An empty span holds the slot when there is no previous or next page, so the
+   remaining link stays on its own side instead of sliding to the middle. */
+.ghost-pagination__spacer {
+	flex: 0 0 auto;
+	width: 1px;
+}

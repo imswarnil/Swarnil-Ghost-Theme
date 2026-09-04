@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Abstract cover for: Members and access">
+  <rect width="1600" height="900" fill="#f1f1f4"/>
+
+  <!-- The hairline grid the whole theme is built on, made literal. -->
+  <g stroke="#d3d3db" stroke-width="2">
+    <line x1="100" y1="0" x2="100" y2="900"/>
+    <line x1="200" y1="0" x2="200" y2="900"/>
+    <line x1="300" y1="0" x2="300" y2="900"/>
+    <line x1="400" y1="0" x2="400" y2="900"/>
+    <line x1="500" y1="0" x2="500" y2="900"/>
+    <line x1="600" y1="0" x2="600" y2="900"/>
+    <line x1="700" y1="0" x2="700" y2="900"/>
+    <line x1="800" y1="0" x2="800" y2="900"/>
+    <line x1="900" y1="0" x2="900" y2="900"/>
+    <line x1="1000" y1="0" x2="1000" y2="900"/>
+    <line x1="1100" y1="0" x2="1100" y2="900"/>
+    <line x1="1200" y1="0" x2="1200" y2="900"/>
+    <line x1="1300" y1="0" x2="1300" y2="900"/>
+    <line x1="1400" y1="0" x2="1400" y2="900"/>
+    <line x1="1500" y1="0" x2="1500" y2="900"/>
+    <line x1="0" y1="100" x2="1600" y2="100"/>
+    <line x1="0" y1="200" x2="1600" y2="200"/>
+    <line x1="0" y1="300" x2="1600" y2="300"/>
+    <line x1="0" y1="400" x2="1600" y2="400"/>
+    <line x1="0" y1="500" x2="1600" y2="500"/>
+    <line x1="0" y1="600" x2="1600" y2="600"/>
+    <line x1="0" y1="700" x2="1600" y2="700"/>
+    <line x1="0" y1="800" x2="1600" y2="800"/>
+  </g>
+
+  <circle cx="608" cy="450" r="240" fill="none" stroke="#191922" stroke-width="16"/>
+		 <circle cx="992" cy="450" r="240" fill="#f04e2e" opacity="0.92"/>
+
+  <!-- Deliberately no viewfinder brackets here. The theme draws its own over
+       every framed image on hover, and a cover that also drew them produced two
+       sets of corners a few pixels apart. The artwork stays plain and lets the
+       component do the framing. -->
+
+  <text x="110" y="790" font-family="ui-monospace, monospace" font-size="72"
+        fill="#76768a" letter-spacing="8">10</text>
+</svg>

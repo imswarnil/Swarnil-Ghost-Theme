@@ -1,0 +1,82 @@
+/* =============================================================================
+   2 · BASE — headings, lists, quotes
+   =============================================================================
+   Bare element styling. Post content adds to this in 06-content/prose.css
+   rather than replacing it, so a heading looks the same in a page, a post and
+   an author bio.
+   ========================================================================== */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: var(--t-font-display);
+	font-weight: var(--t-display-weight, var(--t-weight-semibold));
+	letter-spacing: var(--t-display-tracking, var(--t-tracking-tight));
+	line-height: var(--t-leading-tight);
+	color: var(--t-fg);
+	text-wrap: balance;
+}
+
+h1 { font-size: var(--t-text-4xl); }
+h2 { font-size: var(--t-text-3xl); }
+h3 { font-size: var(--t-text-2xl); }
+h4 { font-size: var(--t-text-xl); }
+h5 { font-size: var(--t-text-lg); }
+
+h6 {
+	font-size: var(--t-text-sm);
+	font-family: var(--t-font-slate);
+	text-transform: uppercase;
+	letter-spacing: var(--t-tracking-slate);
+	color: var(--t-fg-muted);
+}
+
+p {
+	text-wrap: pretty;
+}
+
+strong,
+b {
+	font-weight: var(--t-weight-semibold);
+}
+
+small {
+	font-size: var(--t-text-sm);
+	color: var(--t-fg-muted);
+}
+
+code,
+kbd,
+samp,
+pre {
+	font-family: var(--t-font-slate);
+	font-size: 0.9em;
+}
+
+blockquote {
+	margin: 0;
+	padding-left: var(--t-space-5);
+	border-left: 2px solid var(--t-accent);
+	color: var(--t-fg-muted);
+	font-size: var(--t-text-md);
+}
+
+ul,
+ol {
+	padding-left: var(--t-space-5);
+}
+
+figure {
+	margin: 0;
+}
+
+figcaption {
+	margin-top: var(--t-space-3);
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-xs);
+	color: var(--t-fg-subtle);
+	text-align: center;
+}

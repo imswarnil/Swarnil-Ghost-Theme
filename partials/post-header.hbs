@@ -1,0 +1,66 @@
+{{!--
+    The post hero: kicker, title, excerpt, byline, feature image.
+
+    A partial rather than inline markup because post-shell.hbs needs it twice —
+    for the Standard and Wide layouts, and again as the fallback when Immersive
+    is chosen on a post with no feature image to put a title on. Ghost has no
+    `and` helper to express that in one condition.
+
+    The hero is the widest part of the page and the reading column is the
+    narrowest, so the two are deliberately different measures: the header runs to
+    the layout's full width and the body steps in. That step is what signals the
+    article has started, without needing a rule to say so.
+--}}
+<header class="ghost-post__header">
+
+    {{!-- The primary tag as a kicker. It is the one piece of navigation a reader
+         arriving from search actually wants: what is this, and what else is like
+         it. Internal tags are filtered out by primary_tag itself. --}}
+    {{#if primary_tag}}
+        <a class="ghost-post__kicker" href="{{primary_tag.url}}">{{primary_tag.name}}</a>
+    {{/if}}
+
+    <h1 class="ghost-post__title">{{title}}</h1>
+
+    {{#if custom_excerpt}}
+        <p class="ghost-post__excerpt">{{custom_excerpt}}</p>
+    {{/if}}
+
+    <div class="ghost-post__byline">
+        {{#if primary_author}}
+            <a class="ghost-author" href="{{primary_author.url}}">
+                {{#if primary_author.profile_image}}
+                    <img class="ghost-author__avatar" src="{{img_url primary_author.profile_image size="xs"}}" alt="{{primary_author.name}}" width="32" height="32" loading="eager">
+                {{else}}
+                    <span class="ghost-author__avatar ghost-author__avatar--empty" aria-hidden="true"></span>
+                {{/if}}
+                <span class="ghost-author__name">{{primary_author.name}}</span>
+            </a>
+        {{/if}}
+
+        <div class="ghost-slate ghost-post__meta">
+            {{#if featured}}
+                <span class="ghost-slate__item ghost-slate__item--accent">Featured</span>
+            {{/if}}
+            <span class="ghost-slate__item">
+                <time datetime="{{date format="YYYY-MM-DD"}}">{{date format="D MMM YYYY"}}</time>
+            </span>
+            {{#if @custom.show_reading_time}}
+                <span class="ghost-slate__item">{{reading_time}}</span>
+            {{/if}}
+            {{#unless access}}
+                <span class="ghost-slate__item ghost-slate__item--accent">Members only</span>
+            {{/unless}}
+        </div>
+    </div>
+
+</header>
+
+{{#if feature_image}}
+    <figure class="ghost-post__feature">
+        {{> "frame" src=feature_image alt=title eager=true}}
+        {{#if feature_image_caption}}
+            <figcaption class="ghost-post__feature-caption">{{feature_image_caption}}</figcaption>
+        {{/if}}
+    </figure>
+{{/if}}

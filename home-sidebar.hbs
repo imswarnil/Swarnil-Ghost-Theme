@@ -1,0 +1,10 @@
+{{!--
+    The homepage with the sidebar forced on.
+
+    Reached at /home/sidebar/ via routes.yaml. It exists so the demo can link to
+    both list layouts side by side — a buyer deciding between them should be able
+    to look at them rather than toggle a setting twice.
+--}}
+{{!< default}}
+
+{{> "home-body" sidebar=true}}

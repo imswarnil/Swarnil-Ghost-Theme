@@ -1,0 +1,21 @@
+{
+	"extends": "stylelint-config-standard",
+	"rules": {
+		"custom-property-pattern": null,
+		"selector-class-pattern": [
+			"^(ghost|kg)-[a-z0-9]+(-[a-z0-9]+)*(__[a-z0-9]+(-[a-z0-9]+)*)?(--[a-z0-9]+(-[a-z0-9]+)*)?$|^(footnotes|success|error|loading)$",
+			{
+				"message": "Expected the theme's own ghost-* BEM class, a Ghost editor kg-* class, or one of the state classes Ghost adds itself (footnotes, success, error, loading)"
+			}
+		],
+		"alpha-value-notation": "number",
+		"media-feature-range-notation": "prefix",
+		"declaration-empty-line-before": null,
+		"comment-empty-line-before": null,
+		"no-descending-specificity": null,
+		"value-keyword-case": null,
+		"property-no-vendor-prefix": null,
+		"at-rule-no-deprecated": null
+	},
+	"ignoreFiles": ["assets/built/**", "node_modules/**"]
+}

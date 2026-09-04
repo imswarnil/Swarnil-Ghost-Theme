@@ -1,0 +1,48 @@
+{{!--
+    A list of posts, in whichever shape the homepage_layout setting asks for.
+
+    Every template that lists posts goes through here, which is what keeps
+    archives, tags and author pages consistent with the homepage without each of
+    them repeating the branch.
+
+    Parameters
+      title      heading for the section
+      layout     Call Sheet | Stacked | Grid  (defaults to Call Sheet)
+      emptyTitle / emptyText  copy for the no-posts state
+--}}
+<section class="ghost-index">
+    {{#if title}}
+        <div class="ghost-index__head">
+            <h2 class="ghost-index__title">{{title}}</h2>
+            {{#if count}}<span class="ghost-index__count">{{count}}</span>{{/if}}
+        </div>
+    {{/if}}
+
+    {{#if posts}}
+
+        {{#match layout "Grid"}}
+            <ul class="ghost-index__grid">
+                {{#foreach posts}}
+                    <li>{{> "card"}}</li>
+                {{/foreach}}
+            </ul>
+
+        {{else match layout "Stacked"}}
+            <ul class="ghost-index__stack">
+                {{#foreach posts}}
+                    <li>{{> "card"}}</li>
+                {{/foreach}}
+            </ul>
+
+        {{else}}
+            <ul class="ghost-index__list">
+                {{#foreach posts}}
+                    <li>{{> "entry"}}</li>
+                {{/foreach}}
+            </ul>
+        {{/match}}
+
+    {{else}}
+        {{> "empty" title=emptyTitle text=emptyText}}
+    {{/if}}
+</section>

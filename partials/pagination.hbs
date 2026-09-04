@@ -1,0 +1,28 @@
+{{!--
+    Pagination.
+
+    Overrides Ghost's built-in pagination partial: when partials/pagination.hbs
+    exists, the {{pagination}} helper renders this instead of its own markup.
+
+    Real links to real pages. Infinite scroll would cost the crawler every post
+    past the first page, and would break the back button.
+--}}
+<nav class="ghost-pagination" aria-label="Pagination">
+    {{#if prev}}
+        <a class="ghost-button ghost-button--outline" href="{{page_url prev}}" rel="prev">
+            {{> "icon" name="arrow-left"}} Newer
+        </a>
+    {{else}}
+        <span class="ghost-pagination__spacer"></span>
+    {{/if}}
+
+    <span class="ghost-pagination__position">Page {{page}} of {{pages}}</span>
+
+    {{#if next}}
+        <a class="ghost-button ghost-button--outline" href="{{page_url next}}" rel="next">
+            Older {{> "icon" name="arrow-right"}}
+        </a>
+    {{else}}
+        <span class="ghost-pagination__spacer"></span>
+    {{/if}}
+</nav>

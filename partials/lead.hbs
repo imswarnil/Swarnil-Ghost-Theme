@@ -1,0 +1,48 @@
+{{!--
+    The homepage lead.
+
+    Which post fills the slot is the homepage_lead setting: the featured one, the
+    most recent one, or none at all.
+
+    Two Ghost-specific constraints shaped this file, and both are easy to trip
+    over silently:
+
+    1. {{#match}} must be used as a block. As a subexpression it returns a
+       SafeString object rather than a boolean, and an object is always truthy —
+       so {{#unless (match a "b")}} can never fire.
+
+    2. {{#get}} does not resolve async helpers inside its {{else}} branch, so a
+       second {{#get}} nested there renders nothing at all, with no error. The
+       "featured, or the latest if nothing is featured" fallback is therefore
+       expressed as an ordering on a single query instead of two nested ones:
+       sorting by `featured desc` puts a featured post first when one exists and
+       costs nothing when none does.
+--}}
+{{#match @custom.homepage_lead "None"}}{{else}}
+<section class="ghost-lead">
+    <div class="ghost-container">
+
+        <div class="ghost-lead__intro">
+            <h1 class="ghost-lead__site-title">{{@site.title}}</h1>
+            {{#if @custom.homepage_intro}}
+                <p class="ghost-lead__site-description">{{@custom.homepage_intro}}</p>
+            {{else}}
+                {{#if @site.description}}
+                    <p class="ghost-lead__site-description">{{@site.description}}</p>
+                {{/if}}
+            {{/if}}
+        </div>
+
+        {{#match @custom.homepage_lead "Featured Post"}}
+            {{#get "posts" limit="1" order="featured desc, published_at desc" include="authors,tags" as |leadPosts|}}
+                {{#foreach leadPosts}}{{> "lead-post"}}{{/foreach}}
+            {{/get}}
+        {{else}}
+            {{#get "posts" limit="1" order="published_at desc" include="authors,tags" as |leadPosts|}}
+                {{#foreach leadPosts}}{{> "lead-post"}}{{/foreach}}
+            {{/get}}
+        {{/match}}
+
+    </div>
+</section>
+{{/match}}

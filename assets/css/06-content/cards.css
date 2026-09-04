@@ -1,0 +1,249 @@
+/* =============================================================================
+   6 · CONTENT — Koenig cards
+   =============================================================================
+   Ghost's editor emits `kg-*` classes. These are Ghost's names, not the theme's,
+   so they are the one place in the stylesheet without a `ghost-` prefix — they
+   are a contract with the editor rather than markup we author.
+
+   `card_assets: true` in package.json makes Ghost ship its own base stylesheet
+   for the interactive cards (gallery, audio, video, toggle), so what follows is
+   the theme's presentation on top of that, not a reimplementation of it.
+   ========================================================================== */
+
+/* ── Widths ──────────────────────────────────────────────────────────────────
+   Wide and full-width cards break out of the reading column. The negative
+   margin is capped so that on a narrow viewport they stop at the gutter instead
+   of running under the edge of the screen. */
+.ghost-prose .kg-width-wide {
+	width: min(var(--t-w-wide), calc(100vw - var(--t-gutter) * 2));
+	margin-inline: calc(50% - min(var(--t-w-wide), 100vw - var(--t-gutter) * 2) / 2);
+}
+
+.ghost-prose .kg-width-full {
+	width: calc(100vw - var(--t-gutter) * 2);
+	max-width: calc(100vw - var(--t-gutter) * 2);
+	margin-inline: calc(50% - (100vw - var(--t-gutter) * 2) / 2);
+}
+
+.ghost-prose .kg-card {
+	margin-top: var(--t-space-10);
+}
+
+.ghost-prose .kg-card + * {
+	margin-top: var(--t-space-10);
+}
+
+/* ── Image ────────────────────────────────────────────────────────────────── */
+.ghost-prose .kg-image-card img,
+.ghost-prose .kg-image {
+	display: block;
+	width: 100%;
+	border-radius: var(--t-radius-media);
+	background-color: var(--t-bg-sunken);
+}
+
+.ghost-prose figcaption {
+	margin-top: var(--t-space-3);
+	text-align: center;
+}
+
+/* ── Gallery ──────────────────────────────────────────────────────────────── */
+.ghost-prose .kg-gallery-image img {
+	border-radius: var(--t-radius-media);
+}
+
+/* ── Embed ──────────────────────────────────────────────────────────────────
+   Providers hand back an <iframe> with fixed width and height attributes. The
+   aspect-ratio here overrides them so an embed cannot break the column. */
+.ghost-prose .kg-embed-card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.ghost-prose .kg-embed-card iframe {
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	height: auto;
+	border: 0;
+	border-radius: var(--t-radius-media);
+}
+
+/* Twitter and Instagram embeds set their own height and must not be forced. */
+.ghost-prose .kg-embed-card iframe[src*='twitter'],
+.ghost-prose .kg-embed-card iframe[src*='instagram'],
+.ghost-prose .kg-embed-card blockquote {
+	aspect-ratio: auto;
+}
+
+/* ── Bookmark ─────────────────────────────────────────────────────────────── */
+.ghost-prose .kg-bookmark-container {
+	display: flex;
+	align-items: stretch;
+	border: var(--t-hair) solid var(--t-line);
+	border-radius: var(--t-radius-card);
+	overflow: hidden;
+	color: inherit;
+	text-decoration: none;
+	transition: border-color var(--t-duration) var(--t-ease);
+}
+
+.ghost-prose .kg-bookmark-container:hover {
+	border-color: var(--t-accent);
+}
+
+.ghost-prose .kg-bookmark-content {
+	flex: 1 1 auto;
+	padding: var(--t-space-5);
+	min-width: 0;
+}
+
+.ghost-prose .kg-bookmark-title {
+	font-weight: var(--t-weight-semibold);
+	font-size: var(--t-text-base);
+}
+
+.ghost-prose .kg-bookmark-description {
+	margin-top: var(--t-space-2);
+	color: var(--t-fg-muted);
+	font-size: var(--t-text-sm);
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.ghost-prose .kg-bookmark-metadata {
+	display: flex;
+	align-items: center;
+	gap: var(--t-space-2);
+	margin-top: var(--t-space-4);
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-2xs);
+	color: var(--t-fg-subtle);
+}
+
+.ghost-prose .kg-bookmark-icon {
+	width: 1rem;
+	height: 1rem;
+}
+
+.ghost-prose .kg-bookmark-thumbnail {
+	flex: 0 0 33%;
+	max-width: 12rem;
+}
+
+.ghost-prose .kg-bookmark-thumbnail img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+@media (max-width: 40rem) {
+	.ghost-prose .kg-bookmark-container {
+		flex-direction: column-reverse;
+	}
+
+	.ghost-prose .kg-bookmark-thumbnail {
+		flex: 0 0 auto;
+		max-width: none;
+		aspect-ratio: 2 / 1;
+	}
+}
+
+/* ── Callout ──────────────────────────────────────────────────────────────── */
+.ghost-prose .kg-callout-card {
+	display: flex;
+	gap: var(--t-space-4);
+	padding: var(--t-space-5);
+	border-radius: var(--t-radius-card);
+	background-color: var(--t-bg-sunken);
+	border-left: 2px solid var(--t-accent);
+}
+
+.ghost-prose .kg-callout-emoji {
+	flex: 0 0 auto;
+	line-height: 1.4;
+}
+
+/* ── Toggle ───────────────────────────────────────────────────────────────── */
+.ghost-prose .kg-toggle-card {
+	padding: var(--t-space-5);
+	border: var(--t-hair) solid var(--t-line);
+	border-radius: var(--t-radius-card);
+}
+
+.ghost-prose .kg-toggle-heading-text {
+	font-family: var(--t-font-display);
+	font-size: var(--t-text-base);
+}
+
+/* ── Button ───────────────────────────────────────────────────────────────── */
+.ghost-prose .kg-btn {
+	display: inline-flex;
+	align-items: center;
+	min-height: var(--tap-min, 2.75rem);
+	padding: var(--t-space-2) var(--t-space-6);
+	border-radius: var(--t-radius-control);
+	background-color: var(--t-accent);
+	color: var(--t-fg-on-accent);
+	font-weight: var(--t-weight-medium);
+	font-size: var(--t-text-sm);
+	text-decoration: none;
+}
+
+.ghost-prose .kg-btn:hover {
+	background-color: var(--t-accent-hover);
+	color: var(--t-fg-on-accent);
+}
+
+/* ── Header, product, signup ────────────────────────────────────────────────
+   These three cards carry their own colours from the editor. The theme only
+   corrects the type and the corner radius so they sit in the same family as
+   everything else. */
+.ghost-prose .kg-header-card h2,
+.ghost-prose .kg-product-card-title,
+.ghost-prose .kg-signup-card-heading {
+	font-family: var(--t-font-display);
+	letter-spacing: var(--t-display-tracking, var(--t-tracking-tight));
+}
+
+.ghost-prose .kg-product-card-container,
+.ghost-prose .kg-signup-card,
+.ghost-prose .kg-header-card {
+	border-radius: var(--t-radius-card);
+}
+
+/* ── Audio, video, file ───────────────────────────────────────────────────── */
+.ghost-prose .kg-audio-card,
+.ghost-prose .kg-file-card-container {
+	border: var(--t-hair) solid var(--t-line);
+	border-radius: var(--t-radius-card);
+}
+
+.ghost-prose .kg-video-container {
+	border-radius: var(--t-radius-media);
+	overflow: hidden;
+	background-color: var(--t-bg-media);
+}
+
+/* ── Members-only teaser ─────────────────────────────────────────────────────
+   Shown where the paywall cuts a post short. */
+.ghost-gate {
+	margin-top: var(--t-space-12);
+	padding: var(--t-space-10) var(--t-space-6);
+	border: var(--t-hair) solid var(--t-line);
+	border-radius: var(--t-radius-card);
+	text-align: center;
+}
+
+.ghost-gate__title {
+	margin: 0 0 var(--t-space-3);
+	font-size: var(--t-text-2xl);
+}
+
+.ghost-gate__text {
+	margin: 0 auto var(--t-space-6);
+	max-width: 34rem;
+	color: var(--t-fg-muted);
+}

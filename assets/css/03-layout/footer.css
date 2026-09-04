@@ -1,0 +1,61 @@
+/* =============================================================================
+   3 · LAYOUT — site footer
+   =============================================================================
+   Deliberately plain. The footer's job is to end the page and satisfy the two
+   things every Ghost theme owes its reader: secondary navigation, and the
+   "Published with Ghost" credit the marketplace requires.
+   ========================================================================== */
+
+.ghost-footer {
+	margin-top: var(--t-space-24);
+	padding-block: var(--t-space-12);
+	border-top: var(--t-hair) solid var(--t-line);
+	font-size: var(--t-text-sm);
+	color: var(--t-fg-muted);
+}
+
+.ghost-footer__inner {
+	display: grid;
+	gap: var(--t-space-8);
+	grid-template-columns: 1fr;
+}
+
+@media (min-width: 48rem) {
+	.ghost-footer__inner {
+		grid-template-columns: minmax(0, 1fr) auto;
+		align-items: start;
+	}
+}
+
+/* The optional line from the `footer_note` setting. Sits above everything else
+   and reads as a sign-off rather than as navigation. */
+.ghost-footer__note {
+	max-width: var(--t-w-prose);
+	margin: 0 0 var(--t-space-6);
+	color: var(--t-fg);
+	font-size: var(--t-text-md);
+	text-wrap: pretty;
+}
+
+.ghost-footer__meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--t-space-2) var(--t-space-4);
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-2xs);
+	text-transform: uppercase;
+	letter-spacing: var(--t-tracking-slate);
+	color: var(--t-fg-subtle);
+}
+
+.ghost-footer__credit a {
+	color: inherit;
+	text-decoration: none;
+	border-bottom: var(--t-hair) solid var(--t-line);
+}
+
+.ghost-footer__credit a:hover {
+	color: var(--t-accent);
+	border-bottom-color: currentColor;
+}

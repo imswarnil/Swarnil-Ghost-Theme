@@ -1,0 +1,31 @@
+{{!--
+    A post as a call-sheet row: number, title, metadata, and a small media strip
+    on wide screens.
+
+    The number is not passed in. It comes from a CSS counter on the list, which
+    keeps it correct across pagination and filtering without the template having
+    to do arithmetic.
+--}}
+<article class="ghost-entry {{#unless feature_image}}ghost-entry--no-media{{/unless}}">
+
+    <span class="ghost-entry__index" aria-hidden="true"></span>
+
+    <div class="ghost-entry__body">
+        <h3 class="ghost-entry__title">
+            <a class="ghost-entry__link" href="{{url}}">{{title}}</a>
+        </h3>
+
+        {{#if excerpt}}
+            <p class="ghost-entry__excerpt">{{excerpt words="26"}}</p>
+        {{/if}}
+
+        {{> "byline"}}
+    </div>
+
+    {{#if feature_image}}
+        <div class="ghost-entry__media">
+            {{> "frame" src=feature_image alt=title}}
+        </div>
+    {{/if}}
+
+</article>

@@ -1,0 +1,40 @@
+{{!--
+    The author block beneath a post.
+
+    Both the picture and the bio are optional in Ghost and frequently missing.
+    The picture falls back to the author's initial rather than to a silhouette —
+    at least the initial is specific to the person — and the bio simply does not
+    render, leaving a name and links that still read as finished.
+--}}
+{{#if @custom.show_author_card}}
+    {{#foreach authors}}
+        <section class="ghost-author-card">
+            <div class="ghost-author-card__head">
+                {{#if profile_image}}
+                    <img class="ghost-author__avatar ghost-author-card__avatar" src="{{img_url profile_image size="xs"}}" alt="{{name}}" loading="lazy" width="56" height="56">
+                {{else}}
+                    <span class="ghost-author__avatar ghost-author__avatar--empty ghost-author-card__avatar" aria-hidden="true"></span>
+                {{/if}}
+
+                <div>
+                    <h2 class="ghost-author-card__name">
+                        <a class="ghost-author__name" href="{{url}}">{{name}}</a>
+                    </h2>
+                    {{#if location}}
+                        <div class="ghost-slate"><span class="ghost-slate__item">{{location}}</span></div>
+                    {{/if}}
+                </div>
+            </div>
+
+            {{#if bio}}
+                <p class="ghost-author-card__bio">{{bio}}</p>
+            {{/if}}
+
+            {{#if website}}
+                <div class="ghost-author-card__links">
+                    <a class="ghost-button ghost-button--outline" href="{{website}}" target="_blank" rel="noopener">Website</a>
+                </div>
+            {{/if}}
+        </section>
+    {{/foreach}}
+{{/if}}

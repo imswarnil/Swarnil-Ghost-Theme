@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="{{@site.locale}}" data-typeface="{{#match @custom.typeface_pairing "Serif & Sans"}}serif{{else match @custom.typeface_pairing "Mono & Sans"}}mono{{else}}grotesk{{/match}}">
+<head>
+
+    {{!-- Document basics --}}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{meta_title}}</title>
+
+    {{!-- Colour scheme, resolved before first paint.
+
+         This script has to stay inline and synchronous. Deferring it, or moving
+         it to the bundle, means the browser paints the default scheme first and
+         then repaints — a white flash on every navigation for anyone reading in
+         dark mode. It is small enough to be worth the render-blocking cost.
+
+         data-scheme is the reader's choice (system | light | dark).
+         data-theme  is what actually gets painted (light | dark), and is what
+                     the stylesheet keys off. --}}
+    <script>
+        (function () {
+            var fallback = "{{#match @custom.color_scheme "Light"}}light{{else match @custom.color_scheme "Dark"}}dark{{else}}system{{/match}}";
+            var scheme = fallback;
+
+            try {
+                var stored = localStorage.getItem('ghost-theme-scheme');
+                if (stored) { scheme = stored; }
+            } catch (e) {
+                /* storage blocked — fall back to the publisher's default */
+            }
+
+            var resolved = scheme;
+            if (scheme === 'system') {
+                resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+
+            document.documentElement.setAttribute('data-scheme', scheme);
+            document.documentElement.setAttribute('data-theme', resolved);
+        })();
+    </script>
+
+    {{!-- Settings that are values rather than switches are passed to CSS as
+         custom properties. Anything that can be expressed as a class or an
+         attribute is, instead — this block is only for the cases that cannot. --}}
+    <style>
+        :root {
+            --t-feature-ratio: {{#match @custom.feature_image_ratio "auto"}}auto{{else}}{{@custom.feature_image_ratio}}{{/match}};
+        }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="{{asset "built/index.css"}}">
+
+    {{!-- Outputs meta tags, structured data and any code injection. Must stay
+         the last thing before </head>. --}}
+    {{ghost_head}}
+
+</head>
+
+<body class="{{body_class}}">
+
+    <div class="ghost-shell">
+
+        {{!-- Keyboard users meet these first. --}}
+        <a class="ghost-skip" href="#ghost-main">Skip to content</a>
+
+        {{> "site-header"}}
+
+        <main id="ghost-main" class="ghost-shell__main">
+            {{{body}}}
+        </main>
+
+        {{> "site-footer"}}
+
+    </div>
+
+    {{> "nav-drawer"}}
+
+    <script defer src="{{asset "built/index.js"}}"></script>
+
+    {{!-- Outputs Ghost's own scripts — members, search, comments, portal.
+         Must stay the last thing before </body>. --}}
+    {{ghost_foot}}
+
+</body>
+</html>

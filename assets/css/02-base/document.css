@@ -1,0 +1,90 @@
+/* =============================================================================
+   2 · BASE — the document
+   =============================================================================
+   Element-level defaults only. Nothing here carries a class, so anything a
+   publisher pastes into the editor inherits sensible behaviour without the
+   theme having to anticipate it.
+   ========================================================================== */
+
+html {
+	/* Anchored headings must clear the sticky header, and the table of contents
+	   relies on the same number to decide which heading is current. */
+	scroll-padding-top: calc(var(--t-header-h) + var(--t-space-6));
+}
+
+body {
+	background-color: var(--t-bg);
+	color: var(--t-fg);
+	font-family: var(--t-font-body);
+	font-size: var(--t-text-base);
+	line-height: var(--t-leading-normal);
+	/* Opt into the browser's own text rendering rather than forcing
+	   antialiasing, which thins type unpredictably across platforms. */
+	text-rendering: optimizeLegibility;
+	-webkit-tap-highlight-color: transparent;
+}
+
+/* Media never overflows its column. Ghost's editor emits raw <img> and
+   <iframe> at author-chosen dimensions, so this has to be unconditional. */
+img,
+video,
+svg,
+iframe {
+	max-width: 100%;
+	height: auto;
+}
+
+img {
+	/* Alt text is a marketplace requirement and every helper below passes it
+	   through, but a publisher can still paste an image without one. Italic
+	   alt text at least makes the gap visible rather than silent. */
+	font-style: italic;
+	color: var(--t-fg-subtle);
+}
+
+a {
+	color: var(--t-link);
+	text-decoration-color: var(--t-line-strong);
+	text-underline-offset: 0.18em;
+	text-decoration-thickness: 1px;
+	transition: color var(--t-duration) var(--t-ease),
+		text-decoration-color var(--t-duration) var(--t-ease);
+}
+
+a:hover {
+	color: var(--t-link-hover);
+	text-decoration-color: currentColor;
+}
+
+/* One focus treatment for the whole theme. `:focus-visible` keeps it off mouse
+   clicks; the fallback below covers browsers without it. Keyboard navigation is
+   a marketplace requirement, so this ring is never removed, only restyled. */
+:focus-visible {
+	outline: 2px solid var(--t-accent);
+	outline-offset: 2px;
+	border-radius: 2px;
+}
+
+::selection {
+	background-color: var(--t-accent);
+	color: var(--t-fg-on-accent);
+}
+
+hr {
+	border: 0;
+	border-top: var(--t-hair) solid var(--t-line);
+	margin: var(--t-space-10) 0;
+}
+
+/* Respect the reader. Every transition and animation in the theme is decorative,
+   so all of it can be dropped without losing meaning. */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}

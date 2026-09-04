@@ -1,0 +1,51 @@
+{{!--
+    Framed media.
+
+    The viewfinder treatment applied to every feature image in the theme, plus
+    the responsive-image plumbing that would otherwise be repeated in six places.
+
+    The srcset widths correspond to the image_sizes declared in package.json.
+    Ghost only generates the sizes named there, so the two lists have to agree —
+    changing one without the other silently serves originals.
+
+    alt is required by the marketplace and by any reasonable reading of
+    accessibility. Callers pass the post title, which is the most useful
+    description available to a theme that cannot see the picture.
+
+    Parameters
+      src       the image URL; omit it to render the empty plate
+      alt       alternative text (required)
+      eager     true on the one above-the-fold image per page
+      duration  optional runtime string, drawn over the media
+--}}
+<div class="ghost-frame{{#unless src}} ghost-frame--empty{{/unless}}">
+    {{#if src}}
+        <img
+            class="ghost-frame__media"
+            src="{{img_url src size="l"}}"
+            srcset="{{img_url src size="s"}} 320w,
+                    {{img_url src size="m"}} 640w,
+                    {{img_url src size="l"}} 960w,
+                    {{img_url src size="xl"}} 1200w,
+                    {{img_url src size="xxl"}} 2000w"
+            sizes="(min-width: 64rem) 960px, 100vw"
+            alt="{{alt}}"
+            loading="{{#if eager}}eager{{else}}lazy{{/if}}"
+            decoding="async"
+        >
+    {{/if}}
+
+    {{!-- The play badge is decided here rather than by the caller. `has` is a
+         block-only helper — used as a subexpression it throws — and a partial
+         inherits its caller's context, so the post's tags are readable from
+         inside it. That keeps the three call sites to one line each. --}}
+    {{#has tag="#video"}}
+        <span class="ghost-frame__play">
+            <span>{{> "icon" name="play"}}</span>
+        </span>
+    {{/has}}
+
+    {{#if duration}}
+        <span class="ghost-frame__duration">{{duration}}</span>
+    {{/if}}
+</div>

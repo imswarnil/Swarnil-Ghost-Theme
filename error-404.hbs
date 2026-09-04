@@ -1,0 +1,25 @@
+{{!--
+    404.
+
+    Split out from error.hbs because a missing page is the one error a reader
+    can do something about. Rather than a dead end it offers the latest posts,
+    which is usually what someone following a stale link actually wanted.
+--}}
+{{!< default}}
+
+<div class="ghost-container">
+
+    <div class="ghost-error">
+        <p class="ghost-error__code">404</p>
+        <h1 class="ghost-error__title">That page has moved or never existed</h1>
+        <p class="ghost-error__message">The link may be out of date. Here is what has been published recently.</p>
+        <a class="ghost-button ghost-button--outline" href="{{@site.url}}">Back to {{@site.title}}</a>
+    </div>
+
+    {{#get "posts" limit="3" include="authors,tags" as |recent|}}
+        {{#if recent}}
+            {{> "post-list" posts=recent title="Recent" layout="Grid"}}
+        {{/if}}
+    {{/get}}
+
+</div>

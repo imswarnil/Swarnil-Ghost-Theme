@@ -1,0 +1,15 @@
+{{!--
+    Post template: Immersive.
+
+    Selectable per post in Ghost admin under Post settings → Template. Sets the
+    title over a full-height feature image.
+
+    On a post with no feature image it renders exactly like Standard. That is
+    intentional: a publisher who picks this template and then removes the image
+    should get a plain, correct post rather than a broken hero.
+--}}
+{{!< default}}
+
+{{#post}}
+    {{> "post-shell" layout="Immersive"}}
+{{/post}}

@@ -1,0 +1,76 @@
+{{!--
+    The list sidebar.
+
+    Shown beside the homepage and the archives when the layout asks for it. Four
+    widgets, each of which removes itself when it has nothing to say — a sidebar
+    of empty boxes is worse than no sidebar.
+
+    Every {{#get}} hands its results out as a block parameter and is read back
+    through that parameter, because {{#get}} invokes its body with the API
+    response as the context. Reading a bare {{name}} inside one resolves against
+    the response object and comes out blank.
+--}}
+<aside class="ghost-sidebar" aria-label="More from this site">
+
+    {{!-- About --}}
+    {{#if @site.description}}
+        <section class="ghost-sidebar__block">
+            <h2 class="ghost-sidebar__title">About</h2>
+            <p class="ghost-sidebar__text">{{@site.description}}</p>
+        </section>
+    {{/if}}
+
+    {{!-- Tags. Ordered by post count so the sidebar leads with what the site is
+         actually about, rather than with whatever was created first. --}}
+    {{#get "tags" limit="10" include="count.posts" order="count.posts desc" filter="visibility:public" as |sidebarTags|}}
+        <section class="ghost-sidebar__block">
+            <h2 class="ghost-sidebar__title">Topics</h2>
+            <ul class="ghost-tags">
+                {{#foreach sidebarTags as |sidebarTag|}}
+                    <li class="ghost-tags__item">
+                        <a class="ghost-tags__link" href="{{sidebarTag.url}}">
+                            {{sidebarTag.name}}
+                            <span class="ghost-tags__count">{{sidebarTag.count.posts}}</span>
+                        </a>
+                    </li>
+                {{/foreach}}
+            </ul>
+        </section>
+    {{/get}}
+
+    {{!-- Recent posts --}}
+    {{#get "posts" limit="4" include="authors" order="published_at desc" as |recentPosts|}}
+        <section class="ghost-sidebar__block">
+            <h2 class="ghost-sidebar__title">Recent</h2>
+            <ul class="ghost-sidebar__list">
+                {{#foreach recentPosts as |recentPost|}}
+                    <li class="ghost-sidebar__item">
+                        <a class="ghost-sidebar__link" href="{{recentPost.url}}">{{recentPost.title}}</a>
+                        <span class="ghost-slate">
+                            <span class="ghost-slate__item">
+                                <time datetime="{{recentPost.published_at}}">{{recentPost.published_at}}</time>
+                            </span>
+                        </span>
+                    </li>
+                {{/foreach}}
+            </ul>
+        </section>
+    {{/get}}
+
+    {{!-- Subscribe. Never rendered on a site without memberships. --}}
+    {{#if @site.members_enabled}}
+        <section class="ghost-sidebar__block ghost-sidebar__block--boxed">
+            <h2 class="ghost-sidebar__title">Newsletter</h2>
+            <p class="ghost-sidebar__text">New posts, sent as they are published.</p>
+            <form class="ghost-subscribe__form ghost-sidebar__form" data-members-form="subscribe">
+                <label class="ghost-sr" for="ghost-sidebar-email">Email address</label>
+                <input class="ghost-subscribe__input" id="ghost-sidebar-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required data-members-email>
+                <button class="ghost-button ghost-button--primary ghost-button--block" type="submit">Subscribe</button>
+                <p class="ghost-subscribe__message ghost-subscribe__message--loading">Sending…</p>
+                <p class="ghost-subscribe__message ghost-subscribe__message--success">Check your inbox to confirm.</p>
+                <p class="ghost-subscribe__message ghost-subscribe__message--error">That did not work. Try again?</p>
+            </form>
+        </section>
+    {{/if}}
+
+</aside>

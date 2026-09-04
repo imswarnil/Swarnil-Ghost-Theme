@@ -1,0 +1,523 @@
+{
+  "db": [
+    {
+      "meta": {
+        "exported_on": 1767690000000,
+        "version": "6.0.0"
+      },
+      "data": {
+        "posts": [
+          {
+            "id": "pd280e882000000000000000",
+            "title": "What a Ghost theme actually is",
+            "slug": "what-a-ghost-theme-is",
+            "lexical": "{\"root\":{\"children\":[{\"type\":\"html\",\"version\":1,\"html\":\"<p>A Ghost theme is a folder. Ghost reads it, finds some files it expects by name,\\nand renders your content through them. There is no plugin API, no lifecycle, no\\ncomponent tree. Once that lands, the rest of Ghost theming stops feeling\\nmysterious.</p>\\n<h2>The smallest theme that works</h2>\\n<p>Three files:</p>\\n<pre><code>my-theme/\\n├── package.json\\n├── default.hbs\\n└── index.hbs\\n</code></pre>\\n<p><code>index.hbs</code> renders a list of posts. <code>default.hbs</code> wraps it in an HTML document.\\n<code>package.json</code> tells Ghost what the theme is called and what it needs. Upload a\\nzip of those three and Ghost will serve your site.</p>\\n<p>Everything else — <code>post.hbs</code>, <code>tag.hbs</code>, partials, custom settings — is Ghost\\nnoticing that a file exists and using it. Nothing registers itself.</p>\\n<h2>The manifest</h2>\\n<p><code>package.json</code> is a normal npm manifest with a <code>config</code> block Ghost reads:</p>\\n<pre><code class=\\\"language-json\\\">{\\n  &quot;name&quot;: &quot;swarnil&quot;,\\n  &quot;version&quot;: &quot;1.0.0&quot;,\\n  &quot;description&quot;: &quot;An editorial Ghost theme for creators.&quot;,\\n  &quot;author&quot;: { &quot;name&quot;: &quot;Swarnil Singhai&quot;, &quot;email&quot;: &quot;you@example.com&quot; },\\n  &quot;engines&quot;: { &quot;ghost&quot;: &quot;&gt;=6.0.0&quot; },\\n  &quot;config&quot;: {\\n    &quot;posts_per_page&quot;: 12,\\n    &quot;card_assets&quot;: true,\\n    &quot;image_sizes&quot;: { &quot;m&quot;: { &quot;width&quot;: 640 } },\\n    &quot;custom&quot;: {}\\n  }\\n}\\n</code></pre>\\n<p>Four fields are not optional and Ghost will reject the theme without them:\\n<code>name</code>, <code>version</code>, <code>description</code>, and <code>author.email</code>. The last one catches\\npeople out — it is there because a theme in the marketplace has to have somewhere\\nto send support requests.</p>\\n<p><code>engines.ghost</code> is a semver range. Set it to what you have actually tested\\nagainst, not to what you hope will work.</p>\\n<h2>What Ghost does at upload</h2>\\n<p>When you upload a zip, Ghost:</p>\\n<ol>\\n<li>unpacks it and reads <code>package.json</code></li>\\n<li>runs <strong>gscan</strong>, its own validator, over the files</li>\\n<li>rejects the theme on any error, and warns on anything questionable</li>\\n<li>stores it, and activates it if you asked</li>\\n</ol>\\n<p>gscan is not a linter you can argue with. If it errors, the theme does not\\ninstall. So run it yourself before you ever open the admin panel:</p>\\n<pre><code class=\\\"language-bash\\\">npx gscan .\\n</code></pre>\\n<p>It is worth reading its output carefully even when it passes. Warnings are\\nusually about features you have not implemented yet rather than mistakes — a\\nmissing <code>{{#if @page.show_title_and_feature_image}}</code>, or an asset loaded without\\nthe <code>{{asset}}</code> helper.</p>\\n<h2>Where the theme lives</h2>\\n<p>On a local install, themes sit in <code>content/themes/</code>. Ghost follows symlinks, so\\nthe usual development setup is to keep the theme in its own git repository\\nsomewhere sensible and link it in:</p>\\n<pre><code class=\\\"language-bash\\\">ln -s ~/code/my-theme ~/ghost/content/themes/my-theme\\n</code></pre>\\n<p>Now the theme is a normal repository with normal history, and Ghost sees it\\nanyway.</p>\\n<h2>What to take from this</h2>\\n<ul>\\n<li>A theme is files on disk, discovered by name. Nothing is registered.</li>\\n<li><code>package.json</code> is the only configuration, and four of its fields are mandatory.</li>\\n<li>gscan decides whether your theme installs. Run it before Ghost does.</li>\\n</ul>\\n<p>Next: which of those files Ghost picks for a given URL.</p>\\n\"}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
+            "feature_image": null,
+            "featured": true,
+            "type": "post",
+            "status": "published",
+            "visibility": "public",
+            "custom_excerpt": "A folder of Handlebars files and one manifest. There is no framework underneath, and knowing that makes everything else easier.",
+            "custom_template": null,
+            "created_at": "2026-01-06T09:00:00.000Z",
+            "updated_at": "2026-01-06T09:00:00.000Z",
+            "published_at": "2026-01-06T09:00:00.000Z"
+          },
+          {
+            "id": "p0fa621ad000000000000000",
+            "title": "The template hierarchy",
+            "slug": "template-hierarchy",
+            "lexical": "{\"root\":{\"children\":[{\"type\":\"html\",\"version\":1,\"html\":\"<p>Every request to a Ghost site resolves to one template file. Ghost decides which\\nby walking a list from most specific to least specific and taking the first file\\nthat exists.</p>\\n<p>Knowing the list is most of the job. Without it you end up editing <code>index.hbs</code>\\nand wondering why the tag page did not change.</p>\\n<h2>The lists</h2>\\n<p><strong>A post at <code>/my-post/</code>:</strong></p>\\n<ol>\\n<li>the custom template chosen in the post settings, e.g. <code>custom-video.hbs</code></li>\\n<li><code>post-{slug}.hbs</code> — e.g. <code>post-my-post.hbs</code></li>\\n<li><code>post.hbs</code></li>\\n<li><code>default.hbs</code></li>\\n</ol>\\n<p><strong>A page at <code>/about/</code>:</strong></p>\\n<ol>\\n<li>the custom template chosen in the page settings</li>\\n<li><code>page-{slug}.hbs</code> — e.g. <code>page-about.hbs</code></li>\\n<li><code>page.hbs</code></li>\\n<li><code>post.hbs</code></li>\\n<li><code>default.hbs</code></li>\\n</ol>\\n<p>Note step 4: a page falls back to the <em>post</em> template. If you have no\\n<code>page.hbs</code>, your pages will render as posts, byline and all.</p>\\n<p><strong>A tag archive at <code>/tag/design/</code>:</strong></p>\\n<ol>\\n<li><code>tag-design.hbs</code></li>\\n<li><code>tag.hbs</code></li>\\n<li><code>index.hbs</code></li>\\n</ol>\\n<p><strong>An author archive at <code>/author/swarnil/</code>:</strong></p>\\n<ol>\\n<li><code>author-swarnil.hbs</code></li>\\n<li><code>author.hbs</code></li>\\n<li><code>index.hbs</code></li>\\n</ol>\\n<p><strong>The homepage at <code>/</code>:</strong></p>\\n<ol>\\n<li><code>home.hbs</code></li>\\n<li><code>index.hbs</code></li>\\n</ol>\\n<p><strong>An error:</strong></p>\\n<ol>\\n<li><code>error-404.hbs</code> for a 404 specifically</li>\\n<li><code>error.hbs</code> for everything else</li>\\n</ol>\\n<h2>home.hbs is free</h2>\\n<p>That last pair is worth stopping on, because it is commonly misunderstood. If\\n<code>home.hbs</code> exists, Ghost uses it for the homepage automatically. You do <strong>not</strong>\\nneed <code>routes.yaml</code> for that.</p>\\n<p>This theme takes advantage of it: <code>home.hbs</code> assembles the lead, the shelves and\\nthe feed, while <code>index.hbs</code> stays a plain paginated list and serves <code>/page/2/</code>\\nand the archive. Both work standalone, so a publisher who never touches routing\\nstill gets the full homepage.</p>\\n<h2>Slug templates are a trap worth knowing</h2>\\n<p><code>post-{slug}.hbs</code> and <code>tag-{slug}.hbs</code> are real and they work. They are also\\nalmost always the wrong tool, because the filename hard-codes a slug that a\\npublisher can rename in the editor without ever suspecting it was load-bearing.</p>\\n<p>Prefer a custom template. Those show up in a dropdown in Ghost admin, they\\nsurvive a slug change, and a publisher can apply one without knowing a theme\\nfile exists. This theme ships three — Wide, Immersive and Video — and no slug\\ntemplates at all.</p>\\n<h2>Seeing it work</h2>\\n<p>The fastest way to internalise the hierarchy is to break it on purpose. Rename\\n<code>tag.hbs</code> to <code>tag.hbs.off</code>, reload a tag archive, and watch it fall through to\\n<code>index.hbs</code>. Put it back.</p>\\n<h2>What to take from this</h2>\\n<ul>\\n<li>One request, one template, chosen by filename from a fixed list.</li>\\n<li>Pages fall back to <code>post.hbs</code>, which surprises people.</li>\\n<li><code>home.hbs</code> needs no routing configuration.</li>\\n<li>Prefer custom templates over <code>{slug}</code> templates — slugs change.</li>\\n</ul>\\n<p>Next: the language those files are written in.</p>\\n\"}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
+            "feature_image": null,
+            "featured": false,
+            "type": "post",
+            "status": "published",
+            "visibility": "public",
+            "custom_excerpt": "Ghost picks a template by walking a list of filenames from most specific to least. Learn the list and you stop guessing which file to edit.",
+            "custom_template": "custom-wide",
+            "created_at": "2026-01-09T09:00:00.000Z",
+            "updated_at": "2026-01-09T09:00:00.000Z",
+            "published_at": "2026-01-09T09:00:00.000Z"
+          },
+          {
+            "id": "p6b0a6d6f000000000000000",
+            "title": "Handlebars in Ghost",
+            "slug": "handlebars-in-ghost",
+            "lexical": "{\"root\":{\"children\":[{\"type\":\"html\",\"version\":1,\"html\":\"<p>Ghost templates are Handlebars. If you have written any templating language the\\nsyntax will not surprise you. What <em>will</em> surprise you is a handful of Ghost\\nhelpers that behave differently from how they read.</p>\\n<h2>Context</h2>\\n<p>Handlebars evaluates every expression against a current context — &quot;the thing we\\nare talking about right now&quot;. <code>{{title}}</code> means &quot;the title of the current\\ncontext&quot;.</p>\\n<p>Block helpers change it:</p>\\n<pre><code class=\\\"language-hbs\\\">{{#post}}\\n    {{title}}     {{!-- the post&#39;s title --}}\\n{{/post}}\\n\\n{{#foreach posts}}\\n    {{title}}     {{!-- each post&#39;s title, in turn --}}\\n{{/foreach}}\\n</code></pre>\\n<p><code>../</code> climbs back out one level:</p>\\n<pre><code class=\\\"language-hbs\\\">{{#foreach posts}}\\n    {{title}} — on {{../@site.title}}\\n{{/foreach}}\\n</code></pre>\\n<p>And <code>@</code>-prefixed values are global, reachable from anywhere: <code>@site</code>, <code>@custom</code>,\\n<code>@member</code>, <code>@config</code>, plus loop state like <code>@index</code>, <code>@first</code>, <code>@last</code>.</p>\\n<h2>Partials</h2>\\n<p>A partial is a reusable fragment in <code>partials/</code>:</p>\\n<pre><code class=\\\"language-hbs\\\">{{&gt; &quot;byline&quot;}}                        {{!-- inherits the current context --}}\\n{{&gt; &quot;frame&quot; src=feature_image alt=title}}   {{!-- plus named parameters --}}\\n</code></pre>\\n<p>The inheritance is the important half. <code>{{&gt; &quot;byline&quot;}}</code> inside a\\n<code>{{#foreach posts}}</code> sees the current post without being handed it, which is why\\nthis theme&#39;s card, entry and byline partials take almost no parameters.</p>\\n<p>Partials nest and can be organised into folders (<code>{{&gt; &quot;post/meta&quot;}}</code>), but the\\nmarketplace guidance is explicit: use partials to manage components sensibly,\\nnot for every snippet. A partial that is used once and is five lines long is\\nfiling, not architecture.</p>\\n<h2>The three traps</h2>\\n<p>These all compile. They all fail at runtime. None of them says so on the page.</p>\\n<h3>1. <code>{{match}}</code> as a subexpression is always truthy</h3>\\n<pre><code class=\\\"language-hbs\\\">{{!-- BROKEN: never renders --}}\\n{{#unless (match @custom.layout &quot;None&quot;)}} … {{/unless}}\\n</code></pre>\\n<p>Used as a subexpression, <code>match</code> returns a <code>SafeString</code> <em>object</em>, not a boolean.\\nObjects are truthy, so the condition can never be false. Use the block form:</p>\\n<pre><code class=\\\"language-hbs\\\">{{#match @custom.layout &quot;None&quot;}}{{else}} … {{/match}}\\n</code></pre>\\n<h3>2. Block-only helpers throw as subexpressions</h3>\\n<p><code>has</code>, <code>is</code> and <code>foreach</code> only work as blocks. Written as subexpressions —\\n<code>{{&gt; &quot;frame&quot; video=(has tag=&quot;#video&quot;)}}</code> — they throw\\n<code>options.inverse is not a function</code>. Ghost logs it and renders the surrounding\\nsection as nothing at all. You get a blank space and no error on the page.</p>\\n<p>Move the check inside the partial, where it can be a block:</p>\\n<pre><code class=\\\"language-hbs\\\">{{#has tag=&quot;#video&quot;}} … {{/has}}\\n</code></pre>\\n<h3>3. <code>{{#get}}</code> does not run async helpers in its <code>{{else}}</code></h3>\\n<pre><code class=\\\"language-hbs\\\">{{!-- BROKEN: the inner query renders nothing --}}\\n{{#get &quot;posts&quot; filter=&quot;featured:true&quot; limit=&quot;1&quot;}}\\n    …\\n{{else}}\\n    {{#get &quot;posts&quot; limit=&quot;1&quot;}} … {{/get}}\\n{{/get}}\\n</code></pre>\\n<p><code>{{#get}}</code> is asynchronous. Ghost resolves nested async helpers inside the\\n<em>body</em> of a <code>get</code>, but not inside its inverse branch. The fallback query silently\\nproduces nothing.</p>\\n<p>Express the fallback as an ordering on one query instead:</p>\\n<pre><code class=\\\"language-hbs\\\">{{#get &quot;posts&quot; limit=&quot;1&quot; order=&quot;featured desc, published_at desc&quot;}} … {{/get}}\\n</code></pre>\\n<p>That returns the featured post when one exists and the latest post when none\\ndoes — in a single query, with no nesting.</p>\\n<h2>Guarding against them</h2>\\n<p>This theme keeps a small linter at <code>scripts/lint-hbs.mjs</code> that fails the build\\non all three. It exists because each one cost real time, and because none of\\nthem is something gscan checks — gscan validates compatibility with Ghost&#39;s API,\\nnot whether your logic can ever be reached.</p>\\n<h2>What to take from this</h2>\\n<ul>\\n<li>Context is &quot;the thing we are talking about&quot;; <code>../</code> climbs out, <code>@</code> is global.</li>\\n<li>Partials inherit context, which is what makes them worth having.</li>\\n<li><code>match</code> as a subexpression, block helpers as subexpressions, and nested\\n<code>{{#get}}</code> fallbacks all fail quietly. Learn the three shapes.</li>\\n</ul>\\n<p>Next: the file every one of these templates is wrapped in.</p>\\n\"}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
+            "feature_image": null,
+            "featured": false,
+            "type": "post",
+            "status": "published",
+            "visibility": "public",
+            "custom_excerpt": "Context, helpers and partials — plus the three helper traps that fail silently and cost an afternoon each.",
+            "custom_template": "custom-video",
+            "created_at": "2026-01-12T09:00:00.000Z",
+            "updated_at": "2026-01-12T09:00:00.000Z",
+            "published_at": "2026-01-12T09:00:00.000Z"
+          },
+          {
+            "id": "p40c5df5c000000000000000",
+            "title": "The layout contract",
+            "slug": "the-layout-contract",
+            "lexical": "{\"root\":{\"children\":[{\"type\":\"html\",\"version\":1,\"html\":\"<p><code>default.hbs</code> is the HTML document every other template renders inside. It is\\nthe one file with genuine non-negotiable requirements.</p>\\n<h2>The four obligations</h2>\\n<pre><code class=\\\"language-hbs\\\">&lt;!DOCTYPE html&gt;\\n&lt;html lang=&quot;{{@site.locale}}&quot;&gt;\\n&lt;head&gt;\\n    &lt;title&gt;{{meta_title}}&lt;/title&gt;\\n    &lt;link rel=&quot;stylesheet&quot; href=&quot;{{asset &quot;built/index.css&quot;}}&quot;&gt;\\n    {{ghost_head}}\\n&lt;/head&gt;\\n&lt;body class=&quot;{{body_class}}&quot;&gt;\\n    {{{body}}}\\n    {{ghost_foot}}\\n&lt;/body&gt;\\n&lt;/html&gt;\\n</code></pre>\\n<p><strong><code>{{{body}}}</code></strong> — three braces, not two. This is where the page template gets\\ninserted. Two braces would escape the HTML and print your markup as visible\\ntext.</p>\\n<p><strong><code>{{ghost_head}}</code></strong> — must be the last thing before <code>&lt;/head&gt;</code>. It emits the\\ncanonical URL, Open Graph and Twitter meta, JSON-LD structured data, the RSS\\nlink, and anything the publisher put in code injection. Placing it earlier lets\\nyour own tags override things Ghost is trying to set.</p>\\n<p><strong><code>{{ghost_foot}}</code></strong> — must be the last thing before <code>&lt;/body&gt;</code>. It loads\\nmembers, Portal, search, comments and footer code injection. Search will simply\\nnot work without it, and the failure is silent.</p>\\n<p><strong><code>{{body_class}}</code></strong> — emits context classes like <code>post-template</code>,\\n<code>tag-template</code>, <code>paged</code>. Ghost&#39;s own tooling and plenty of third-party snippets\\nlook for them.</p>\\n<h2>Assets</h2>\\n<p>Always load theme files through <code>{{asset}}</code>:</p>\\n<pre><code class=\\\"language-hbs\\\">&lt;link rel=&quot;stylesheet&quot; href=&quot;{{asset &quot;built/index.css&quot;}}&quot;&gt;\\n&lt;script defer src=&quot;{{asset &quot;built/index.js&quot;}}&quot;&gt;&lt;/script&gt;\\n</code></pre>\\n<p><code>{{asset}}</code> resolves the path relative to the theme and appends a cache-busting\\nquery string tied to the theme version. A hard-coded <code>/assets/…</code> path will be\\ncached by a CDN and your buyers will report that an update &quot;did nothing&quot;.\\nUsing it is a marketplace requirement, and gscan checks for it.</p>\\n<h2>Blocking on purpose</h2>\\n<p>This theme has exactly one render-blocking inline script, and it is worth\\nexplaining because the instinct is to remove it:</p>\\n<pre><code class=\\\"language-hbs\\\">&lt;script&gt;\\n    (function () {\\n        var scheme = localStorage.getItem(&#39;ghost-theme-scheme&#39;) || &#39;system&#39;;\\n        var resolved = scheme === &#39;system&#39;\\n            ? (matchMedia(&#39;(prefers-color-scheme: dark)&#39;).matches ? &#39;dark&#39; : &#39;light&#39;)\\n            : scheme;\\n        document.documentElement.setAttribute(&#39;data-theme&#39;, resolved);\\n    })();\\n&lt;/script&gt;\\n</code></pre>\\n<p>It has to be inline and synchronous. Defer it, bundle it, move it to the footer —\\nany of those and the browser paints the light theme first and then repaints. A\\nreader who chose dark mode gets a white flash on every single navigation.</p>\\n<p>This is the standard trade: a few hundred bytes of blocking script against a\\nvisible defect on every page load. Take the trade, and leave a comment saying\\nwhy, because the next person to read the file will want to tidy it away.</p>\\n<h2>Settings that are values, not switches</h2>\\n<p>Anything expressible as a class or an attribute should be one. Custom properties\\nare for the rest:</p>\\n<pre><code class=\\\"language-hbs\\\">&lt;style&gt;\\n    :root {\\n        --t-feature-ratio: {{@custom.feature_image_ratio}};\\n    }\\n&lt;/style&gt;\\n</code></pre>\\n<p>An aspect ratio is a value; there is no sensible finite set of classes for it.\\nThe colour scheme, by contrast, is an attribute on <code>&lt;html&gt;</code> — because the whole\\nstylesheet keys off it.</p>\\n<h2>What to take from this</h2>\\n<ul>\\n<li><code>{{{body}}}</code> takes three braces.</li>\\n<li><code>{{ghost_head}}</code> last in <code>&lt;head&gt;</code>, <code>{{ghost_foot}}</code> last in <code>&lt;body&gt;</code>.</li>\\n<li>Load every theme file through <code>{{asset}}</code>, always.</li>\\n<li>One inline blocking script for the colour scheme is correct. Comment it.</li>\\n</ul>\\n<p>Next: putting posts on the page.</p>\\n\"}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
+            "feature_image": null,
+            "featured": false,
+            "type": "post",
+            "status": "published",
+            "visibility": "public",
+            "custom_excerpt": "default.hbs wraps every page. Four things must be in it, and getting any of them wrong breaks something you will not notice for weeks.",
+            "custom_template": null,
+            "created_at": "2026-01-15T09:00:00.000Z",
+            "updated_at": "2026-01-15T09:00:00.000Z",
+            "published_at": "2026-01-15T09:00:00.000Z"
+          },
+          {
+            "id": "p6f77caa5000000000000000",
+            "title": "Listing posts",
+            "slug": "listing-posts",
+            "lexical": "{\"root\":{\"children\":[{\"type\":\"html\",\"version\":1,\"html\":\"<p>Most of a theme is lists of posts. There are two ways to get them, and picking\\nthe wrong one is the usual cause of a slow homepage.</p>\\n<h2>What the route already gave you</h2>\\n<p>On <code>index.hbs</code>, <code>tag.hbs</code> and <code>author.hbs</code>, Ghost has already run the query.\\nThe posts are sitting in <code>posts</code>:</p>\\n<pre><code class=\\\"language-hbs\\\">{{#foreach posts}}\\n    &lt;h2&gt;&lt;a href=&quot;{{url}}&quot;&gt;{{title}}&lt;/a&gt;&lt;/h2&gt;\\n{{/foreach}}\\n</code></pre>\\n<p>This costs nothing extra — the data is already loaded. How many you get is\\n<code>posts_per_page</code> in <code>package.json</code>.</p>\\n<p><code>{{#foreach}}</code> gives you loop state: <code>@index</code> (zero-based), <code>@number</code>\\n(one-based), <code>@first</code>, <code>@last</code>, and it accepts <code>limit</code>, <code>from</code> and <code>visibility</code>.</p>\\n<h2>Fetching something else</h2>\\n<p>For anything the route did not hand you — a shelf of posts from one tag, related\\nposts under an article — use <code>{{#get}}</code>:</p>\\n<pre><code class=\\\"language-hbs\\\">{{#get &quot;posts&quot; filter=&quot;tag:video&quot; limit=&quot;8&quot; include=&quot;authors,tags&quot; as |videos|}}\\n    {{#foreach videos}}\\n        {{&gt; &quot;card&quot;}}\\n    {{/foreach}}\\n{{else}}\\n    &lt;p&gt;Nothing here yet.&lt;/p&gt;\\n{{/get}}\\n</code></pre>\\n<p>Three things to hold onto:</p>\\n<p><strong>The <code>{{else}}</code> runs when the query is empty.</strong> That is where your empty state\\nbelongs. Putting it inside a partial after an <code>{{#if posts}}</code> will never be\\nreached, because Handlebars never enters the body at all.</p>\\n<p><strong><code>include</code> is not free but not optional either.</strong> Without <code>include=&quot;authors&quot;</code>,\\n<code>{{primary_author.name}}</code> is empty. Ask for what you use and nothing more.</p>\\n<p><strong>Every <code>{{#get}}</code> is a real query.</strong> Six of them on a homepage is six queries on\\nevery uncached request. Ghost caches aggressively in production, but the first\\nvisitor still pays.</p>\\n<h2>Filters</h2>\\n<p>The filter string is NQL, Ghost&#39;s query language:</p>\\n<table>\\n<thead>\\n<tr>\\n<th>Filter</th>\\n<th>Meaning</th>\\n</tr>\\n</thead>\\n<tbody><tr>\\n<td><code>featured:true</code></td>\\n<td>featured posts</td>\\n</tr>\\n<tr>\\n<td><code>tag:video</code></td>\\n<td>tagged <code>video</code></td>\\n</tr>\\n<tr>\\n<td><code>tags:[video,notes]</code></td>\\n<td>tagged either</td>\\n</tr>\\n<tr>\\n<td><code>id:-{{id}}</code></td>\\n<td>everything except this post</td>\\n</tr>\\n<tr>\\n<td><code>tag:video+featured:true</code></td>\\n<td>both (<code>+</code> is AND)</td>\\n</tr>\\n<tr>\\n<td><code>tag:video,tag:notes</code></td>\\n<td>either (<code>,</code> is OR)</td>\\n</tr>\\n</tbody></table>\\n<p><code>{{...}}</code> interpolation works inside the string, which is how &quot;related posts,\\nbut not this one&quot; is written:</p>\\n<pre><code class=\\\"language-hbs\\\">{{#get &quot;posts&quot; filter=&quot;tags:{{primary_tag.slug}}+id:-{{id}}&quot; limit=&quot;3&quot;}}\\n</code></pre>\\n<h2>Ordering as a fallback</h2>\\n<p>Because <code>{{#get}}</code> cannot nest a fallback query in its <code>{{else}}</code> (see lesson 3),\\n<code>order</code> is often the answer:</p>\\n<pre><code class=\\\"language-hbs\\\">{{#get &quot;posts&quot; limit=&quot;1&quot; order=&quot;featured desc, published_at desc&quot;}}\\n</code></pre>\\n<p>&quot;The featured post, or the newest one if nothing is featured&quot; — one query, no\\nbranching. Reach for <code>order</code> whenever a fallback is really a preference.</p>\\n<h2>Pagination</h2>\\n<pre><code class=\\\"language-hbs\\\">{{pagination}}\\n</code></pre>\\n<p>If <code>partials/pagination.hbs</code> exists, Ghost renders that instead of its own\\nmarkup. Inside it you get <code>page</code>, <code>pages</code>, <code>total</code>, <code>prev</code>, <code>next</code>, and\\n<code>{{page_url next}}</code>.</p>\\n<p>Keep them as real links. Infinite scroll costs the crawler every post past the\\nfirst page and breaks the back button, and no amount of client-side cleverness\\nfully fixes either.</p>\\n<h2>What to take from this</h2>\\n<ul>\\n<li><code>{{#foreach posts}}</code> for what the route loaded; <code>{{#get}}</code> for anything else.</li>\\n<li>Empty states go in <code>{{#get}}</code>&#39;s <code>{{else}}</code>, not deeper inside.</li>\\n<li><code>include</code> what you use; every <code>{{#get}}</code> is a query.</li>\\n<li>Prefer <code>order</code> to a nested fallback.</li>\\n</ul>\\n<p>Next: everything you can actually read off a post.</p>\\n\"}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
+            "feature_image": null,
+            "featured": false,
+            "type": "post",
+            "status": "published",
+            "visibility": "public",
+            "custom_excerpt": "foreach for what the route gave you, get for anything else, and pagination that a search engine can actually follow.",
+            "custom_template": null,
+            "created_at": "2026-01-18T09:00:00.000Z",
+            "updated_at": "2026-01-18T09:00:00.000Z",
+            "published_at": "2026-01-18T09:00:00.000Z"
+          },
+          {
+            "id": "p1d0ae86b000000000000000",
+            "title": "The post context",
+            "slug": "the-post-context",
+            "lexical": "{\"root\":{\"children\":[{\"type\":\"html\",\"version\":1,\"html\":\"<p>Inside <code>{{#post}}</code> or <code>{{#foreach posts}}</code> you have the whole post. Here is what\\nis actually on it, and — more usefully — what is often missing.</p>\\n<h2>Always there</h2>\\n<pre><code class=\\\"language-hbs\\\">{{title}}            {{url}}          {{id}}\\n{{content}}          {{excerpt}}      {{reading_time}}\\n{{published_at}}     {{slug}}         {{access}}\\n</code></pre>\\n<p><code>{{content}}</code> is the rendered HTML of the post body. It is already escaped by\\nGhost, so print it with two braces, not three.</p>\\n<p><code>{{excerpt}}</code> falls back to the first words of the post when no custom excerpt\\nwas written, and takes a <code>words</code> parameter: <code>{{excerpt words=&quot;24&quot;}}</code>.</p>\\n<p><code>{{access}}</code> is a boolean: can the current visitor read this? It is <code>false</code> on a\\nmembers-only post seen by a signed-out reader.</p>\\n<h2>Frequently empty</h2>\\n<p>These are the ones that decide whether your theme looks finished:</p>\\n<pre><code class=\\\"language-hbs\\\">{{feature_image}}            {{feature_image_alt}}\\n{{feature_image_caption}}    {{custom_excerpt}}\\n{{primary_tag}}              {{primary_author.profile_image}}\\n{{primary_author.bio}}\\n</code></pre>\\n<p>Every one of them is unset on a real post somewhere. A publisher writing quickly\\ndoes not add a feature image. Most authors never fill in a bio. Plenty of posts\\ncarry no tags at all.</p>\\n<p>The marketplace calls this out directly: <em>ensure good fallbacks when content is\\nempty or unavailable</em>. In practice it means every list, every card and every\\nheader needs a designed answer to &quot;what if this is blank&quot; — not a hidden element\\nthat leaves a hole in the grid.</p>\\n<p>This theme takes three different approaches depending on what is missing:</p>\\n<ul>\\n<li><strong>No feature image, in a grid</strong> — the frame stays and fills with a hairline\\nhatch, so the row keeps its rhythm.</li>\\n<li><strong>No feature image, in a list</strong> — the media column is skipped entirely and the\\ntext keeps its alignment.</li>\\n<li><strong>No author picture</strong> — the avatar keeps its circle and shows the same hatch,\\nrather than a stock silhouette that asserts something about a person.</li>\\n</ul>\\n<h2>Tags</h2>\\n<pre><code class=\\\"language-hbs\\\">{{#foreach tags visibility=&quot;public&quot;}}\\n    &lt;a href=&quot;{{url}}&quot;&gt;{{name}}&lt;/a&gt;\\n{{/foreach}}\\n</code></pre>\\n<p><code>visibility=&quot;public&quot;</code> matters. Ghost has <strong>internal tags</strong>, written with a <code>#</code>\\nprefix — <code>#video</code>, <code>#featured-series</code>. They are configuration, not taxonomy:\\nthey exist so a theme can switch behaviour without the reader seeing a tag. Loop\\nwithout the filter and you will print <code>#video</code> on the page.</p>\\n<p><code>{{primary_tag}}</code> is the first public tag, and it is what &quot;related posts&quot; should\\nkey off.</p>\\n<h2>Authors</h2>\\n<pre><code class=\\\"language-hbs\\\">{{#foreach authors}}\\n    {{name}} {{bio}} {{profile_image}} {{url}}\\n{{/foreach}}\\n\\n{{primary_author.name}}\\n</code></pre>\\n<p>A post can have several authors. <code>{{primary_author}}</code> is the first. If you only\\never show one, say so in your docs, because a publisher with a co-authored post\\nwill notice.</p>\\n<p>Both require <code>include=&quot;authors&quot;</code> when you fetched the posts with <code>{{#get}}</code>.</p>\\n<h2>Dates</h2>\\n<pre><code class=\\\"language-hbs\\\">&lt;time datetime=&quot;{{date format=&quot;YYYY-MM-DD&quot;}}&quot;&gt;{{date format=&quot;D MMM YYYY&quot;}}&lt;/time&gt;\\n</code></pre>\\n<p>Always put a machine-readable <code>datetime</code> on a <code>&lt;time&gt;</code> element. Structured data\\nand assistive technology both use it, and &quot;4 Sep&quot; alone is ambiguous to both.</p>\\n<h2>What to take from this</h2>\\n<ul>\\n<li><code>{{content}}</code> takes two braces — Ghost already escaped it.</li>\\n<li>Feature images, excerpts, bios and tags are all routinely empty.</li>\\n<li>Filter tags to <code>visibility=&quot;public&quot;</code> or you will leak internal tags.</li>\\n<li>Designing the empty states <em>is</em> the work, not a finishing touch.</li>\\n</ul>\\n<p>Next: giving one post a different shape from the others.</p>\\n\"}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
+            "feature_image": null,
+            "featured": false,
+            "type": "post",
+            "status": "published",
+            "visibility": "public",
+            "custom_excerpt": "Every variable a post gives you, which ones are routinely empty, and why designing for the empty ones is most of the work.",
+            "custom_template": null,
+            "created_at": "2026-01-21T09:00:00.000Z",
+            "updated_at": "2026-01-21T09:00:00.000Z",
+            "published_at": "2026-01-21T09:00:00.000Z"
+          },
+          {
+            "id": "p1ba58289000000000000000",
+            "title": "Post layouts",
+            "slug": "post-layouts",
+            "lexical": "{\"root\":{\"children\":[{\"type\":\"html\",\"version\":1,\"html\":\"<p>Sooner or later one post needs to look different — a photo essay wants a wider\\ncolumn, an interview wants its title over the image. Ghost gives you two\\nmechanisms, and they are good at different things.</p>\\n<h2>Custom templates</h2>\\n<p>Any file named <code>custom-{something}.hbs</code> appears as an option in the post\\nsettings sidebar in Ghost admin, under <strong>Template</strong>. The word after the dash\\nbecomes the label, title-cased.</p>\\n<pre><code>custom-wide.hbs        → &quot;Wide&quot;\\ncustom-immersive.hbs   → &quot;Immersive&quot;\\ncustom-video.hbs       → &quot;Video&quot;\\n</code></pre>\\n<p>A publisher picks one from a dropdown. They never learn that a file exists.</p>\\n<p>This is the mechanism to reach for. It is discoverable, it survives a slug\\nchange, and it is self-documenting inside the admin panel.</p>\\n<h2>Internal tags</h2>\\n<p>The other approach is an internal tag — <code>#wide</code> — read by the template:</p>\\n<pre><code class=\\\"language-hbs\\\">{{#has tag=&quot;#wide&quot;}} … {{/has}}\\n</code></pre>\\n<p>Internal tags are invisible to readers, so this works. But it is a convention a\\npublisher has to be <em>told</em> about, and telling them means documentation that\\nsomeone will not read. Prefer them for behaviour that is not a whole layout:\\nmarking a post as a video so its card gets a play badge, for instance, which is\\nexactly what this theme uses <code>#video</code> for.</p>\\n<h2>Not maintaining three copies</h2>\\n<p>The obvious implementation is to copy <code>post.hbs</code> three times and edit each. Do\\nthat and the three files will drift within a month — a fix to the byline lands\\nin one and not the others.</p>\\n<p>Instead, each template is three lines, and they all delegate:</p>\\n<pre><code class=\\\"language-hbs\\\">{{!-- custom-wide.hbs --}}\\n{{!&lt; default}}\\n{{#post}}\\n    {{&gt; &quot;post-shell&quot; layout=&quot;Wide&quot;}}\\n{{/post}}\\n</code></pre>\\n<p><code>post.hbs</code> does the same thing with the site-wide default:</p>\\n<pre><code class=\\\"language-hbs\\\">{{#post}}\\n    {{&gt; &quot;post-shell&quot; layout=@custom.post_layout}}\\n{{/post}}\\n</code></pre>\\n<p>All the markup lives once, in <code>partials/post-shell.hbs</code>, which branches on its\\n<code>layout</code> parameter. A change to the byline lands in every layout at once,\\nbecause there is only one byline.</p>\\n<h2>Degrading a layout</h2>\\n<p>The Immersive layout sets the title over the feature image. What should it do on\\na post with no feature image?</p>\\n<p>Not this:</p>\\n<pre><code class=\\\"language-hbs\\\">{{!-- a title floating on an empty grey block --}}\\n&lt;div class=&quot;cover&quot; style=&quot;background-image: url({{feature_image}})&quot;&gt;\\n</code></pre>\\n<p>The template checks, and falls back to the standard header:</p>\\n<pre><code class=\\\"language-hbs\\\">{{#match layout &quot;Immersive&quot;}}\\n    {{#unless feature_image}}\\n        {{&gt; &quot;post-header&quot;}}\\n    {{/unless}}\\n{{else}}\\n    {{&gt; &quot;post-header&quot;}}\\n{{/match}}\\n</code></pre>\\n<p>Note the nesting rather than a single condition. Ghost has no <code>and</code> helper, so\\n&quot;Immersive <strong>and</strong> has an image&quot; has to be written as two blocks. That is\\nawkward enough to be worth a comment in the file.</p>\\n<h2>What to take from this</h2>\\n<ul>\\n<li>Custom templates for whole layouts; internal tags for smaller behaviours.</li>\\n<li>Keep the custom templates thin and delegate to one shared partial.</li>\\n<li>Every alternate layout needs an answer for its missing ingredient.</li>\\n<li>There is no <code>and</code> helper. Nest the conditions.</li>\\n</ul>\\n<p>Next: changing what lives at which URL.</p>\\n\"}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
+            "feature_image": null,
+            "featured": true,
+            "type": "post",
+            "status": "published",
+            "visibility": "public",
+            "custom_excerpt": "Custom templates, internal tags, and how to offer three layouts without maintaining three copies of the same file.",
+            "custom_template": "custom-immersive",
+            "created_at": "2026-01-24T09:00:00.000Z",
+            "updated_at": "2026-01-24T09:00:00.000Z",
+            "published_at": "2026-01-24T09:00:00.000Z"
+          },
+          {
+            "id": "peba26363000000000000000",
+            "title": "Routing",
+            "slug": "routing-in-ghost",
+            "lexical": "{\"root\":{\"children\":[{\"type\":\"html\",\"version\":1,\"html\":\"<p><code>routes.yaml</code> maps URLs to templates and content. It is the least understood\\npart of Ghost theming, partly because of one detail: <strong>it is not installed with\\nyour theme</strong>.</p>\\n<h2>It ships separately</h2>\\n<p>A publisher uploads <code>routes.yaml</code> under <strong>Settings → Labs → Routes</strong>, as a\\nseparate action from installing the theme. Ghost does this deliberately —\\nrouting is site configuration, and replacing it when someone tries a new theme\\nwould break every URL they have.</p>\\n<p>The consequence for you: <strong>your theme must work correctly without it.</strong> Ship a\\n<code>routes.yaml</code> if it adds something, document it, and make sure everything\\ndegrades gracefully when a buyer never uploads it.</p>\\n<p>This theme ships one that adds a single route, <code>/archive/</code>. The homepage does\\nnot need it, because <code>home.hbs</code> is picked up automatically.</p>\\n<h2>The three sections</h2>\\n<pre><code class=\\\"language-yaml\\\">routes:\\n  /about/:\\n    template: about\\n\\ncollections:\\n  /:\\n    permalink: /{slug}/\\n    template: home\\n\\ntaxonomies:\\n  tag: /tag/{slug}/\\n  author: /author/{slug}/\\n</code></pre>\\n<p><strong><code>routes</code></strong> maps one URL to one template. Optionally with <code>data:</code> to bind a\\npage or post to it.</p>\\n<p><strong><code>collections</code></strong> define paginated groups of posts. Every post belongs to\\nexactly one collection, and the collection sets its permalink.</p>\\n<p><strong><code>taxonomies</code></strong> set the URL patterns for tag and author archives.</p>\\n<h2>The filter that eats your posts</h2>\\n<p>This is the mistake worth burning into memory:</p>\\n<pre><code class=\\\"language-yaml\\\">collections:\\n  /:\\n    permalink: /{slug}/\\n    filter: &#39;featured:false&#39;    # ← do not do this\\n</code></pre>\\n<p>Every post belongs to exactly one collection, and a post&#39;s URL comes from the\\ncollection it belongs to. Filter featured posts out of the only collection and\\nthose posts belong to no collection — so they have <strong>no URL at all</strong>. They\\nvanish from the site, still listed in admin as published.</p>\\n<p>If you filter a collection, you must define another collection that catches\\neverything the first one excluded:</p>\\n<pre><code class=\\\"language-yaml\\\">collections:\\n  /featured/:\\n    permalink: /{slug}/\\n    filter: &#39;featured:true&#39;\\n    template: index\\n  /:\\n    permalink: /{slug}/\\n    template: home\\n</code></pre>\\n<h2>Permalinks</h2>\\n<pre><code class=\\\"language-yaml\\\">permalink: /{slug}/\\npermalink: /{year}/{month}/{slug}/\\npermalink: /{primary_tag}/{slug}/\\n</code></pre>\\n<p>Changing a permalink on a live site changes every post URL and breaks every\\ninbound link. If a theme&#39;s routing suggestion changes permalinks, say so in\\ncapitals in your documentation.</p>\\n<h2>Channels</h2>\\n<p>A <code>route</code> with a <code>controller</code> becomes a channel — a filtered, paginated list:</p>\\n<pre><code class=\\\"language-yaml\\\">routes:\\n  /archive/:\\n    controller: channel\\n    template: index\\n</code></pre>\\n<p>Channels do not own permalinks, so they are safe. This is how you add &quot;all posts\\nin one place&quot; without touching where anything lives.</p>\\n<h2>What to take from this</h2>\\n<ul>\\n<li><code>routes.yaml</code> is uploaded separately. The theme must work without it.</li>\\n<li>A filtered collection with no catch-all leaves posts with no URL.</li>\\n<li>Permalink changes break every inbound link to the site.</li>\\n<li>Channels are the safe way to add a listing page.</li>\\n</ul>\\n<p>Next: letting a publisher change things without opening a file.</p>\\n\"}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
+            "feature_image": null,
+            "featured": false,
+            "type": "post",
+            "status": "published",
+            "visibility": "public",
+            "custom_excerpt": "routes.yaml decides what lives at which URL. It is powerful, it is not part of your theme, and one wrong filter will delete posts from your site.",
+            "custom_template": null,
+            "created_at": "2026-01-27T09:00:00.000Z",
+            "updated_at": "2026-01-27T09:00:00.000Z",
+            "published_at": "2026-01-27T09:00:00.000Z"
+          },
+          {
+            "id": "p44fa60fe000000000000000",
+            "title": "Custom settings",
+            "slug": "custom-settings",
+            "lexical": "{\"root\":{\"children\":[{\"type\":\"html\",\"version\":1,\"html\":\"<p>Custom settings turn a theme from a starting point into a product. They live in\\n<code>package.json</code> under <code>config.custom</code>, and Ghost renders them as real form\\ncontrols in <strong>Settings → Design</strong>.</p>\\n<h2>The shape</h2>\\n<pre><code class=\\\"language-json\\\">&quot;custom&quot;: {\\n  &quot;homepage_layout&quot;: {\\n    &quot;type&quot;: &quot;select&quot;,\\n    &quot;options&quot;: [&quot;Call Sheet&quot;, &quot;Stacked&quot;, &quot;Grid&quot;],\\n    &quot;default&quot;: &quot;Call Sheet&quot;,\\n    &quot;group&quot;: &quot;homepage&quot;,\\n    &quot;description&quot;: &quot;The overall shape of the homepage.&quot;\\n  }\\n}\\n</code></pre>\\n<p>Five types: <code>select</code>, <code>boolean</code>, <code>color</code>, <code>image</code>, <code>text</code>.</p>\\n<p>Three groups: <code>homepage</code>, <code>post</code>, and — by leaving <code>group</code> out — site-wide.\\nGhost shows grouped settings in context, so a <code>homepage</code> setting appears while\\nthe publisher is previewing the homepage.</p>\\n<p>Read them with <code>@custom</code>:</p>\\n<pre><code class=\\\"language-hbs\\\">{{#match @custom.homepage_layout &quot;Grid&quot;}} … {{/match}}\\n{{#if @custom.show_reading_time}} … {{/if}}\\n{{@custom.footer_note}}\\n</code></pre>\\n<h2>The rule that matters</h2>\\n<p><em>If a publisher would need to touch <code>.hbs</code> or CSS to change something reasonable,\\nit belongs in a setting.</em></p>\\n<p>&quot;Reasonable&quot; is doing work in that sentence. A setting for every colour is not\\nusability, it is an unfinished design — and reviewers read a long settings list\\nas indecision. Pick the handful of choices that genuinely differ between\\npublications and make those excellent.</p>\\n<h2>Selects are contracts</h2>\\n<p>An option string is used verbatim in your templates:</p>\\n<pre><code class=\\\"language-json\\\">&quot;options&quot;: [&quot;Call Sheet&quot;, &quot;Stacked&quot;, &quot;Grid&quot;]\\n</code></pre>\\n<pre><code class=\\\"language-hbs\\\">{{#match @custom.homepage_layout &quot;Call Sheet&quot;}}\\n</code></pre>\\n<p>The comparison is exact — spaces, capitals, everything. Rename an option in\\n<code>package.json</code> and every template comparing against the old string silently\\nstops matching. There is no error; the branch just never runs.</p>\\n<p>Worse, a publisher who already chose the old value keeps it in their database,\\nand now their site matches nothing at all. Renaming an option in a released\\ntheme is a breaking change. Treat it like one.</p>\\n<h2>Values versus switches</h2>\\n<p>Anything that maps to a finite set should become a class or an attribute:</p>\\n<pre><code class=\\\"language-hbs\\\">&lt;html data-typeface=&quot;{{#match @custom.typeface_pairing &quot;Serif &amp; Sans&quot;}}serif{{else}}grotesk{{/match}}&quot;&gt;\\n</code></pre>\\n<p>Anything continuous has to become a custom property:</p>\\n<pre><code class=\\\"language-hbs\\\">&lt;style&gt;:root { --t-feature-ratio: {{@custom.feature_image_ratio}}; }&lt;/style&gt;\\n</code></pre>\\n<p>Prefer the first. Attributes are inspectable, cacheable, and cannot be broken by\\nan unexpected value.</p>\\n<h2>Descriptions are documentation</h2>\\n<p>Every setting takes a <code>description</code>, and it is rendered right under the control.\\nIt is the only documentation a publisher is guaranteed to see, so spend the\\nsentence:</p>\\n<pre><code class=\\\"language-json\\\">&quot;description&quot;: &quot;Tag slugs shown as horizontal shelves. Comma-separated, no spaces, e.g. video,notes&quot;\\n</code></pre>\\n<p>That one says what it does, what format it wants, and shows an example — because\\nthe value is split on commas without trimming, and a stray space would produce a\\nshelf that silently matches nothing.</p>\\n<h2>What to take from this</h2>\\n<ul>\\n<li>Settings live in <code>package.json</code> and appear in Settings → Design.</li>\\n<li>Anything a publisher would reasonably want to change belongs in one.</li>\\n<li>A select&#39;s option strings are compared verbatim. Renaming one is breaking.</li>\\n<li>Write the <code>description</code>. It is the only docs most people will read.</li>\\n</ul>\\n<p>Next: the readers who pay.</p>\\n\"}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
+            "feature_image": null,
+            "featured": false,
+            "type": "post",
+            "status": "published",
+            "visibility": "public",
+            "custom_excerpt": "If a publisher would have to edit a template to change something reasonable, it belongs in package.json instead.",
+            "custom_template": null,
+            "created_at": "2026-01-30T09:00:00.000Z",
+            "updated_at": "2026-01-30T09:00:00.000Z",
+            "published_at": "2026-01-30T09:00:00.000Z"
+          },
+          {
+            "id": "pd9f4396f000000000000000",
+            "title": "Members and access",
+            "slug": "members-and-access",
+            "lexical": "{\"root\":{\"children\":[{\"type\":\"html\",\"version\":1,\"html\":\"<p>Memberships are Ghost&#39;s reason for existing, and the amount a theme has to do is\\nsmaller than it looks. The common mistake is reimplementing something Ghost\\nalready ships.</p>\\n<h2>Portal does the hard part</h2>\\n<p>Portal is Ghost&#39;s own signup, signin and account interface. It is loaded by\\n<code>{{ghost_foot}}</code>. You trigger it with links:</p>\\n<pre><code class=\\\"language-hbs\\\">&lt;a href=&quot;#/portal/signup&quot;&gt;Subscribe&lt;/a&gt;\\n&lt;a href=&quot;#/portal/signin&quot;&gt;Sign in&lt;/a&gt;\\n&lt;a href=&quot;#/portal/account&quot;&gt;Account&lt;/a&gt;\\n&lt;a href=&quot;javascript:&quot; data-members-signout&gt;Sign out&lt;/a&gt;\\n</code></pre>\\n<p>That is the whole integration. Do not build a signup modal. Portal handles\\nmagic links, tiers, Stripe, error states and email verification, and it is\\nlocalised and maintained for you.</p>\\n<h2>Knowing who is reading</h2>\\n<pre><code class=\\\"language-hbs\\\">{{#if @member}}\\n    {{@member.name}} — {{@member.email}}\\n{{else}}\\n    &lt;a href=&quot;#/portal/signup&quot;&gt;Subscribe&lt;/a&gt;\\n{{/if}}\\n</code></pre>\\n<p>And whether the site has memberships at all:</p>\\n<pre><code class=\\\"language-hbs\\\">{{#if @site.members_enabled}} … {{/if}}\\n</code></pre>\\n<p>Wrap every newsletter form in that check. A publication that has not turned on\\nmemberships should never be shown a form that cannot work — it is the fastest\\nway to make a theme feel broken on first install.</p>\\n<h2>The newsletter form</h2>\\n<pre><code class=\\\"language-hbs\\\">&lt;form data-members-form=&quot;subscribe&quot;&gt;\\n    &lt;input type=&quot;email&quot; name=&quot;email&quot; data-members-email required&gt;\\n    &lt;button type=&quot;submit&quot;&gt;Subscribe&lt;/button&gt;\\n\\n    &lt;p class=&quot;message message--loading&quot;&gt;Sending…&lt;/p&gt;\\n    &lt;p class=&quot;message message--success&quot;&gt;Check your inbox to confirm.&lt;/p&gt;\\n    &lt;p class=&quot;message message--error&quot;&gt;That did not work. Try again?&lt;/p&gt;\\n&lt;/form&gt;\\n</code></pre>\\n<p>Ghost intercepts the submit, calls the members API, and adds <code>loading</code>,\\n<code>success</code> or <code>error</code> to the form&#39;s class list. It does not write any copy — your\\nCSS reveals the right message:</p>\\n<pre><code class=\\\"language-css\\\">.ghost-subscribe__form.success .ghost-subscribe__message--success { display: block; }\\n</code></pre>\\n<p>All three messages must be in the DOM. Rendering them conditionally in\\nHandlebars will not work, because the state changes client-side after render.</p>\\n<h2>The paywall</h2>\\n<p>On a members-only post seen by a signed-out reader, <code>{{content}}</code> returns the\\npublic preview and stops. <code>{{access}}</code> tells you which happened:</p>\\n<pre><code class=\\\"language-hbs\\\">{{content}}\\n\\n{{#unless access}}\\n    &lt;aside class=&quot;ghost-gate&quot;&gt;\\n        &lt;h2&gt;This post is for subscribers&lt;/h2&gt;\\n        &lt;a href=&quot;#/portal/signup&quot;&gt;Subscribe&lt;/a&gt;\\n    &lt;/aside&gt;\\n{{/unless}}\\n</code></pre>\\n<p>Ghost enforces this on the server. The rest of the post is never sent to the\\nbrowser, so there is no &quot;view source&quot; workaround — and equally, no way for you\\nto accidentally leak it.</p>\\n<p>Show the gate in listings too. A card for a locked post should say so before the\\nclick, not after.</p>\\n<h2>Tiers</h2>\\n<pre><code class=\\\"language-hbs\\\">{{#get &quot;tiers&quot; as |tiers|}}\\n    {{#foreach tiers}}\\n        {{name}} — {{price monthly_price currency=currency}}\\n    {{/foreach}}\\n{{/get}}\\n</code></pre>\\n<p>Prices are in the smallest currency unit — 500 means £5.00 — and <code>{{price}}</code>\\nformats them. Do not do the arithmetic yourself.</p>\\n<h2>What to take from this</h2>\\n<ul>\\n<li>Link to Portal; never rebuild signup.</li>\\n<li>Guard everything members-related with <code>{{#if @site.members_enabled}}</code>.</li>\\n<li>All three form messages live in the DOM; CSS reveals one.</li>\\n<li><code>{{access}}</code> is the paywall signal, and it belongs in listings as well as posts.</li>\\n</ul>\\n<p>Next: the files the browser actually downloads.</p>\\n\"}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
+            "feature_image": null,
+            "featured": false,
+            "type": "post",
+            "status": "published",
+            "visibility": "public",
+            "custom_excerpt": "Signup, the paywall and Portal — most of which Ghost does for you, provided you do not build your own version of it.",
+            "custom_template": null,
+            "created_at": "2026-02-02T09:00:00.000Z",
+            "updated_at": "2026-02-02T09:00:00.000Z",
+            "published_at": "2026-02-02T09:00:00.000Z"
+          },
+          {
+            "id": "p1acc9cdb000000000000000",
+            "title": "Assets and images",
+            "slug": "assets-and-images",
+            "lexical": "{\"root\":{\"children\":[{\"type\":\"html\",\"version\":1,\"html\":\"<p>A Ghost theme ships static files. There is no server-side build, no bundler\\nrunning on the publisher&#39;s machine. Whatever is in <code>assets/built/</code> when you zip\\nis what every reader downloads.</p>\\n<h2>The pipeline</h2>\\n<p>This theme uses PostCSS for CSS and esbuild for JavaScript:</p>\\n<pre><code class=\\\"language-bash\\\">npm run build    # build:css + build:js\\nnpm run dev      # both in watch mode\\n</code></pre>\\n<p><code>assets/css/index.css</code> imports around thirty small files and PostCSS inlines\\nthem into one. <code>assets/js/index.js</code> imports five modules and esbuild bundles\\nthem into one. Two requests, no waterfall.</p>\\n<p><strong><code>assets/built/</code> is committed on purpose.</strong> It is not build output in the usual\\nsense — it is the product. Ghost serves it, buyers receive it, and a repository\\nthat omits it produces a broken theme when cloned. Rebuild and commit it\\nalongside any source change.</p>\\n<h2>Bundling rather than depending</h2>\\n<p>The theme is styled from a design system that lives in its own package. It could\\nlist it as a dependency and let the publisher install it. It does not: PostCSS\\ninlines it at build time.</p>\\n<p>The reason is that a buyer must be able to unzip a theme and upload it. Anything\\nrequiring <code>npm install</code> on their side is not a theme, it is a project. The\\ndependency is a build-time convenience for the theme author and completely\\ninvisible downstream.</p>\\n<h2>The asset helper</h2>\\n<pre><code class=\\\"language-hbs\\\">&lt;link rel=&quot;stylesheet&quot; href=&quot;{{asset &quot;built/index.css&quot;}}&quot;&gt;\\n&lt;script defer src=&quot;{{asset &quot;built/index.js&quot;}}&quot;&gt;&lt;/script&gt;\\n</code></pre>\\n<p><code>{{asset}}</code> resolves the path and appends a cache-busting token tied to the\\ntheme version. Hard-code the path and a CDN will serve a stale file after every\\nupdate. gscan checks for this, and the marketplace lists it explicitly.</p>\\n<h2>Image sizes</h2>\\n<p>Ghost only generates the image sizes you declare:</p>\\n<pre><code class=\\\"language-json\\\">&quot;image_sizes&quot;: {\\n  &quot;s&quot;:  { &quot;width&quot;: 320 },\\n  &quot;m&quot;:  { &quot;width&quot;: 640 },\\n  &quot;l&quot;:  { &quot;width&quot;: 960 },\\n  &quot;xl&quot;: { &quot;width&quot;: 1200 }\\n}\\n</code></pre>\\n<pre><code class=\\\"language-hbs\\\">&lt;img src=&quot;{{img_url feature_image size=&quot;l&quot;}}&quot;\\n     srcset=&quot;{{img_url feature_image size=&quot;s&quot;}} 320w,\\n             {{img_url feature_image size=&quot;m&quot;}} 640w,\\n             {{img_url feature_image size=&quot;l&quot;}} 960w&quot;\\n     sizes=&quot;(min-width: 64rem) 960px, 100vw&quot;\\n     alt=&quot;{{title}}&quot; loading=&quot;lazy&quot; decoding=&quot;async&quot;&gt;\\n</code></pre>\\n<p>The two lists have to agree. Ask for a size you did not declare and Ghost quietly\\nserves the original — a 4000px photograph on a phone, and nothing in the console\\nto tell you.</p>\\n<h2>Loading</h2>\\n<p>One image per page should be <code>loading=&quot;eager&quot;</code>; everything else <code>lazy</code>. On a post\\nthat is the feature image. Marking everything eager defeats the point; marking\\neverything lazy delays the image the reader came for.</p>\\n<h2>Card assets</h2>\\n<pre><code class=\\\"language-json\\\">&quot;config&quot;: { &quot;card_assets&quot;: true }\\n</code></pre>\\n<p>This makes Ghost ship its own stylesheet for interactive editor cards — gallery,\\naudio, video, toggle. Turn it off and you own the behaviour of every one of\\nthem, including the JavaScript. Leave it on and style on top.</p>\\n<h2>What to take from this</h2>\\n<ul>\\n<li><code>assets/built/</code> is the product. Commit it.</li>\\n<li>Bundle your dependencies; a buyer cannot run <code>npm install</code>.</li>\\n<li><code>{{asset}}</code> for every theme file, always.</li>\\n<li><code>image_sizes</code> and your <code>srcset</code> must name the same sizes.</li>\\n</ul>\\n<p>Next: the standard a theme has to clear before anyone else sees it.</p>\\n\"}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
+            "feature_image": null,
+            "featured": false,
+            "type": "post",
+            "status": "published",
+            "visibility": "public",
+            "custom_excerpt": "One stylesheet, one script, and images at the sizes you declared — plus why the theme bundles its design system instead of depending on it.",
+            "custom_template": null,
+            "created_at": "2026-02-05T09:00:00.000Z",
+            "updated_at": "2026-02-05T09:00:00.000Z",
+            "published_at": "2026-02-05T09:00:00.000Z"
+          },
+          {
+            "id": "p71805d95000000000000000",
+            "title": "Shipping a theme",
+            "slug": "shipping-a-theme",
+            "lexical": "{\"root\":{\"children\":[{\"type\":\"html\",\"version\":1,\"html\":\"<p>Passing gscan means a theme installs. It says nothing about whether it is any\\ngood. This is the rest of the bar.</p>\\n<h2>The two real rejection reasons</h2>\\n<p>Ghost publishes its criteria, and two of them account for most rejections.</p>\\n<p><strong>Style.</strong> Flow, hierarchy, balance, contrast, typography, negative space. This\\nis subjective and they say so, but the standard is high and the feedback is\\nusually just &quot;no&quot;.</p>\\n<p><strong>Originality.</strong> In Ghost&#39;s own words, there are hundreds — maybe thousands — of\\nforks of Casper with minor visual tweaks. They are often very nice. They are not\\nuseful to someone browsing the marketplace for the first time.</p>\\n<p>The practical test: if a decision could be described as &quot;the default theme, but\\nwith X&quot;, it is the wrong decision. Not because copying is wrong, but because the\\nresult is invisible in a gallery, which is the only place it will ever be seen.</p>\\n<h2>Accessibility</h2>\\n<p>Four things, all checkable:</p>\\n<p><strong>Alt text on every image.</strong> No exceptions. A decorative image gets <code>alt=&quot;&quot;</code>, and\\nthat is a decision, not an omission.</p>\\n<p><strong>Valid HTML.</strong> One <code>&lt;h1&gt;</code> per page, headings that descend without skipping,\\nlandmarks (<code>&lt;header&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;footer&gt;</code>) with accessible names\\nwhere there is more than one of a kind.</p>\\n<p><strong>Keyboard navigation.</strong> Tab through the whole site. Every interactive thing\\nmust be reachable and must show focus. Never remove a focus ring without\\nreplacing it. A horizontally scrolling row needs <code>tabindex=&quot;0&quot;</code> and a label, or\\neverything past the fold is unreachable.</p>\\n<p><strong>Contrast.</strong> 4.5:1 for body text, 3:1 for large text and interface elements —\\nin both colour schemes. Dark mode is where this quietly fails.</p>\\n<p>Native elements do most of this for free. <code>&lt;dialog&gt;</code> with <code>showModal()</code> gives\\nfocus trapping, Escape-to-close and an inert background; a hand-rolled div does\\nnot, and getting it right is a few hundred lines.</p>\\n<h2>SEO</h2>\\n<p>Ghost handles almost all of it in <code>{{ghost_head}}</code> — canonical URLs, Open Graph,\\nTwitter cards, JSON-LD, the RSS link. What is left is yours:</p>\\n<ul>\\n<li>semantic markup, so the structure is legible</li>\\n<li>one <code>&lt;h1&gt;</code></li>\\n<li>real <code>&lt;a href&gt;</code> links to every page, including pagination</li>\\n<li>descriptive link text, not &quot;read more&quot;</li>\\n</ul>\\n<p>No tricks. Clean, well-structured markup is the entire strategy.</p>\\n<h2>Documentation</h2>\\n<p>The marketplace ranks documentation explicitly. A buyer needs to know how to\\ninstall the theme, what every custom setting does, how to reproduce the demo,\\nand where to get help.</p>\\n<p>Write it before you think you need it. Writing the setup guide is also the\\nfastest way to find the settings you named badly.</p>\\n<h2>The checklist</h2>\\n<p>Before submitting:</p>\\n<ul>\\n<li><input disabled=\\\"\\\" type=\\\"checkbox\\\"> <code>gscan .</code> passes with no errors</li>\\n<li><input disabled=\\\"\\\" type=\\\"checkbox\\\"> Responsive, tested on a real phone, not just a narrow window</li>\\n<li><input disabled=\\\"\\\" type=\\\"checkbox\\\"> Latest two versions of Chrome, Firefox, Safari and Edge</li>\\n<li><input disabled=\\\"\\\" type=\\\"checkbox\\\"> Every asset loaded through <code>{{asset}}</code></li>\\n<li><input disabled=\\\"\\\" type=\\\"checkbox\\\"> &quot;Published with Ghost&quot; link present</li>\\n<li><input disabled=\\\"\\\" type=\\\"checkbox\\\"> A demo on HTTPS, embeddable in an iframe from <code>*.ghost.org</code></li>\\n<li><input disabled=\\\"\\\" type=\\\"checkbox\\\"> Every image has <code>alt</code></li>\\n<li><input disabled=\\\"\\\" type=\\\"checkbox\\\"> Keyboard-navigable end to end</li>\\n<li><input disabled=\\\"\\\" type=\\\"checkbox\\\"> Empty states for: no posts, no feature image, no bio, no tags</li>\\n<li><input disabled=\\\"\\\" type=\\\"checkbox\\\"> Base styling for every card the editor can produce</li>\\n<li><input disabled=\\\"\\\" type=\\\"checkbox\\\"> Featured posts styled distinctly</li>\\n<li><input disabled=\\\"\\\" type=\\\"checkbox\\\"> Tag and author archives that are worth visiting</li>\\n<li><input disabled=\\\"\\\" type=\\\"checkbox\\\"> Search, comments and custom settings all supported</li>\\n<li><input disabled=\\\"\\\" type=\\\"checkbox\\\"> <code>README.md</code> with features and support details</li>\\n<li><input disabled=\\\"\\\" type=\\\"checkbox\\\"> <code>package.json</code> complete, including <code>author.email</code></li>\\n</ul>\\n<h2>The demo is the submission</h2>\\n<p>Reviewers look at the demo before they look at anything else. Fill it with real\\ncontent of real length — long titles, missing images, a post with no tags, a\\nmembers-only post. A demo of five perfect posts with identical thumbnails proves\\nnothing about how the theme behaves on a real site.</p>\\n<p>That is why this theme&#39;s demo content is these lessons: it is genuinely long,\\ngenuinely varied, and it has to be written anyway.</p>\\n<h2>What to take from this</h2>\\n<ul>\\n<li>gscan is the floor, not the bar.</li>\\n<li>Originality and style are what get themes rejected.</li>\\n<li>Accessibility is four checkable things; native elements do most of the work.</li>\\n<li>Write the documentation early. It will fix your naming.</li>\\n</ul>\\n\"}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
+            "feature_image": null,
+            "featured": false,
+            "type": "post",
+            "status": "published",
+            "visibility": "public",
+            "custom_excerpt": "Accessibility, SEO, documentation and the two reasons themes are actually rejected from the Ghost Marketplace.",
+            "custom_template": null,
+            "created_at": "2026-02-08T09:00:00.000Z",
+            "updated_at": "2026-02-08T09:00:00.000Z",
+            "published_at": "2026-02-08T09:00:00.000Z"
+          },
+          {
+            "id": "p0f11ede0000000000000000",
+            "title": "About",
+            "slug": "about",
+            "lexical": "{\"root\":{\"children\":[{\"type\":\"html\",\"version\":1,\"html\":\"<p>This site is the live preview for the <strong>Swarnil</strong> Ghost theme.</p>\\n<p>Every post on it is a lesson about how Ghost themes work, so the demo\\ncontent is the documentation. Nothing here is filler — the posts are the\\nlength real posts are, with real headings, code, tables and quotes.</p>\\n<p>See <a href=\\\"/preview/\\\">the preview index</a> to jump straight to each template and\\nlayout the theme ships.</p>\\n\"}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
+            "feature_image": null,
+            "featured": false,
+            "type": "page",
+            "status": "published",
+            "visibility": "public",
+            "custom_excerpt": "What this preview site is, and how to read it.",
+            "custom_template": null,
+            "created_at": "2026-01-06T09:00:00.000Z",
+            "updated_at": "2026-01-06T09:00:00.000Z",
+            "published_at": "2026-01-06T09:00:00.000Z"
+          },
+          {
+            "id": "pc28c7547000000000000000",
+            "title": "Preview",
+            "slug": "preview",
+            "lexical": "{\"root\":{\"children\":[{\"type\":\"html\",\"version\":1,\"html\":\"<p>The theme ships several templates and a few layout switches. This page\\nlinks to a live example of each, so nothing has to be taken on trust.</p>\\n<h2>Homepage layouts</h2>\\n<ul>\\n<li><a href=\\\"/home/sidebar/\\\">With sidebar</a> — topics, recent posts and the newsletter\\nin a second column</li>\\n<li><a href=\\\"/home/full/\\\">Without sidebar</a> — the feed at full width</li>\\n</ul>\\n<p>The shape of the feed itself is a separate setting: Call Sheet, Stacked or\\nGrid.</p>\\n<h2>Post layouts</h2>\\n<ul>\\n<li><a href=\\\"/what-a-ghost-theme-is/\\\">Standard</a> — the default reading layout</li>\\n<li><a href=\\\"/the-template-hierarchy/\\\">Wide</a> — a broader column for image-led posts</li>\\n<li><a href=\\\"/post-layouts/\\\">Immersive</a> — the title set over the feature image</li>\\n<li><a href=\\\"/handlebars-in-ghost/\\\">Video</a> — player first, writing beside it</li>\\n</ul>\\n<h2>Listing pages</h2>\\n<ul>\\n<li><a href=\\\"/blog/\\\">Blog</a> — every post, paginated</li>\\n<li><a href=\\\"/tag/handlebars/\\\">Tag archive</a> — posts under one tag</li>\\n<li><a href=\\\"/author/swarnil/\\\">Author archive</a> — posts by one author</li>\\n</ul>\\n<h2>Everything else</h2>\\n<ul>\\n<li><a href=\\\"/about/\\\">A page</a> — no byline, no tags, no read-next</li>\\n<li><a href=\\\"/contact/\\\">Contact</a> — a page with a form in it</li>\\n<li><a href=\\\"/this-page-does-not-exist/\\\">404</a> — the error template</li>\\n</ul>\\n\"}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
+            "feature_image": null,
+            "featured": false,
+            "type": "page",
+            "status": "published",
+            "visibility": "public",
+            "custom_excerpt": "A live example of every template and layout the theme ships.",
+            "custom_template": null,
+            "created_at": "2026-01-06T09:00:00.000Z",
+            "updated_at": "2026-01-06T09:00:00.000Z",
+            "published_at": "2026-01-06T09:00:00.000Z"
+          },
+          {
+            "id": "pd3798711000000000000000",
+            "title": "Contact",
+            "slug": "contact",
+            "lexical": "{\"root\":{\"children\":[{\"type\":\"html\",\"version\":1,\"html\":\"<p>The quickest way to reach me is email.</p>\\n<p>For anything about the theme itself — a bug, a question, a licence —\\nwrite to the address in the theme package and include your Ghost version\\nand a link to the page that is wrong.</p>\\n<h2>Elsewhere</h2>\\n<p>Ghost renders whatever you put on a page, so this one is deliberately\\nplain: a page template with no byline, no tags and no read-next, which is\\nexactly what a contact page should be.</p>\\n\"}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
+            "feature_image": null,
+            "featured": false,
+            "type": "page",
+            "status": "published",
+            "visibility": "public",
+            "custom_excerpt": "How to reach the publisher of this site.",
+            "custom_template": null,
+            "created_at": "2026-01-06T09:00:00.000Z",
+            "updated_at": "2026-01-06T09:00:00.000Z",
+            "published_at": "2026-01-06T09:00:00.000Z"
+          }
+        ],
+        "tags": [
+          {
+            "id": "t8c8ac0af000000000000000",
+            "name": "Foundations",
+            "slug": "foundations",
+            "description": null
+          },
+          {
+            "id": "t0fda6497000000000000000",
+            "name": "Learn",
+            "slug": "learn",
+            "description": null
+          },
+          {
+            "id": "t967111d9000000000000000",
+            "name": "Handlebars",
+            "slug": "handlebars",
+            "description": null
+          },
+          {
+            "id": "t686217f6000000000000000",
+            "name": "Layouts",
+            "slug": "layouts",
+            "description": null
+          },
+          {
+            "id": "t56a1e54d000000000000000",
+            "name": "Routing",
+            "slug": "routing",
+            "description": null
+          },
+          {
+            "id": "t1304dc16000000000000000",
+            "name": "Settings",
+            "slug": "settings",
+            "description": null
+          },
+          {
+            "id": "tbdd06bf0000000000000000",
+            "name": "Members",
+            "slug": "members",
+            "description": null
+          },
+          {
+            "id": "t0f2e56d5000000000000000",
+            "name": "Build",
+            "slug": "build",
+            "description": null
+          }
+        ],
+        "posts_tags": [
+          {
+            "id": "x3d481e59000000000000000",
+            "post_id": "pd280e882000000000000000",
+            "tag_id": "t8c8ac0af000000000000000",
+            "sort_order": 0
+          },
+          {
+            "id": "x01754ac1000000000000000",
+            "post_id": "pd280e882000000000000000",
+            "tag_id": "t0fda6497000000000000000",
+            "sort_order": 1
+          },
+          {
+            "id": "xd8017004000000000000000",
+            "post_id": "p0fa621ad000000000000000",
+            "tag_id": "t8c8ac0af000000000000000",
+            "sort_order": 0
+          },
+          {
+            "id": "x6be9782c000000000000000",
+            "post_id": "p0fa621ad000000000000000",
+            "tag_id": "t0fda6497000000000000000",
+            "sort_order": 1
+          },
+          {
+            "id": "xdb20d910000000000000000",
+            "post_id": "p6b0a6d6f000000000000000",
+            "tag_id": "t967111d9000000000000000",
+            "sort_order": 0
+          },
+          {
+            "id": "x67bc0d6e000000000000000",
+            "post_id": "p6b0a6d6f000000000000000",
+            "tag_id": "t0fda6497000000000000000",
+            "sort_order": 1
+          },
+          {
+            "id": "x83811cdd000000000000000",
+            "post_id": "p40c5df5c000000000000000",
+            "tag_id": "t967111d9000000000000000",
+            "sort_order": 0
+          },
+          {
+            "id": "x16327d1b000000000000000",
+            "post_id": "p40c5df5c000000000000000",
+            "tag_id": "t0fda6497000000000000000",
+            "sort_order": 1
+          },
+          {
+            "id": "xddafc886000000000000000",
+            "post_id": "p6f77caa5000000000000000",
+            "tag_id": "t967111d9000000000000000",
+            "sort_order": 0
+          },
+          {
+            "id": "x6ec3fb24000000000000000",
+            "post_id": "p6f77caa5000000000000000",
+            "tag_id": "t0fda6497000000000000000",
+            "sort_order": 1
+          },
+          {
+            "id": "x7730fe8c000000000000000",
+            "post_id": "p1d0ae86b000000000000000",
+            "tag_id": "t967111d9000000000000000",
+            "sort_order": 0
+          },
+          {
+            "id": "xa103d56a000000000000000",
+            "post_id": "p1d0ae86b000000000000000",
+            "tag_id": "t0fda6497000000000000000",
+            "sort_order": 1
+          },
+          {
+            "id": "x64d4e1a7000000000000000",
+            "post_id": "p1ba58289000000000000000",
+            "tag_id": "t686217f6000000000000000",
+            "sort_order": 0
+          },
+          {
+            "id": "x38fd0e08000000000000000",
+            "post_id": "p1ba58289000000000000000",
+            "tag_id": "t0fda6497000000000000000",
+            "sort_order": 1
+          },
+          {
+            "id": "x73e9c9d8000000000000000",
+            "post_id": "peba26363000000000000000",
+            "tag_id": "t56a1e54d000000000000000",
+            "sort_order": 0
+          },
+          {
+            "id": "x9839aa62000000000000000",
+            "post_id": "peba26363000000000000000",
+            "tag_id": "t0fda6497000000000000000",
+            "sort_order": 1
+          },
+          {
+            "id": "x8853cdfc000000000000000",
+            "post_id": "p44fa60fe000000000000000",
+            "tag_id": "t1304dc16000000000000000",
+            "sort_order": 0
+          },
+          {
+            "id": "x405e303d000000000000000",
+            "post_id": "p44fa60fe000000000000000",
+            "tag_id": "t0fda6497000000000000000",
+            "sort_order": 1
+          },
+          {
+            "id": "x06b57287000000000000000",
+            "post_id": "pd9f4396f000000000000000",
+            "tag_id": "tbdd06bf0000000000000000",
+            "sort_order": 0
+          },
+          {
+            "id": "x09ced96e000000000000000",
+            "post_id": "pd9f4396f000000000000000",
+            "tag_id": "t0fda6497000000000000000",
+            "sort_order": 1
+          },
+          {
+            "id": "xcb0b1018000000000000000",
+            "post_id": "p1acc9cdb000000000000000",
+            "tag_id": "t0f2e56d5000000000000000",
+            "sort_order": 0
+          },
+          {
+            "id": "xcbb71dda000000000000000",
+            "post_id": "p1acc9cdb000000000000000",
+            "tag_id": "t0fda6497000000000000000",
+            "sort_order": 1
+          },
+          {
+            "id": "xb75ef452000000000000000",
+            "post_id": "p71805d95000000000000000",
+            "tag_id": "t0f2e56d5000000000000000",
+            "sort_order": 0
+          },
+          {
+            "id": "xb80b0214000000000000000",
+            "post_id": "p71805d95000000000000000",
+            "tag_id": "t0fda6497000000000000000",
+            "sort_order": 1
+          }
+        ],
+        "posts_authors": [
+          {
+            "id": "j17a1ad42000000000000000",
+            "post_id": "pd280e882000000000000000",
+            "author_id": "ab4da78e5000000000000000"
+          },
+          {
+            "id": "jd09b880d000000000000000",
+            "post_id": "p0fa621ad000000000000000",
+            "author_id": "ab4da78e5000000000000000"
+          },
+          {
+            "id": "j46c0c58f000000000000000",
+            "post_id": "p6b0a6d6f000000000000000",
+            "author_id": "ab4da78e5000000000000000"
+          },
+          {
+            "id": "jc4052adc000000000000000",
+            "post_id": "p40c5df5c000000000000000",
+            "author_id": "ab4da78e5000000000000000"
+          },
+          {
+            "id": "j2ec66a05000000000000000",
+            "post_id": "p6f77caa5000000000000000",
+            "author_id": "ab4da78e5000000000000000"
+          },
+          {
+            "id": "ja9018d0b000000000000000",
+            "post_id": "p1d0ae86b000000000000000",
+            "author_id": "ab4da78e5000000000000000"
+          },
+          {
+            "id": "j4021d969000000000000000",
+            "post_id": "p1ba58289000000000000000",
+            "author_id": "ab4da78e5000000000000000"
+          },
+          {
+            "id": "j86f20103000000000000000",
+            "post_id": "peba26363000000000000000",
+            "author_id": "ab4da78e5000000000000000"
+          },
+          {
+            "id": "j33a7423e000000000000000",
+            "post_id": "p44fa60fe000000000000000",
+            "author_id": "ab4da78e5000000000000000"
+          },
+          {
+            "id": "j2b2d118f000000000000000",
+            "post_id": "pd9f4396f000000000000000",
+            "author_id": "ab4da78e5000000000000000"
+          },
+          {
+            "id": "j2a1de37b000000000000000",
+            "post_id": "p1acc9cdb000000000000000",
+            "author_id": "ab4da78e5000000000000000"
+          },
+          {
+            "id": "ja0ee4ef5000000000000000",
+            "post_id": "p71805d95000000000000000",
+            "author_id": "ab4da78e5000000000000000"
+          }
+        ],
+        "users": [
+          {
+            "id": "ab4da78e5000000000000000",
+            "name": "Swarnil Singhai",
+            "slug": "swarnil",
+            "email": "swarnilsinghaicse@gmail.com",
+            "bio": "Writes about Ghost, design systems and the craft of publishing on the web.",
+            "website": "https://imswarnil.com",
+            "status": "active"
+          }
+        ]
+      }
+    }
+  ]
+}

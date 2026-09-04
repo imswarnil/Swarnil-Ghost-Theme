@@ -1,0 +1,32 @@
+{{!--
+    A post as a card: media above, words below.
+
+    Used by the grid and stacked homepage layouts, by shelves, and by read-next.
+    Called from inside a {{#foreach posts}} block, so it reads the current post
+    from context rather than taking it as a parameter.
+
+    Only the title is a link. Its ::after is stretched over the whole card in
+    CSS, which keeps the card clickable while leaving exactly one destination in
+    the accessibility tree.
+--}}
+<article class="ghost-card {{#if featured}}ghost-card--featured{{/if}} {{#unless feature_image}}ghost-card--text{{/unless}} {{class}}">
+
+    {{#if feature_image}}
+        <div class="ghost-card__media">
+            {{> "frame" src=feature_image alt=title}}
+        </div>
+    {{/if}}
+
+    <div class="ghost-card__body">
+        {{> "byline"}}
+
+        <h3 class="ghost-card__title">
+            <a class="ghost-card__link" href="{{url}}">{{title}}</a>
+        </h3>
+
+        {{#if excerpt}}
+            <p class="ghost-card__excerpt">{{excerpt words="24"}}</p>
+        {{/if}}
+    </div>
+
+</article>

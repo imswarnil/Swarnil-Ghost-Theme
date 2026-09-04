@@ -1,0 +1,18 @@
+{{!--
+    Table of contents.
+
+    The list is empty here and filled by assets/js/toc.js from the headings Ghost
+    actually rendered — a theme cannot know them in advance. If the post has
+    fewer than three headings the script removes the whole element, so nothing
+    below needs a "but only if it is long enough" condition.
+
+    <details> is open by default at desktop widths where it becomes a sticky rail;
+    on narrow screens it collapses, which is why it is a disclosure rather than a
+    plain <nav>.
+--}}
+{{#if @custom.show_table_of_contents}}
+    <details class="ghost-toc" data-toc open>
+        <summary class="ghost-toc__title">Contents</summary>
+        <ul class="ghost-toc__list" data-toc-list></ul>
+    </details>
+{{/if}}

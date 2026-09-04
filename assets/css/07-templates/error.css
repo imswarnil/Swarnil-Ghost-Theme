@@ -1,0 +1,44 @@
+/* =============================================================================
+   7 · TEMPLATE — error
+   =============================================================================
+   404 and 500. The code is set large in the slate face — it is the one piece of
+   information that is actually useful to whoever reports the problem.
+   ========================================================================== */
+
+.ghost-error {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: var(--t-space-5);
+	min-height: 60vh;
+	padding-block: var(--t-space-20);
+	text-align: center;
+}
+
+.ghost-error__code {
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-5xl);
+	color: var(--t-accent);
+	font-variant-numeric: tabular-nums;
+	line-height: 1;
+}
+
+.ghost-error__title {
+	margin: 0;
+	font-size: var(--t-text-2xl);
+}
+
+.ghost-error__message {
+	margin: 0;
+	max-width: 34rem;
+	color: var(--t-fg-muted);
+}
+
+/* Only shown in development, where Ghost passes a stack trace. */
+.ghost-error__stack {
+	max-width: 100%;
+	overflow-x: auto;
+	text-align: left;
+	font-size: var(--t-text-xs);
+}

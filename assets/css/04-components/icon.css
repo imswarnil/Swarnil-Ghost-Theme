@@ -1,0 +1,20 @@
+/* =============================================================================
+   4 · COMPONENT — icon
+   =============================================================================
+   partials/icon.hbs emits a 24×24 SVG. Without a size rule it renders at its
+   intrinsic size wherever it is not explicitly sized — which made the arrow in
+   a shelf's "All …" link taller than the line and pushed it onto a row of its
+   own.
+
+   Sizing in `em` rather than `rem` means an icon always matches whatever text
+   it sits beside, which is almost always what is wanted.
+   ========================================================================== */
+
+.ghost-icon {
+	width: 1.25em;
+	height: 1.25em;
+	flex: 0 0 auto;
+	/* Optically centred against lowercase text; baseline alignment would sit
+	   it too high. */
+	vertical-align: -0.28em;
+}

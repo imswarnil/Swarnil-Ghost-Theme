@@ -1,0 +1,37 @@
+{{!--
+    The post collection.
+
+    Ghost uses home.hbs for "/", so this template serves /page/2 onwards and any
+    channel pointed at it by routes.yaml — /blog/ in the routing that ships with
+    the theme. It is written to stand on its own either way, which is why it
+    carries its own header rather than assuming the homepage sits above it.
+--}}
+{{!< default}}
+
+<div class="ghost-container">
+
+    <header class="ghost-archive__header">
+        {{#is "paged"}}
+            <p class="ghost-archive__kicker">Archive</p>
+            <h1 class="ghost-archive__title">All posts</h1>
+        {{else}}
+            <p class="ghost-archive__kicker">{{@site.title}}</p>
+            <h1 class="ghost-archive__title">{{#if @site.description}}{{@site.description}}{{else}}Latest posts{{/if}}</h1>
+        {{/is}}
+    </header>
+
+    <div class="ghost-list{{#if @custom.list_sidebar}} ghost-list--with-sidebar{{/if}}">
+        <div class="ghost-list__main">
+            {{> "post-list"
+                posts=posts
+                layout=@custom.homepage_layout
+                emptyTitle="Nothing published yet"
+                emptyText="This is where posts will appear. Write one in Ghost admin and it will show up here."}}
+
+            {{pagination}}
+        </div>
+
+        {{#if @custom.list_sidebar}}{{> "sidebar"}}{{/if}}
+    </div>
+
+</div>

@@ -1,0 +1,14 @@
+/* =============================================================================
+   7 · TEMPLATE — home
+   =============================================================================
+   The homepage assembles sections that already know how to look. The only rules
+   that belong here are the ones about how those sections sit next to each
+   other, which no single section can decide on its own.
+   ========================================================================== */
+
+/* The last section before the footer should not draw a rule — the footer's own
+   top border is already there, and two hairlines a few pixels apart reads as a
+   mistake. */
+.ghost-home > :last-child {
+	border-bottom: 0;
+}

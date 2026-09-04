@@ -1,0 +1,191 @@
+/* =============================================================================
+   6 · CONTENT — prose
+   =============================================================================
+   Everything the Ghost editor can emit as body copy. A publisher never writes
+   these classes; Ghost does. The marketplace explicitly asks for base styling
+   covering "all possible types of content someone might enter into the editor",
+   so this file is deliberately exhaustive rather than minimal.
+
+   The rhythm is set by the sibling selector `* + *` rather than by margins on
+   every element. That way the first child never adds a gap at the top of the
+   post, and any card type Ghost adds in the future inherits the spacing without
+   this file needing to know about it.
+   ========================================================================== */
+
+.ghost-prose {
+	font-size: var(--t-text-md);
+	line-height: var(--t-leading-relaxed);
+	color: var(--t-fg);
+}
+
+.ghost-prose > * + * {
+	margin-top: var(--t-space-6);
+}
+
+/* Headings get more space above than below, so they bind to the text they
+   introduce rather than floating between two blocks. */
+.ghost-prose > h2 {
+	margin-top: var(--t-space-16);
+	font-size: var(--t-text-2xl);
+}
+
+.ghost-prose > h3 {
+	margin-top: var(--t-space-12);
+	font-size: var(--t-text-xl);
+}
+
+.ghost-prose > h4,
+.ghost-prose > h5,
+.ghost-prose > h6 {
+	margin-top: var(--t-space-10);
+}
+
+.ghost-prose > h2 + *,
+.ghost-prose > h3 + *,
+.ghost-prose > h4 + * {
+	margin-top: var(--t-space-4);
+}
+
+/* Links inside prose are underlined. Outside prose the theme relies on position
+   and weight, but inside a paragraph an underline is the only reliable signal. */
+.ghost-prose a {
+	color: var(--t-fg);
+	text-decoration: underline;
+	text-decoration-color: var(--t-accent);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.2em;
+}
+
+.ghost-prose a:hover {
+	color: var(--t-accent);
+}
+
+.ghost-prose ul,
+.ghost-prose ol {
+	padding-left: var(--t-space-6);
+}
+
+.ghost-prose li + li {
+	margin-top: var(--t-space-2);
+}
+
+.ghost-prose li::marker {
+	color: var(--t-fg-faint);
+}
+
+.ghost-prose blockquote {
+	font-family: var(--t-font-display);
+	font-size: var(--t-text-lg);
+	line-height: var(--t-leading-snug);
+	color: var(--t-fg);
+}
+
+.ghost-prose blockquote cite {
+	display: block;
+	margin-top: var(--t-space-3);
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-2xs);
+	font-style: normal;
+	text-transform: uppercase;
+	letter-spacing: var(--t-tracking-slate);
+	color: var(--t-fg-subtle);
+}
+
+/* Ghost's alternative blockquote style, set from the editor. */
+.ghost-prose .kg-blockquote-alt {
+	border-left: 0;
+	padding-left: 0;
+	text-align: center;
+	font-size: var(--t-text-xl);
+	color: var(--t-fg-muted);
+}
+
+/* ── Code ─────────────────────────────────────────────────────────────────── */
+.ghost-prose :not(pre) > code {
+	padding: 0.15em 0.4em;
+	border-radius: var(--t-radius-control);
+	background-color: var(--t-bg-sunken);
+	border: var(--t-hair) solid var(--t-line-subtle);
+	color: var(--t-fg);
+	white-space: nowrap;
+}
+
+.ghost-prose pre {
+	padding: var(--t-space-5);
+	border: var(--t-hair) solid var(--t-line);
+	border-radius: var(--t-radius-card);
+	background-color: var(--t-bg-sunken);
+	overflow-x: auto;
+	font-size: var(--t-text-sm);
+	line-height: var(--t-leading-normal);
+	/* Tabs at 2 rather than the browser's 8, which pushes code off the side of
+	   a narrow reading column. */
+	tab-size: 2;
+}
+
+.ghost-prose pre code {
+	background: none;
+	border: 0;
+	padding: 0;
+	white-space: pre;
+}
+
+/* ── Tables ──────────────────────────────────────────────────────────────────
+   Ghost emits bare <table> with no wrapper, so the scroll container has to be
+   the table's own block. `display: block` on the table is the only way to get
+   horizontal scrolling without adding markup the editor does not produce. */
+.ghost-prose table {
+	display: block;
+	width: 100%;
+	overflow-x: auto;
+	border-collapse: collapse;
+	font-size: var(--t-text-sm);
+}
+
+.ghost-prose th,
+.ghost-prose td {
+	padding: var(--t-space-3) var(--t-space-4);
+	border-bottom: var(--t-hair) solid var(--t-line);
+	text-align: left;
+	vertical-align: top;
+}
+
+.ghost-prose th {
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-2xs);
+	text-transform: uppercase;
+	letter-spacing: var(--t-tracking-slate);
+	color: var(--t-fg-muted);
+	border-bottom-color: var(--t-fg);
+	white-space: nowrap;
+}
+
+/* ── Footnotes ────────────────────────────────────────────────────────────────
+   Emitted by the editor's markdown card. */
+.ghost-prose .footnotes {
+	margin-top: var(--t-space-12);
+	padding-top: var(--t-space-6);
+	border-top: var(--t-hair) solid var(--t-line);
+	font-size: var(--t-text-sm);
+	color: var(--t-fg-muted);
+}
+
+.ghost-prose sup a {
+	text-decoration: none;
+	font-variant-numeric: tabular-nums;
+}
+
+/* ── Horizontal rule ──────────────────────────────────────────────────────────
+   Three dots rather than a line: a scene break, not a section boundary. */
+.ghost-prose hr {
+	border: 0;
+	margin-block: var(--t-space-12);
+	text-align: center;
+	color: var(--t-fg-faint);
+}
+
+.ghost-prose hr::before {
+	content: '· · ·';
+	font-family: var(--t-font-slate);
+	letter-spacing: var(--t-tracking-slate);
+}

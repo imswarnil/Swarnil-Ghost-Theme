@@ -1,0 +1,100 @@
+/* =============================================================================
+   5 · SECTION — subscribe
+   =============================================================================
+   The newsletter band. Rendered only when members are enabled on the site, so a
+   publication that has not turned on memberships never shows a form that cannot
+   work.
+
+   The form posts to Ghost's members endpoint via `data-members-form`, which
+   handles the request, the loading state and the error copy. The theme's job is
+   the three response messages, toggled by the `data-members-*` classes Ghost
+   sets on the form element.
+   ========================================================================== */
+
+.ghost-subscribe {
+	padding-block: var(--t-space-16);
+	border-bottom: var(--t-hair) solid var(--t-line);
+}
+
+.ghost-subscribe__inner {
+	display: grid;
+	gap: var(--t-space-8);
+	align-items: center;
+}
+
+@media (min-width: 56rem) {
+	.ghost-subscribe__inner {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+		gap: var(--t-space-16);
+	}
+}
+
+.ghost-subscribe__title {
+	margin: 0 0 var(--t-space-3);
+	font-size: var(--t-text-3xl);
+}
+
+.ghost-subscribe__text {
+	margin: 0;
+	max-width: var(--t-w-prose);
+	color: var(--t-fg-muted);
+	line-height: var(--t-leading-relaxed);
+}
+
+.ghost-subscribe__form {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--t-space-3);
+}
+
+.ghost-subscribe__input {
+	flex: 1 1 14rem;
+	min-width: 0;
+	min-height: var(--tap-min, 2.75rem);
+	padding: var(--t-space-2) var(--t-space-4);
+	border: var(--t-hair) solid var(--t-line-strong);
+	border-radius: var(--t-radius-control);
+	background-color: var(--t-bg);
+	color: var(--t-fg);
+	font-family: inherit;
+	font-size: var(--t-text-sm);
+}
+
+.ghost-subscribe__input::placeholder {
+	color: var(--t-fg-faint);
+}
+
+.ghost-subscribe__input:focus-visible {
+	border-color: var(--t-accent);
+	outline: 2px solid var(--t-accent-ring);
+	outline-offset: 0;
+}
+
+/* Response messages. All three are in the DOM and hidden; Ghost adds
+   `success` or `error` to the form's class list and the matching one appears.
+   Using `hidden` rather than display:none in the template would be overridden
+   by these rules, so visibility is handled entirely here. */
+.ghost-subscribe__message {
+	flex: 1 0 100%;
+	margin: 0;
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-2xs);
+	text-transform: uppercase;
+	letter-spacing: var(--t-tracking-slate);
+	display: none;
+}
+
+.ghost-subscribe__form.success .ghost-subscribe__message--success {
+	display: block;
+	color: var(--t-accent);
+}
+
+.ghost-subscribe__form.error .ghost-subscribe__message--error {
+	display: block;
+	color: var(--t-accent);
+}
+
+.ghost-subscribe__form.loading .ghost-subscribe__message--loading {
+	display: block;
+	color: var(--t-fg-subtle);
+}

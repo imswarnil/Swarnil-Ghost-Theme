@@ -1,0 +1,254 @@
+/* =============================================================================
+   7 · TEMPLATE — post and page
+   =============================================================================
+   Three layouts, chosen by the `post_layout` setting and overridable per post
+   with an internal tag (#wide, #immersive). All three share this markup; only
+   the grid changes.
+   ========================================================================== */
+
+.ghost-post {
+	padding-block: var(--t-space-12) var(--t-space-16);
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────────────────
+   Its own block, outside the reading grid — see partials/post-shell.hbs.
+
+   Two measures are at work on a post. The hero runs to --t-w-wide; the body
+   steps back to --t-w-prose. That change of width is what tells a reader the
+   article has started, without a rule or an ornament to say so.
+
+   The whole block is a grid rather than a stack so that, once there is room,
+   the byline can sit beside the headline instead of under it — which is what
+   stops a short post's hero from becoming a column of five centred lines. */
+.ghost-post__header {
+	max-width: var(--t-w-wide);
+	margin-inline: auto;
+	margin-bottom: var(--t-space-10);
+	padding-bottom: var(--t-space-6);
+	border-bottom: var(--t-hair) solid var(--t-line);
+}
+
+/* The primary tag, set as a kicker on a short rule. */
+.ghost-post__kicker {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--t-space-3);
+	margin-bottom: var(--t-space-5);
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-2xs);
+	text-transform: uppercase;
+	letter-spacing: var(--t-tracking-slate);
+	color: var(--t-accent);
+	text-decoration: none;
+}
+
+.ghost-post__kicker::before {
+	content: '';
+	width: var(--t-space-8);
+	height: var(--t-hair);
+	background-color: currentcolor;
+}
+
+.ghost-post__kicker:hover {
+	color: var(--t-accent-hover);
+}
+
+.ghost-post__title {
+	margin: 0;
+	/* Display scale, tighter than a heading. The clamp stops it running to four
+	   lines on a phone and to a single enormous line on a very wide screen. */
+	font-size: clamp(2.125rem, 1.1rem + 3.6vw, 4rem);
+	line-height: 1.02;
+	letter-spacing: -0.035em;
+	text-wrap: balance;
+}
+
+.ghost-post__excerpt {
+	margin: var(--t-space-5) 0 0;
+	max-width: 52ch;
+	color: var(--t-fg-muted);
+	font-size: var(--t-text-lg);
+	line-height: var(--t-leading-relaxed);
+	text-wrap: pretty;
+}
+
+.ghost-post__byline {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--t-space-3) var(--t-space-6);
+	margin-top: var(--t-space-8);
+	padding-top: var(--t-space-5);
+	border-top: var(--t-hair) solid var(--t-line-subtle);
+}
+
+.ghost-post__byline .ghost-author {
+	text-decoration: none;
+	color: inherit;
+}
+
+/* Metadata to the right of the author, once there is room for the two not to
+   collide. Below that it wraps underneath, which is the correct reading order
+   anyway. */
+@media (min-width: 40rem) {
+	.ghost-post__meta {
+		margin-left: auto;
+	}
+}
+
+/* ── Feature image ────────────────────────────────────────────────────────────
+   Matches the hero's measure, not the reading column's, and keeps its
+   viewfinder brackets at rest. Everywhere else the brackets appear on hover;
+   here the image is the thing being looked at. */
+.ghost-post__feature {
+	max-width: var(--t-w-wide);
+	margin-inline: auto;
+	margin-bottom: var(--t-space-12);
+}
+
+.ghost-post__feature .ghost-frame {
+	aspect-ratio: var(--t-feature-ratio);
+}
+
+.ghost-post__feature .ghost-frame::before,
+.ghost-post__feature .ghost-frame::after {
+	opacity: 1;
+}
+
+.ghost-post__feature-caption {
+	margin-top: var(--t-space-3);
+	text-align: center;
+}
+
+/* ── Body ─────────────────────────────────────────────────────────────────── */
+.ghost-post__body {
+	max-width: var(--t-w-prose);
+	margin-inline: auto;
+}
+
+.ghost-post__footer {
+	max-width: var(--t-w-prose);
+	margin-inline: auto;
+}
+
+/* ── Contents rail ────────────────────────────────────────────────────────────
+   Below 64rem the contents list is a <details> above the body. At and above it,
+   the reading area becomes three columns with the rail in the left margin.
+
+   Only the rail, the body and the footer live in this grid. The hero sits above
+   it in its own container — putting it in here is what once set the headline in
+   the 15rem rail column. */
+.ghost-post__layout {
+	display: grid;
+	gap: var(--t-space-8);
+}
+
+@media (min-width: 64rem) {
+	.ghost-post--with-toc .ghost-post__layout {
+		/* The outer 1fr columns keep the reading column optically centred on the
+		   page rather than pushed right by the rail. */
+		grid-template-columns: minmax(0, 1fr) minmax(0, var(--t-w-prose)) minmax(0, 1fr);
+		gap: var(--t-space-10);
+		align-items: start;
+	}
+
+	.ghost-post--with-toc .ghost-post__rail {
+		grid-column: 1;
+		justify-self: end;
+		width: min(15rem, 100%);
+	}
+
+	.ghost-post--with-toc .ghost-post__body,
+	.ghost-post--with-toc .ghost-post__footer {
+		grid-column: 2;
+		margin-inline: 0;
+	}
+}
+
+/* ── Wide ─────────────────────────────────────────────────────────────────────
+   A broader reading column and a full-bleed feature image. For posts that are
+   mostly pictures. */
+.ghost-post--wide .ghost-post__body,
+.ghost-post--wide .ghost-post__footer {
+	max-width: var(--t-w-wide);
+}
+
+.ghost-post--wide .ghost-post__header,
+.ghost-post--wide .ghost-post__feature {
+	max-width: var(--t-w-site);
+}
+
+.ghost-post--wide .ghost-post__feature .ghost-frame {
+	aspect-ratio: 21 / 9;
+}
+
+/* ── Immersive ────────────────────────────────────────────────────────────────
+   The title sits on the feature image instead of above it. Only used when there
+   is a feature image — the template checks, because an immersive post with no
+   image would be a title on a grey rectangle. */
+/* The cover has to start immediately under the header. The template's own top
+   padding would otherwise leave a band of page background above it, which reads
+   as a rendering fault rather than as a margin. */
+.ghost-post--immersive {
+	padding-top: 0;
+}
+
+.ghost-post--immersive .ghost-post__cover {
+	position: relative;
+	min-height: min(78vh, 44rem);
+	display: flex;
+	align-items: flex-end;
+	margin-bottom: var(--t-space-12);
+	background-color: var(--t-bg-media);
+	overflow: hidden;
+}
+
+.ghost-post--immersive .ghost-post__cover-image {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.ghost-post--immersive .ghost-post__cover-inner {
+	position: relative;
+	width: 100%;
+	padding-block: var(--t-space-16) var(--t-space-12);
+	/* The scrim is on the inner element rather than the image so it covers the
+	   full width even when the image is narrower than the viewport.
+
+	   It is deliberately heavy and holds its density well past the text. A
+	   feature image can be any colour, including near-white, and white type on
+	   an unknown photograph is the most common contrast failure in themes that
+	   set a title over media. Three stops rather than two keep the mid-tones
+	   dark enough for the excerpt, which sits highest in the block. */
+	background: linear-gradient(
+		to top,
+		rgb(0 0 0 / 0.88) 0%,
+		rgb(0 0 0 / 0.72) 45%,
+		rgb(0 0 0 / 0) 100%
+	);
+	color: var(--pure-white);
+}
+
+.ghost-post--immersive .ghost-post__cover-inner .ghost-post__title,
+.ghost-post--immersive .ghost-post__cover-inner .ghost-post__excerpt,
+.ghost-post--immersive .ghost-post__cover-inner .ghost-slate,
+.ghost-post--immersive .ghost-post__cover-inner .ghost-author__name {
+	color: inherit;
+}
+
+.ghost-post--immersive .ghost-post__byline {
+	border-top-color: rgb(255 255 255 / 0.24);
+}
+
+/* ── Page ─────────────────────────────────────────────────────────────────────
+   A Ghost page is a post without a byline, tags or read-next. It keeps the same
+   body styling so pasted content behaves identically. */
+.ghost-page__title {
+	margin: 0 0 var(--t-space-10);
+	max-width: var(--t-w-prose);
+	margin-inline: auto;
+	font-size: var(--t-text-4xl);
+}

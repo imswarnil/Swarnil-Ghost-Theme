@@ -1,0 +1,46 @@
+{{!--
+    What to read after this post.
+
+    Prefers other posts sharing this one's primary tag, and falls back to the
+    most recent posts when the post has no tag at all.
+
+    The two queries are siblings inside an {{#if}} rather than one nested in the
+    other's {{else}}: Ghost's {{#get}} does not resolve async helpers in its
+    inverse branch, so a nested fallback query renders nothing and reports no
+    error. The {{else}} branches here contain only static markup, which is safe.
+
+    That static branch matters most on a young publication. A post with a tag
+    nothing else carries would otherwise end in a dead end — exactly when a
+    reader is most likely to want a second post.
+--}}
+{{#if @custom.show_read_next}}
+    {{#if primary_tag}}
+
+        {{#get "posts" filter="tags:{{primary_tag.slug}}+id:-{{id}}" limit="3" include="authors,tags" as |related|}}
+            <aside class="ghost-read-next ghost-container">
+                <h2 class="ghost-read-next__title">More in {{../primary_tag.name}}</h2>
+                <ul class="ghost-read-next__list">
+                    {{#foreach related}}<li>{{> "card"}}</li>{{/foreach}}
+                </ul>
+            </aside>
+        {{else}}
+            <aside class="ghost-read-next ghost-container">
+                <h2 class="ghost-read-next__title">Keep reading</h2>
+                <p class="ghost-empty__text">This is the only post tagged {{primary_tag.name}} so far.</p>
+                <p><a class="ghost-button ghost-button--outline" href="{{@site.url}}">Everything else {{> "icon" name="arrow-right"}}</a></p>
+            </aside>
+        {{/get}}
+
+    {{else}}
+
+        {{#get "posts" filter="id:-{{id}}" limit="3" include="authors,tags" as |latest|}}
+            <aside class="ghost-read-next ghost-container">
+                <h2 class="ghost-read-next__title">Read next</h2>
+                <ul class="ghost-read-next__list">
+                    {{#foreach latest}}<li>{{> "card"}}</li>{{/foreach}}
+                </ul>
+            </aside>
+        {{/get}}
+
+    {{/if}}
+{{/if}}

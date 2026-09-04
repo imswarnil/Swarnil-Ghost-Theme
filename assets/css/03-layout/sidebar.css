@@ -1,0 +1,117 @@
+/* =============================================================================
+   3 · LAYOUT — list sidebar
+   =============================================================================
+   A second column beside the homepage and the archives, switched on by the
+   list_sidebar setting or forced by the /home/sidebar/ and /home/full/ preview
+   routes.
+
+   Below the breakpoint it is not hidden — it moves under the feed. Hiding it on
+   a phone would mean the topics and the newsletter simply do not exist there,
+   which is where most people read.
+   ========================================================================== */
+
+.ghost-list {
+	display: grid;
+	gap: var(--t-space-12);
+	align-items: start;
+}
+
+@media (min-width: 64rem) {
+	.ghost-list--with-sidebar {
+		grid-template-columns: minmax(0, 1fr) 17rem;
+		gap: var(--t-space-16);
+	}
+}
+
+.ghost-list__main {
+	min-width: 0;
+}
+
+.ghost-sidebar {
+	display: flex;
+	flex-direction: column;
+	gap: var(--t-space-10);
+	min-width: 0;
+}
+
+@media (min-width: 64rem) {
+	.ghost-sidebar {
+		position: sticky;
+		/* Clears the sticky header, and stops the column scrolling past its own
+		   content on a long feed. */
+		top: calc(var(--t-header-h) + var(--t-space-8));
+		max-height: calc(100vh - var(--t-header-h) - var(--t-space-16));
+		overflow-y: auto;
+		padding-bottom: var(--t-space-4);
+	}
+}
+
+.ghost-sidebar__title {
+	margin: 0 0 var(--t-space-4);
+	padding-bottom: var(--t-space-3);
+	border-bottom: var(--t-hair) solid var(--t-line);
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-2xs);
+	font-weight: var(--t-weight-medium);
+	text-transform: uppercase;
+	letter-spacing: var(--t-tracking-slate);
+	color: var(--t-fg-subtle);
+}
+
+.ghost-sidebar__text {
+	margin: 0;
+	color: var(--t-fg-muted);
+	font-size: var(--t-text-sm);
+	line-height: var(--t-leading-relaxed);
+}
+
+.ghost-sidebar__list {
+	display: flex;
+	flex-direction: column;
+	gap: var(--t-space-4);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.ghost-sidebar__item {
+	display: flex;
+	flex-direction: column;
+	gap: var(--t-space-1);
+}
+
+.ghost-sidebar__link {
+	color: inherit;
+	text-decoration: none;
+	font-size: var(--t-text-sm);
+	font-weight: var(--t-weight-medium);
+	line-height: var(--t-leading-snug);
+}
+
+.ghost-sidebar__link:hover {
+	color: var(--t-accent);
+}
+
+.ghost-sidebar__block--boxed {
+	padding: var(--t-space-5);
+	border: var(--t-hair) solid var(--t-line);
+	border-radius: var(--t-radius-card);
+}
+
+.ghost-sidebar__block--boxed .ghost-sidebar__title {
+	border-bottom: 0;
+	padding-bottom: 0;
+}
+
+/* The sidebar form stacks; the band form is a row. Same component, and the only
+   difference is the width it has to live in. */
+.ghost-sidebar__form {
+	flex-direction: column;
+	gap: var(--t-space-3);
+	margin-top: var(--t-space-4);
+}
+
+.ghost-sidebar__form .ghost-subscribe__input {
+	flex: 1 1 auto;
+	width: 100%;
+}

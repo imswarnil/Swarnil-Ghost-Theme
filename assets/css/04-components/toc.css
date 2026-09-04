@@ -1,0 +1,79 @@
+/* =============================================================================
+   4 · COMPONENT — table of contents
+   =============================================================================
+   Built at runtime from the h2/h3 elements in the post body (assets/js/toc.js),
+   not authored. If a post has fewer than three headings the script removes the
+   whole block, because a two-item contents list is noise.
+
+   On wide screens it becomes a sticky rail beside the reading column; below
+   that it collapses into a <details> above the post.
+   ========================================================================== */
+
+.ghost-toc {
+	font-size: var(--t-text-sm);
+}
+
+.ghost-toc__title {
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-2xs);
+	text-transform: uppercase;
+	letter-spacing: var(--t-tracking-slate);
+	color: var(--t-fg-subtle);
+	margin-bottom: var(--t-space-3);
+	cursor: pointer;
+}
+
+.ghost-toc__list {
+	display: flex;
+	flex-direction: column;
+	gap: var(--t-space-2);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	border-left: var(--t-hair) solid var(--t-line);
+}
+
+.ghost-toc__link {
+	display: block;
+	padding: 0.125rem 0 0.125rem var(--t-space-4);
+	margin-left: -1px;
+	border-left: 2px solid transparent;
+	color: var(--t-fg-muted);
+	text-decoration: none;
+	line-height: var(--t-leading-snug);
+}
+
+.ghost-toc__link:hover {
+	color: var(--t-fg);
+}
+
+/* Set by the scroll observer in toc.js as the reader moves through the post. */
+.ghost-toc__link--current {
+	border-left-color: var(--t-accent);
+	color: var(--t-fg);
+}
+
+/* Nested h3 entries. */
+.ghost-toc__item--sub .ghost-toc__link {
+	padding-left: var(--t-space-8);
+	font-size: var(--t-text-xs);
+}
+
+@media (min-width: 64rem) {
+	.ghost-toc {
+		position: sticky;
+		top: calc(var(--t-header-h) + var(--t-space-8));
+		max-height: calc(100vh - var(--t-header-h) - var(--t-space-16));
+		overflow-y: auto;
+	}
+
+	/* The mobile disclosure arrow is meaningless once it is a rail. */
+	.ghost-toc__title {
+		list-style: none;
+		pointer-events: none;
+	}
+
+	.ghost-toc__title::-webkit-details-marker {
+		display: none;
+	}
+}

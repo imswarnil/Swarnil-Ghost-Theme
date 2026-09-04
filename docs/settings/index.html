@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" data-base="/docs/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Settings — Swarnil documentation</title>
+<meta name="description" content="All seventeen settings, what each one changes, and which four to set on day one.">
+<link rel="canonical" href="https://theme.imswarnil.com/docs/settings/">
+<meta property="og:title" content="Settings — Swarnil documentation">
+<meta property="og:description" content="All seventeen settings, what each one changes, and which four to set on day one.">
+<meta property="og:url" content="https://theme.imswarnil.com/docs/settings/">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#f04e2e">
+<link rel="stylesheet" href="/docs/assets/docs.css?v=81461a1a">
+<script>
+  /* Applied before first paint — deferring it means a white flash on every
+     page for anyone reading in dark mode. */
+  (function () {
+    var scheme = 'system';
+    try { scheme = localStorage.getItem('swarnil-docs-scheme') || 'system'; } catch (e) {}
+    var root = document.documentElement;
+    root.dataset.scheme = scheme;
+    if (scheme !== 'system') {
+      root.dataset.theme = scheme;
+    }
+  })();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+
+  <header class="header">
+    <div class="wrap header__inner">
+      <a class="brand" href="/docs/">
+        <span class="brand__dot"></span>
+        <span>Swarnil</span>
+        <span class="brand__version">v1.0.0</span>
+      </a>
+
+      <div class="header__spacer"></div>
+
+      <nav class="header__links" aria-label="Site">
+        <a href="/docs/">Documentation</a>
+        <a href="https://theme.imswarnil.com/#preview">Preview</a>
+        <a href="https://github.com/imswarnil/Swarnil-Ghost-Theme">Repository</a>
+      </nav>
+
+      <button class="search-open" data-search-open hidden>
+        <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <span class="search-open__label">Search</span>
+        <kbd class="search-open__hint">/</kbd>
+      </button>
+
+      <button class="btn btn--icon" data-scheme-toggle aria-label="Change colour scheme">
+        <span data-scheme-icon="system"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span>
+        <span data-scheme-icon="light" hidden><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></span>
+        <span data-scheme-icon="dark" hidden><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></span>
+      </button>
+
+      <button class="btn btn--icon nav-toggle" data-drawer-open aria-expanded="false" aria-controls="drawer" aria-label="Open navigation">
+        <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="wrap page">
+    <nav class="sidebar" aria-label="Documentation">
+        <div class="nav__group">
+          <p class="nav__label">Getting started</p>
+          <ul class="nav__list">
+            <li><a class="nav__link" href="/docs/install/"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg>Install</a></li>
+            <li><a class="nav__link" href="/docs/first-run/"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/></svg>First run</a></li>
+          </ul>
+        </div>
+
+        <div class="nav__group">
+          <p class="nav__label">Reference</p>
+          <ul class="nav__list">
+            <li><a class="nav__link" href="/docs/settings/" aria-current="page"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 8h10M18 8h2M4 16h4M12 16h8"/><circle cx="16" cy="8" r="2"/><circle cx="10" cy="16" r="2"/></svg>Settings</a></li>
+            <li><a class="nav__link" href="/docs/layouts/"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg>Layouts</a></li>
+          </ul>
+        </div>
+
+        <div class="nav__group">
+          <p class="nav__label">Going further</p>
+          <ul class="nav__list">
+            <li><a class="nav__link" href="/docs/demo/"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg>The demo content</a></li>
+            <li><a class="nav__link" href="/docs/customising/"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20c2 0 3-1 3-3a2 2 0 1 0-3 3zM9 15L18.5 5.5a2.1 2.1 0 0 1 3 3L12 18"/></svg>Customising</a></li>
+          </ul>
+        </div>
+
+        <div class="nav__group">
+          <p class="nav__label">Help</p>
+          <ul class="nav__list">
+            <li><a class="nav__link" href="/docs/troubleshooting/"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3 2.5v1.5M12 17h.01"/></svg>Troubleshooting</a></li>
+          </ul>
+        </div>
+    </nav>
+
+    <main class="content" id="main">
+      <div class="page-head">
+        <p class="page-head__kicker slate">Reference · 03</p>
+        <h1>Settings</h1>
+        <p class="page-head__summary">All seventeen settings, what each one changes, and which four to set on day one.</p>
+      </div>
+
+      <div class="prose">
+<p>Every setting is in <strong>Settings → Design</strong>, split into three groups. None of them
+requires touching code, which is the rule the theme is built to: if you would
+reasonably want to change it, it is here.</p>
+<h2 id="site-wide">Site-wide<a class="anchor" href="#site-wide" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Options</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Colour scheme</strong></td>
+<td>System · Light · Dark</td>
+<td>What a first-time visitor sees. They can override it with the header toggle, and their choice is remembered.</td>
+</tr>
+<tr>
+<td><strong>Show colour scheme toggle</strong></td>
+<td>on / off</td>
+<td>The sun/moon control in the header. Turn it off to lock the site to your chosen scheme.</td>
+</tr>
+<tr>
+<td><strong>Typeface pairing</strong></td>
+<td>Grotesk &amp; Sans · Serif &amp; Sans · Mono &amp; Sans</td>
+<td>The display face used for headlines. Body text never changes.</td>
+</tr>
+<tr>
+<td><strong>Header style</strong></td>
+<td>Rule · Plate · Over Media</td>
+<td>Rule is a hairline underneath. Plate is a filled bar that lifts on scroll. Over Media sits transparently on a feature image and becomes a plate once you scroll past it.</td>
+</tr>
+<tr>
+<td><strong>Sidebar on lists</strong></td>
+<td>on / off</td>
+<td>A second column beside the homepage and archives, with topics, recent posts and the newsletter. Compare the two at <code>/home/sidebar/</code> and <code>/home/full/</code>.</td>
+</tr>
+<tr>
+<td><strong>Footer note</strong></td>
+<td>text</td>
+<td>A short line above the footer navigation. Blank hides it.</td>
+</tr>
+</tbody></table>
+<h2 id="homepage">Homepage<a class="anchor" href="#homepage" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Options</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Homepage layout</strong></td>
+<td>Call Sheet · Stacked · Grid</td>
+<td>Call Sheet is a numbered index with hairline rules. Stacked is one full-width card per row. Grid is three across.</td>
+</tr>
+<tr>
+<td><strong>Homepage lead</strong></td>
+<td>Featured Post · Latest Post · None</td>
+<td>What fills the large slot at the top. Featured Post falls back to your latest post when nothing is marked featured.</td>
+</tr>
+<tr>
+<td><strong>Homepage intro</strong></td>
+<td>text</td>
+<td>One or two sentences under the site title. Blank uses your site description instead.</td>
+</tr>
+<tr>
+<td><strong>Homepage shelf tags</strong></td>
+<td>text</td>
+<td>Tag slugs shown as horizontally scrolling shelves. <strong>Comma-separated, no spaces</strong> — <code>video,notes</code>, not <code>video, notes</code>.</td>
+</tr>
+<tr>
+<td><strong>Show subscribe band</strong></td>
+<td>on / off</td>
+<td>The newsletter block near the foot of the homepage. Only ever appears if memberships are on.</td>
+</tr>
+</tbody></table>
+<h2 id="post">Post<a class="anchor" href="#post" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Options</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Post layout</strong></td>
+<td>Standard · Wide · Immersive</td>
+<td>The default for every post. Individual posts override it — see <a href="#post-layouts">post layouts</a>.</td>
+</tr>
+<tr>
+<td><strong>Feature image ratio</strong></td>
+<td>auto · 16/9 · 3/2 · 4/3 · 1/1 · 21/9</td>
+<td>The crop applied to feature images. <code>auto</code> keeps each image&#39;s own shape.</td>
+</tr>
+<tr>
+<td><strong>Show reading time</strong></td>
+<td>on / off</td>
+<td>The estimate in the byline.</td>
+</tr>
+<tr>
+<td><strong>Show table of contents</strong></td>
+<td>on / off</td>
+<td>Built from the headings in each post. Posts with fewer than three headings never show one — a two-item contents list is noise.</td>
+</tr>
+<tr>
+<td><strong>Show author card</strong></td>
+<td>on / off</td>
+<td>The author block beneath a post.</td>
+</tr>
+<tr>
+<td><strong>Show read next</strong></td>
+<td>on / off</td>
+<td>Related posts beneath a post, drawn from the primary tag.</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>A note on renaming.</strong> If you fork the theme and rename a setting&#39;s options,
+rename them everywhere. Ghost compares the stored string exactly, so a site
+that already chose the old value will silently match nothing.</p>
+</blockquote>
+
+      </div>
+
+          <nav class="pager" aria-label="Section">
+            <a class="pager__link pager__link--prev" href="/docs/first-run/" rel="prev">
+              <span class="pager__dir"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Previous</span>
+              <span class="pager__title">First run</span>
+            </a>
+            <a class="pager__link pager__link--next" href="/docs/layouts/" rel="next">
+              <span class="pager__dir">Next <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+              <span class="pager__title">Layouts</span>
+            </a>
+          </nav>
+    </main>
+
+        <aside class="rail" aria-label="On this page">
+          <p class="nav__label">On this page</p>
+          <ul class="toc__list">
+            <li class="toc__item"><a class="toc__link" data-toc-link href="#site-wide">Site-wide</a></li>
+            <li class="toc__item"><a class="toc__link" data-toc-link href="#homepage">Homepage</a></li>
+            <li class="toc__item"><a class="toc__link" data-toc-link href="#post">Post</a></li>
+          </ul>
+        </aside>
+  </div>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <span>Swarnil v1.0.0 · Ghost 6.0+</span>
+      <span><a href="/docs/assets/docs.pdf">Download as PDF</a> · <a href="https://theme.imswarnil.com">theme.imswarnil.com</a></span>
+    </div>
+  </footer>
+</div>
+
+  <dialog class="drawer" id="drawer" data-drawer aria-label="Navigation">
+    <div class="drawer__inner">
+      <div class="drawer__head">
+        <span class="brand"><span class="brand__dot"></span><span>Swarnil</span></span>
+        <button class="btn btn--icon" data-drawer-close aria-label="Close navigation"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <nav aria-label="Documentation">
+        <div class="nav__group">
+          <p class="nav__label">Getting started</p>
+          <ul class="nav__list">
+            <li><a class="nav__link" href="/docs/install/"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg>Install</a></li>
+            <li><a class="nav__link" href="/docs/first-run/"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/></svg>First run</a></li>
+          </ul>
+        </div>
+
+        <div class="nav__group">
+          <p class="nav__label">Reference</p>
+          <ul class="nav__list">
+            <li><a class="nav__link" href="/docs/settings/" aria-current="page"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 8h10M18 8h2M4 16h4M12 16h8"/><circle cx="16" cy="8" r="2"/><circle cx="10" cy="16" r="2"/></svg>Settings</a></li>
+            <li><a class="nav__link" href="/docs/layouts/"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg>Layouts</a></li>
+          </ul>
+        </div>
+
+        <div class="nav__group">
+          <p class="nav__label">Going further</p>
+          <ul class="nav__list">
+            <li><a class="nav__link" href="/docs/demo/"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg>The demo content</a></li>
+            <li><a class="nav__link" href="/docs/customising/"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20c2 0 3-1 3-3a2 2 0 1 0-3 3zM9 15L18.5 5.5a2.1 2.1 0 0 1 3 3L12 18"/></svg>Customising</a></li>
+          </ul>
+        </div>
+
+        <div class="nav__group">
+          <p class="nav__label">Help</p>
+          <ul class="nav__list">
+            <li><a class="nav__link" href="/docs/troubleshooting/"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3 2.5v1.5M12 17h.01"/></svg>Troubleshooting</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </dialog>
+
+  <dialog class="search" data-search aria-label="Search the documentation">
+    <div class="search__field">
+      <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the documentation" aria-label="Search the documentation" autocomplete="off" spellcheck="false">
+      <button class="btn btn--icon" data-search-close aria-label="Close search"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <ul class="search__results" data-search-results></ul>
+  </dialog>
+<script src="/docs/assets/docs.js?v=d985e541"></script>
+</body>
+</html>

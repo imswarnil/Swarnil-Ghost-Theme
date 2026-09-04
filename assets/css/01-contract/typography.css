@@ -1,0 +1,43 @@
+/* =============================================================================
+   1 · CONTRACT — typeface pairings
+   =============================================================================
+
+   The `typeface_pairing` custom setting writes a `data-typeface` attribute onto
+   <html> in default.hbs. Each block below re-points the display face only; the
+   body face never changes, because the reading experience should not be part of
+   a cosmetic choice.
+
+   Faces are named but not shipped. The design system's own stack already ends in
+   `ui-sans-serif, system-ui`, so an unavailable face degrades to the system UI
+   font rather than to Times. A publisher who wants a licensed webfont adds the
+   @font-face rule in Ghost's code-injection and overrides `--t-font-display`
+   there — no theme edit, and no fonts we do not have the right to redistribute.
+   ========================================================================== */
+
+/* Grotesk & Sans — the default. Tight, geometric headlines over a neutral body.
+   This is the pairing the layout was drawn for. */
+:root,
+:root[data-typeface='grotesk'] {
+	--t-font-display: var(--font-display);
+	--t-display-tracking: var(--t-tracking-tight);
+	--t-display-weight: var(--t-weight-semibold);
+}
+
+/* Serif & Sans — for publications that lead with writing. The serif carries more
+   width per character, so the tracking opens up and the weight comes down. */
+:root[data-typeface='serif'] {
+	--t-font-display: ui-serif, Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+	--t-display-tracking: var(--t-tracking-normal);
+	--t-display-weight: var(--t-weight-medium);
+}
+
+/* Mono & Sans — the most opinionated of the three. Headlines in the same face as
+   the metadata slate, which makes the whole page read as one document. Mono is
+   wide, so headline sizes are pulled back a step to stop them wrapping early. */
+:root[data-typeface='mono'] {
+	--t-font-display: var(--font-slate);
+	--t-display-tracking: -0.01em;
+	--t-display-weight: var(--t-weight-medium);
+	--t-text-4xl: var(--text-3xl);
+	--t-text-5xl: var(--text-4xl);
+}

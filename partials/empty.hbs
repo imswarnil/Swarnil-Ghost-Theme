@@ -1,0 +1,12 @@
+{{!--
+    The no-content state.
+
+    Every template that loops has one. A publisher's first hour with a theme is
+    spent looking at empty pages, and this is the difference between a theme that
+    looks unfinished and one that looks like it was expecting them.
+--}}
+<div class="ghost-empty">
+    <span class="ghost-empty__mark">Nothing here yet</span>
+    <p class="ghost-empty__title">{{#if title}}{{title}}{{else}}No posts to show{{/if}}</p>
+    <p class="ghost-empty__text">{{#if text}}{{text}}{{else}}Once something is published it will appear here.{{/if}}</p>
+</div>

@@ -1,0 +1,1922 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<title>Swarnil — Ghost theme documentation v1.0.0</title>
+<style>
+/* =============================================================================
+   SWARNIL — documentation site
+   =============================================================================
+
+   Hand-authored, not generated. scripts/build-docs.mjs writes the HTML and
+   copies this file across unchanged, so the stylesheet is editable on its own.
+
+   It deliberately mirrors the theme it documents rather than importing it: the
+   same two-ramp palette, the same monospaced "slate" voice for metadata, the
+   same hairline rules and viewfinder brackets. Importing the theme's compiled
+   CSS would drag in Ghost-specific component classes the docs never use, and
+   would make the docs break whenever the theme's markup changed.
+
+   Layers, top to bottom:
+     1  tokens        palette, type, space — light and dark
+     2  base          document defaults
+     3  layout        header, sidebar, content, rail
+     4  components    brand, nav, search, cards, pagination, toc
+     5  home          hero and the live preview
+     6  prose         rendered Markdown
+     7  print         the same pages, printed to docs.pdf
+   ========================================================================== */
+
+/* =============================================================================
+   1 · TOKENS
+   ========================================================================== */
+
+:root {
+	/* Ink — the same near-neutral grey as the theme, with a whisper of blue in
+	   the shadows so dark surfaces read as unlit rather than muddy. */
+	--ink-0: #fff;
+	--ink-50: #f8f8fa;
+	--ink-100: #f1f1f4;
+	--ink-200: #e5e5ea;
+	--ink-300: #d3d3db;
+	--ink-400: #a5a5b2;
+	--ink-500: #76768a;
+	--ink-600: #55556a;
+	--ink-800: #272734;
+	--ink-900: #191922;
+	--ink-950: #101017;
+
+	/* Signal — the record light. Rationed to what is live, new or hovered. */
+	--signal-300: #ff9d89;
+	--signal-500: #f04e2e;
+	--signal-700: #b52810;
+
+	--bg: var(--ink-0);
+	--bg-sunken: var(--ink-50);
+	--bg-raised: var(--ink-0);
+	--fg: var(--ink-900);
+	--fg-muted: var(--ink-600);
+	--fg-subtle: var(--ink-500);
+	--fg-faint: var(--ink-400);
+	--line: var(--ink-200);
+	--line-subtle: var(--ink-100);
+	--line-strong: var(--ink-300);
+	--accent: var(--signal-500);
+	--accent-text: var(--signal-700);
+	--on-accent: #fff;
+	--scrim: rgb(8 8 12 / 0.5);
+
+	--sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, system-ui, sans-serif;
+	--mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+
+	--slate-size: 0.6875rem;
+	--slate-track: 0.14em;
+
+	--gutter: clamp(1.25rem, 4vw, 2.5rem);
+	--header-h: 3.75rem;
+	--sidebar-w: 15.5rem;
+	--rail-w: 13rem;
+	--measure: 44rem;
+
+	--radius: 6px;
+	--radius-lg: 10px;
+	--hair: 1px;
+
+	--ease: cubic-bezier(0.2, 0, 0, 1);
+	--dur: 160ms;
+}
+
+:root[data-theme='dark'] {
+	--bg: var(--ink-950);
+	--bg-sunken: var(--ink-900);
+	--bg-raised: var(--ink-900);
+	--fg: var(--ink-100);
+	--fg-muted: var(--ink-400);
+	--fg-subtle: var(--ink-500);
+	--fg-faint: var(--ink-600);
+	--line: var(--ink-800);
+	--line-subtle: #1d1d27;
+	--line-strong: var(--ink-600);
+	--accent-text: var(--signal-300);
+	--scrim: rgb(0 0 0 / 0.7);
+}
+
+/* Before the inline script runs — and for anyone with JavaScript off — follow
+   the operating system. The [data-theme] rules above still win once set. */
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme='light']) {
+		--bg: var(--ink-950);
+		--bg-sunken: var(--ink-900);
+		--bg-raised: var(--ink-900);
+		--fg: var(--ink-100);
+		--fg-muted: var(--ink-400);
+		--fg-subtle: var(--ink-500);
+		--fg-faint: var(--ink-600);
+		--line: var(--ink-800);
+		--line-subtle: #1d1d27;
+		--line-strong: var(--ink-600);
+		--accent-text: var(--signal-300);
+		--scrim: rgb(0 0 0 / 0.7);
+	}
+}
+
+/* =============================================================================
+   2 · BASE
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	scroll-padding-top: calc(var(--header-h) + 1.5rem);
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	margin: 0;
+	background: var(--bg);
+	color: var(--fg);
+	font-family: var(--sans);
+	font-size: 1rem;
+	line-height: 1.65;
+}
+
+/* `height: auto` is load-bearing. Every <img> here carries width and height
+   attributes so the browser can reserve space before the image loads, but those
+   attributes also fix the used height — which makes `aspect-ratio` on the
+   element do nothing. Without this line the section thumbnails render at their
+   full 900px. */
+img,
+svg,
+iframe {
+	max-width: 100%;
+	height: auto;
+}
+
+a {
+	color: var(--fg);
+	text-decoration-color: var(--line-strong);
+	text-underline-offset: 0.18em;
+	transition: color var(--dur) var(--ease);
+}
+
+a:hover {
+	color: var(--accent-text);
+}
+
+:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+	border-radius: 3px;
+}
+
+::selection {
+	background: var(--accent);
+	color: var(--on-accent);
+}
+
+.sr {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+}
+
+.skip {
+	position: absolute;
+	top: 0.75rem;
+	left: 0.75rem;
+	z-index: 60;
+	padding: 0.5rem 1rem;
+	background: var(--bg-raised);
+	border: var(--hair) solid var(--line-strong);
+	border-radius: var(--radius);
+	font-family: var(--mono);
+	font-size: var(--slate-size);
+	text-decoration: none;
+	transform: translateY(-200%);
+}
+
+.skip:focus {
+	transform: translateY(0);
+}
+
+/* The theme's metadata voice, reused here for kickers, counts and labels. */
+.slate {
+	font-family: var(--mono);
+	font-size: var(--slate-size);
+	letter-spacing: var(--slate-track);
+	text-transform: uppercase;
+	color: var(--fg-subtle);
+}
+
+.icon {
+	width: 1.25em;
+	height: 1.25em;
+	flex: 0 0 auto;
+	vertical-align: -0.28em;
+}
+
+/* =============================================================================
+   3 · LAYOUT
+   ========================================================================== */
+
+.shell {
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+	min-height: 100vh;
+	min-height: 100dvh;
+}
+
+.wrap {
+	width: 100%;
+	max-width: 84rem;
+	margin-inline: auto;
+	padding-inline: var(--gutter);
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+
+.header {
+	position: sticky;
+	top: 0;
+	z-index: 40;
+	height: var(--header-h);
+	display: flex;
+	align-items: center;
+	background: color-mix(in srgb, var(--bg) 88%, transparent);
+	backdrop-filter: blur(12px);
+	border-bottom: var(--hair) solid var(--line);
+}
+
+.header__inner {
+	display: flex;
+	align-items: center;
+	gap: 1.25rem;
+	width: 100%;
+}
+
+.header__spacer {
+	flex: 1 1 auto;
+}
+
+.header__links {
+	display: none;
+	align-items: center;
+	gap: 1.25rem;
+}
+
+.header__links a {
+	font-size: 0.9375rem;
+	text-decoration: none;
+	color: var(--fg-muted);
+}
+
+.header__links a:hover,
+.header__links a[aria-current='true'] {
+	color: var(--fg);
+}
+
+@media (min-width: 60rem) {
+	.header__links {
+		display: flex;
+	}
+}
+
+.brand {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.625rem;
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	text-decoration: none;
+	flex: 0 0 auto;
+}
+
+.brand__dot {
+	width: 7px;
+	height: 7px;
+	border-radius: 999px;
+	background: var(--accent);
+}
+
+.brand__version {
+	font-family: var(--mono);
+	font-size: var(--slate-size);
+	letter-spacing: var(--slate-track);
+	color: var(--fg-faint);
+	padding-left: 0.5rem;
+	border-left: var(--hair) solid var(--line);
+}
+
+/* ── Page grid ──────────────────────────────────────────────────────────── */
+
+.page {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 3rem;
+	padding-block: 2.5rem 5rem;
+	align-items: start;
+}
+
+@media (min-width: 64rem) {
+	.page {
+		grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+		gap: 3.5rem;
+	}
+}
+
+@media (min-width: 84rem) {
+	.page {
+		grid-template-columns: var(--sidebar-w) minmax(0, 1fr) var(--rail-w);
+	}
+}
+
+.content {
+	min-width: 0;
+	max-width: var(--measure);
+}
+
+/* =============================================================================
+   4 · COMPONENTS
+   ========================================================================== */
+
+/* ── Buttons ────────────────────────────────────────────────────────────── */
+
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	min-height: 2.5rem;
+	padding: 0 1.125rem;
+	border: var(--hair) solid transparent;
+	border-radius: var(--radius);
+	background: none;
+	color: var(--fg);
+	font: inherit;
+	font-size: 0.9375rem;
+	font-weight: 500;
+	line-height: 1;
+	text-decoration: none;
+	cursor: pointer;
+	transition: background-color var(--dur) var(--ease),
+		border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.btn--primary {
+	background: var(--accent);
+	color: var(--on-accent);
+}
+
+.btn--primary:hover {
+	background: var(--signal-700);
+	color: var(--on-accent);
+}
+
+.btn--outline {
+	border-color: var(--line-strong);
+}
+
+.btn--outline:hover {
+	border-color: var(--accent);
+	color: var(--accent-text);
+}
+
+.btn--icon {
+	width: 2.5rem;
+	padding: 0;
+	color: var(--fg-muted);
+}
+
+.btn--icon:hover {
+	background: var(--bg-sunken);
+	color: var(--fg);
+}
+
+/* ── Sidebar navigation ─────────────────────────────────────────────────── */
+
+.sidebar {
+	display: none;
+}
+
+@media (min-width: 64rem) {
+	.sidebar {
+		display: block;
+		position: sticky;
+		top: calc(var(--header-h) + 2rem);
+		max-height: calc(100vh - var(--header-h) - 3rem);
+		overflow-y: auto;
+		padding-right: 0.5rem;
+	}
+}
+
+.nav__group + .nav__group {
+	margin-top: 1.75rem;
+}
+
+.nav__label {
+	margin: 0 0 0.625rem;
+	font-family: var(--mono);
+	font-size: var(--slate-size);
+	letter-spacing: var(--slate-track);
+	text-transform: uppercase;
+	color: var(--fg-faint);
+	font-weight: 400;
+}
+
+.nav__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	border-left: var(--hair) solid var(--line);
+}
+
+.nav__link {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.35rem 0 0.35rem 0.875rem;
+	margin-left: -1px;
+	border-left: 2px solid transparent;
+	color: var(--fg-muted);
+	font-size: 0.9375rem;
+	text-decoration: none;
+}
+
+.nav__link:hover {
+	color: var(--fg);
+}
+
+.nav__link[aria-current='page'] {
+	border-left-color: var(--accent);
+	color: var(--fg);
+	font-weight: 500;
+}
+
+.nav__link .icon {
+	width: 1rem;
+	height: 1rem;
+	color: var(--fg-faint);
+}
+
+.nav__link[aria-current='page'] .icon {
+	color: var(--accent);
+}
+
+/* ── In-page contents rail ──────────────────────────────────────────────── */
+
+.rail {
+	display: none;
+}
+
+@media (min-width: 84rem) {
+	.rail {
+		display: block;
+		position: sticky;
+		top: calc(var(--header-h) + 2rem);
+		max-height: calc(100vh - var(--header-h) - 3rem);
+		overflow-y: auto;
+	}
+}
+
+.toc__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	border-left: var(--hair) solid var(--line);
+}
+
+.toc__link {
+	display: block;
+	padding: 0.28rem 0 0.28rem 0.875rem;
+	margin-left: -1px;
+	border-left: 2px solid transparent;
+	color: var(--fg-muted);
+	font-size: 0.875rem;
+	line-height: 1.45;
+	text-decoration: none;
+}
+
+.toc__link:hover {
+	color: var(--fg);
+}
+
+.toc__link[data-current='true'] {
+	border-left-color: var(--accent);
+	color: var(--fg);
+}
+
+.toc__item--sub .toc__link {
+	padding-left: 1.75rem;
+	font-size: 0.8125rem;
+}
+
+/* ── Page header and pagination ─────────────────────────────────────────── */
+
+.page-head {
+	padding-bottom: 1.5rem;
+	margin-bottom: 2.5rem;
+	border-bottom: 2px solid var(--fg);
+}
+
+.page-head__kicker {
+	margin: 0 0 0.75rem;
+	color: var(--accent-text);
+}
+
+.page-head h1 {
+	margin: 0;
+	font-size: 2.25rem;
+	line-height: 1.1;
+	letter-spacing: -0.02em;
+}
+
+.page-head__summary {
+	margin: 0.875rem 0 0;
+	color: var(--fg-muted);
+	font-size: 1.0625rem;
+}
+
+.pager {
+	display: grid;
+	gap: 1rem;
+	grid-template-columns: 1fr;
+	margin-top: 4rem;
+	padding-top: 2rem;
+	border-top: var(--hair) solid var(--line);
+}
+
+@media (min-width: 40rem) {
+	.pager {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+.pager__link {
+	display: flex;
+	flex-direction: column;
+	gap: 0.375rem;
+	padding: 1rem 1.125rem;
+	border: var(--hair) solid var(--line);
+	border-radius: var(--radius-lg);
+	text-decoration: none;
+	transition: border-color var(--dur) var(--ease);
+}
+
+.pager__link:hover {
+	border-color: var(--accent);
+}
+
+.pager__link--next {
+	text-align: right;
+	/* Sits in the second column even when there is no previous page. */
+	grid-column: 2;
+}
+
+.pager__dir {
+	display: flex;
+	align-items: center;
+	gap: 0.375rem;
+	font-family: var(--mono);
+	font-size: var(--slate-size);
+	letter-spacing: var(--slate-track);
+	text-transform: uppercase;
+	color: var(--fg-subtle);
+}
+
+.pager__link--next .pager__dir {
+	justify-content: flex-end;
+}
+
+.pager__title {
+	font-weight: 600;
+	color: var(--fg);
+}
+
+/* ── Search ─────────────────────────────────────────────────────────────── */
+
+.search-open {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-height: 2.25rem;
+	padding: 0 0.625rem 0 0.75rem;
+	border: var(--hair) solid var(--line);
+	border-radius: var(--radius);
+	background: var(--bg-sunken);
+	color: var(--fg-subtle);
+	font: inherit;
+	font-size: 0.875rem;
+	cursor: pointer;
+}
+
+.search-open:hover {
+	border-color: var(--line-strong);
+	color: var(--fg);
+}
+
+.search-open__hint {
+	display: none;
+	padding: 0.05rem 0.35rem;
+	border: var(--hair) solid var(--line);
+	border-radius: 4px;
+	background: var(--bg);
+	font-family: var(--mono);
+	font-size: 0.6875rem;
+	color: var(--fg-faint);
+}
+
+@media (min-width: 48rem) {
+	.search-open__label {
+		min-width: 7rem;
+		text-align: left;
+	}
+
+	.search-open__hint {
+		display: inline-block;
+	}
+}
+
+.search {
+	width: min(38rem, calc(100vw - 2rem));
+	max-height: min(30rem, 80vh);
+	padding: 0;
+	margin: 12vh auto auto;
+	border: var(--hair) solid var(--line-strong);
+	border-radius: var(--radius-lg);
+	background: var(--bg-raised);
+	color: var(--fg);
+	overflow: hidden;
+}
+
+.search::backdrop {
+	background: var(--scrim);
+	backdrop-filter: blur(3px);
+}
+
+.search__field {
+	display: flex;
+	align-items: center;
+	gap: 0.625rem;
+	padding: 0.875rem 1rem;
+	border-bottom: var(--hair) solid var(--line);
+	color: var(--fg-subtle);
+}
+
+.search__input {
+	flex: 1 1 auto;
+	min-width: 0;
+	border: 0;
+	background: none;
+	color: var(--fg);
+	font: inherit;
+	font-size: 1rem;
+}
+
+.search__input:focus {
+	outline: none;
+}
+
+/* WebKit draws its own clear button inside type="search", which sits right
+   beside this dialog's close button and reads as two ways to dismiss. The
+   dialog's own control is the one that should be there. */
+.search__input::-webkit-search-cancel-button,
+.search__input::-webkit-search-decoration {
+	appearance: none;
+	display: none;
+}
+
+.search__results {
+	list-style: none;
+	margin: 0;
+	padding: 0.375rem;
+	max-height: 22rem;
+	overflow-y: auto;
+}
+
+.search__result a {
+	display: block;
+	padding: 0.625rem 0.75rem;
+	border-radius: var(--radius);
+	text-decoration: none;
+}
+
+.search__result a:hover,
+.search__result[data-active='true'] a {
+	background: var(--bg-sunken);
+}
+
+.search__result-title {
+	font-weight: 500;
+}
+
+.search__result-context {
+	display: block;
+	margin-top: 0.125rem;
+	font-size: 0.875rem;
+	color: var(--fg-muted);
+}
+
+.search__result mark {
+	background: color-mix(in srgb, var(--accent) 22%, transparent);
+	color: inherit;
+	border-radius: 2px;
+}
+
+.search__empty {
+	padding: 2rem 1rem;
+	text-align: center;
+	color: var(--fg-subtle);
+	font-size: 0.9375rem;
+}
+
+/* ── Mobile navigation ──────────────────────────────────────────────────── */
+
+.drawer {
+	width: min(20rem, 100vw);
+	height: 100dvh;
+	max-height: 100dvh;
+	margin: 0 0 0 auto;
+	padding: 0;
+	border: 0;
+	border-left: var(--hair) solid var(--line);
+	background: var(--bg);
+	color: var(--fg);
+}
+
+.drawer::backdrop {
+	background: var(--scrim);
+}
+
+.drawer__inner {
+	height: 100%;
+	overflow-y: auto;
+	padding: 1rem var(--gutter) 3rem;
+}
+
+.drawer__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 1.5rem;
+}
+
+@media (min-width: 64rem) {
+	.nav-toggle,
+	.drawer {
+		display: none;
+	}
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────────── */
+
+.footer {
+	border-top: var(--hair) solid var(--line);
+	padding-block: 2rem 3.5rem;
+}
+
+.footer__inner {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem 1.5rem;
+	align-items: center;
+	justify-content: space-between;
+	font-family: var(--mono);
+	font-size: var(--slate-size);
+	letter-spacing: var(--slate-track);
+	text-transform: uppercase;
+	color: var(--fg-subtle);
+}
+
+.footer__inner a {
+	color: inherit;
+}
+
+/* =============================================================================
+   5 · HOME
+   ========================================================================== */
+
+.hero {
+	padding-block: 4rem 3rem;
+	border-bottom: var(--hair) solid var(--line);
+}
+
+.hero__kicker {
+	margin: 0 0 1rem;
+	color: var(--accent-text);
+}
+
+.hero h1 {
+	margin: 0;
+	max-width: 18ch;
+	font-size: clamp(2.75rem, 7vw, 4.5rem);
+	line-height: 1.02;
+	letter-spacing: -0.035em;
+}
+
+.hero__lede {
+	margin: 1.5rem 0 0;
+	max-width: 40rem;
+	color: var(--fg-muted);
+	font-size: 1.1875rem;
+	line-height: 1.6;
+}
+
+.hero__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	margin-top: 2rem;
+}
+
+/* ── Live preview ───────────────────────────────────────────────────────── */
+
+.preview {
+	padding-block: 3.5rem;
+	border-bottom: var(--hair) solid var(--line);
+}
+
+.preview__head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 1.25rem;
+}
+
+.preview__widths {
+	display: inline-flex;
+	padding: 3px;
+	border: var(--hair) solid var(--line);
+	border-radius: var(--radius);
+	background: var(--bg-sunken);
+	gap: 2px;
+}
+
+.preview__width {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	padding: 0.3rem 0.7rem;
+	border: 0;
+	border-radius: 4px;
+	background: none;
+	color: var(--fg-subtle);
+	font-family: var(--mono);
+	font-size: var(--slate-size);
+	letter-spacing: var(--slate-track);
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+.preview__width[aria-pressed='true'] {
+	background: var(--bg-raised);
+	color: var(--fg);
+	box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+}
+
+/* The frame carries the theme's viewfinder brackets, drawn with gradients on
+   two pseudo-elements rather than eight extra elements. */
+.preview__frame {
+	position: relative;
+	padding: 0.75rem;
+	border: var(--hair) solid var(--line);
+	border-radius: var(--radius-lg);
+	background: var(--bg-sunken);
+}
+
+.preview__frame::before,
+.preview__frame::after {
+	content: '';
+	position: absolute;
+	width: 14px;
+	height: 14px;
+	border-color: var(--accent);
+	border-style: solid;
+	pointer-events: none;
+}
+
+.preview__frame::before {
+	top: -1px;
+	left: -1px;
+	border-width: 2px 0 0 2px;
+	border-top-left-radius: var(--radius-lg);
+}
+
+.preview__frame::after {
+	right: -1px;
+	bottom: -1px;
+	border-width: 0 2px 2px 0;
+	border-bottom-right-radius: var(--radius-lg);
+}
+
+.preview__viewport {
+	margin-inline: auto;
+	max-width: 100%;
+	transition: max-width var(--dur) var(--ease);
+}
+
+.preview__viewport[data-width='tablet'] {
+	max-width: 46rem;
+}
+
+.preview__viewport[data-width='phone'] {
+	max-width: 24rem;
+}
+
+.preview__chrome {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	padding: 0.55rem 0.75rem;
+	border: var(--hair) solid var(--line);
+	border-bottom: 0;
+	border-radius: var(--radius) var(--radius) 0 0;
+	background: var(--bg-raised);
+}
+
+.preview__dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 999px;
+	background: var(--line-strong);
+}
+
+.preview__url {
+	margin-left: 0.5rem;
+	font-family: var(--mono);
+	font-size: var(--slate-size);
+	color: var(--fg-faint);
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.preview__stage {
+	position: relative;
+	aspect-ratio: 16 / 10;
+	border: var(--hair) solid var(--line);
+	border-radius: 0 0 var(--radius) var(--radius);
+	background: var(--bg-raised);
+	overflow: hidden;
+}
+
+.preview__stage iframe {
+	width: 100%;
+	height: 100%;
+	border: 0;
+	display: block;
+}
+
+.preview__shot {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: top center;
+	display: block;
+}
+
+.preview__note {
+	margin: 0.875rem 0 0;
+	color: var(--fg-subtle);
+	font-size: 0.875rem;
+}
+
+/* ── Section cards ──────────────────────────────────────────────────────── */
+
+.sections {
+	padding-block: 3.5rem;
+}
+
+.sections__group + .sections__group {
+	margin-top: 3rem;
+}
+
+.sections__head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	padding-bottom: 0.75rem;
+	margin-bottom: 1.5rem;
+	border-bottom: var(--hair) solid var(--line);
+}
+
+.sections__title {
+	margin: 0;
+	font-family: var(--mono);
+	font-size: 0.9375rem;
+	font-weight: 500;
+	letter-spacing: var(--slate-track);
+	text-transform: uppercase;
+}
+
+.cards {
+	display: grid;
+	gap: 1.25rem;
+	grid-template-columns: 1fr;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+@media (min-width: 44rem) {
+	.cards {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 72rem) {
+	.cards {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+.card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	border: var(--hair) solid var(--line);
+	border-radius: var(--radius-lg);
+	overflow: hidden;
+	background: var(--bg-raised);
+	transition: border-color var(--dur) var(--ease);
+}
+
+.card:hover {
+	border-color: var(--accent);
+}
+
+.card__thumb {
+	display: block;
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+	border-bottom: var(--hair) solid var(--line);
+	background: var(--bg-sunken);
+}
+
+.card__body {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 1.125rem;
+}
+
+.card__index {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-family: var(--mono);
+	font-size: var(--slate-size);
+	letter-spacing: var(--slate-track);
+	text-transform: uppercase;
+	color: var(--fg-faint);
+	font-variant-numeric: tabular-nums;
+}
+
+.card__title {
+	margin: 0;
+	font-size: 1.125rem;
+	letter-spacing: -0.01em;
+}
+
+.card__title a {
+	text-decoration: none;
+}
+
+/* Stretch the title's link over the whole card, keeping one destination in the
+   accessibility tree rather than three. */
+.card__title a::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+}
+
+.card:hover .card__title a {
+	color: var(--accent-text);
+}
+
+.card__summary {
+	margin: 0;
+	color: var(--fg-muted);
+	font-size: 0.9375rem;
+	line-height: 1.55;
+}
+
+/* =============================================================================
+   6 · PROSE
+   ========================================================================== */
+
+.prose > * + * {
+	margin-top: 1.125rem;
+}
+
+.prose h2 {
+	margin: 3rem 0 0.875rem;
+	padding-top: 1.25rem;
+	border-top: var(--hair) solid var(--line);
+	font-size: 1.5rem;
+	letter-spacing: -0.015em;
+	line-height: 1.2;
+}
+
+.prose h3 {
+	margin: 2.25rem 0 0.625rem;
+	font-size: 1.125rem;
+	line-height: 1.3;
+}
+
+.prose h2 + *,
+.prose h3 + * {
+	margin-top: 0;
+}
+
+.prose p,
+.prose ul,
+.prose ol {
+	margin-block: 0 1.125rem;
+}
+
+.prose ul,
+.prose ol {
+	padding-left: 1.25rem;
+}
+
+.prose li + li {
+	margin-top: 0.35rem;
+}
+
+.prose li::marker {
+	color: var(--fg-faint);
+}
+
+.prose a {
+	text-decoration: underline;
+	text-decoration-color: var(--accent);
+	text-decoration-thickness: 1px;
+}
+
+.prose code {
+	font-family: var(--mono);
+	font-size: 0.875em;
+	padding: 0.12em 0.35em;
+	border: var(--hair) solid var(--line-subtle);
+	border-radius: 4px;
+	background: var(--bg-sunken);
+}
+
+.prose pre {
+	padding: 1rem 1.125rem;
+	border: var(--hair) solid var(--line);
+	border-radius: var(--radius);
+	background: var(--bg-sunken);
+	overflow-x: auto;
+	font-size: 0.875rem;
+	line-height: 1.55;
+	tab-size: 2;
+}
+
+.prose pre code {
+	padding: 0;
+	border: 0;
+	background: none;
+	font-size: inherit;
+	white-space: pre;
+}
+
+.prose blockquote {
+	margin: 1.75rem 0;
+	padding: 0.15rem 0 0.15rem 1.125rem;
+	border-left: 2px solid var(--accent);
+	color: var(--fg-muted);
+}
+
+.prose blockquote p:last-child {
+	margin-bottom: 0;
+}
+
+.prose table {
+	display: block;
+	width: 100%;
+	overflow-x: auto;
+	border-collapse: collapse;
+	font-size: 0.9375rem;
+	margin-bottom: 1.5rem;
+}
+
+.prose th,
+.prose td {
+	padding: 0.6rem 0.75rem;
+	border-bottom: var(--hair) solid var(--line);
+	text-align: left;
+	vertical-align: top;
+}
+
+.prose th {
+	font-family: var(--mono);
+	font-size: var(--slate-size);
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--fg-muted);
+	border-bottom-color: var(--fg);
+	white-space: nowrap;
+}
+
+/* The settings tables lead with a setting name. Left to itself the column
+   collapses to its narrowest word and wraps "Show colour scheme toggle" over
+   three lines, which makes the table hard to scan down. */
+.prose td:first-child {
+	min-width: 9rem;
+	font-weight: 500;
+}
+
+.prose td:nth-child(2) {
+	min-width: 8rem;
+	color: var(--fg-muted);
+}
+
+.prose hr {
+	border: 0;
+	border-top: var(--hair) solid var(--line);
+	margin-block: 2.5rem;
+}
+
+/* An anchor link that appears on hover, so a heading can be linked to. */
+.prose .anchor {
+	margin-left: 0.4rem;
+	color: var(--fg-faint);
+	text-decoration: none;
+	opacity: 0;
+	transition: opacity var(--dur) var(--ease);
+}
+
+.prose h2:hover .anchor,
+.prose h3:hover .anchor,
+.prose .anchor:focus-visible {
+	opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+/* =============================================================================
+   7 · PRINT
+   =============================================================================
+   print.html concatenates every section and is printed to docs.pdf. Everything
+   that only makes sense on screen comes out here.
+   ========================================================================== */
+
+@media print {
+	:root {
+		--bg: #fff;
+		--bg-sunken: #f6f6f6;
+		--bg-raised: #fff;
+		--fg: #111;
+		--fg-muted: #444;
+		--fg-subtle: #555;
+		--line: #ccc;
+	}
+
+	.header,
+	.sidebar,
+	.rail,
+	.pager,
+	.footer,
+	.drawer,
+	.search,
+	.preview__widths,
+	.skip {
+		display: none !important;
+	}
+
+	.page,
+	.wrap {
+		display: block;
+		max-width: none;
+		padding: 0;
+	}
+
+	.content {
+		max-width: none;
+	}
+
+	body {
+		font-size: 11pt;
+	}
+
+	.prose h2,
+	.prose h3 {
+		break-after: avoid;
+	}
+
+	.prose pre,
+	.prose table,
+	.prose blockquote,
+	.card {
+		break-inside: avoid;
+	}
+
+	.print-section {
+		break-before: page;
+	}
+
+	.print-section:first-of-type {
+		break-before: auto;
+	}
+
+	a {
+		text-decoration: none;
+		color: #111;
+	}
+}
+
+</style>
+</head>
+<body>
+<div class="wrap" style="padding-top:2rem">
+  <p class="slate" style="color:var(--accent-text)">Ghost theme documentation</p>
+  <h1 style="font-size:2.5rem;margin:.5rem 0 0;letter-spacing:-.03em">Swarnil</h1>
+  <p style="max-width:34rem;color:var(--fg-muted)">An editorial Ghost theme for creators who publish in more than one shape — writing, video and notes — held together by a call-sheet grid and a single signal colour.</p>
+  <p class="slate">Version 1.0.0 · Ghost 6.0+ · https://theme.imswarnil.com</p>
+</div>
+
+<div class="wrap">
+<section class="print-section">
+  <div class="page-head">
+    <p class="page-head__kicker slate">Getting started · 01</p>
+    <h1>Install</h1>
+    <p class="page-head__summary">Upload the zip, and the optional routing file. Two steps, both under a minute.</p>
+  </div>
+  <div class="prose">
+<p>Download <code>swarnil.zip</code>, then in Ghost admin:</p>
+<p><strong>Settings → Design → Change theme → Upload theme</strong>, and select the zip.</p>
+<p>That is the entire installation. The theme bundles everything it needs — there
+is nothing to install, compile or configure first.</p>
+<h2 id="requirements">Requirements<a class="anchor" href="#requirements" aria-label="Link to this section">#</a></h2>
+<ul>
+<li>Ghost <strong>6.0 or later</strong>. The theme declares this in <code>package.json</code>, and Ghost
+refuses the upload on an older version rather than half-working.</li>
+<li>No plugins, no build step, no external services.</li>
+</ul>
+<h2 id="optional-routing">Optional: routing<a class="anchor" href="#optional-routing" aria-label="Link to this section">#</a></h2>
+<p>The theme ships a <code>routes.yaml</code> that adds three URLs: <code>/blog/</code>, which lists
+every post, and <code>/home/sidebar/</code> and <code>/home/full/</code>, which show the homepage with
+its sidebar forced on and off. Ghost keeps routing separate from themes, so this
+is a second, deliberate step:</p>
+<p><strong>Settings → Labs → Routes → Upload routes file</strong></p>
+<p>Everything else works without it. The homepage, all post layouts, tags and
+author pages need no routing configuration at all — Ghost picks up <code>home.hbs</code>
+for <code>/</code> on its own.</p>
+<p>The two <code>/home/</code> routes exist so both list layouts can be linked side by side.
+They are safe to delete once you have chosen one.</p>
+<blockquote>
+<p><strong>Before you upload routes.yaml</strong>, download your current one from the same
+screen. Routing is site-wide, and uploading a new file replaces whatever you
+had.</p>
+</blockquote>
+
+  </div>
+</section>
+<section class="print-section">
+  <div class="page-head">
+    <p class="page-head__kicker slate">Getting started · 02</p>
+    <h1>First run</h1>
+    <p class="page-head__summary">Fifteen minutes from a fresh install to a site that looks like yours.</p>
+  </div>
+  <div class="prose">
+<p>Fifteen minutes, in this order. Each step is visible on the site immediately.</p>
+<h2 id="1-brand">1. Brand<a class="anchor" href="#1-brand" aria-label="Link to this section">#</a></h2>
+<p><strong>Settings → Design → Brand</strong></p>
+<ul>
+<li><strong>Accent colour</strong> — the theme uses exactly one, and rations it: it marks what
+is live, new, or under the cursor. Pick something that survives on both white
+and near-black. The theme&#39;s own default is a vermilion, <code>#f04e2e</code>.</li>
+<li><strong>Publication icon</strong> — becomes the favicon.</li>
+<li><strong>Logo</strong> — optional. Without one the theme sets your site title in the display
+face beside a small accent dot, which is a designed state rather than a
+fallback. Try it before uploading anything.</li>
+</ul>
+<h2 id="2-navigation">2. Navigation<a class="anchor" href="#2-navigation" aria-label="Link to this section">#</a></h2>
+<p><strong>Settings → Navigation</strong></p>
+<p>Primary navigation appears in the header and the mobile drawer. Secondary
+appears in the footer. Four or five primary items is the practical limit before
+the header starts competing with your logo.</p>
+<h2 id="3-theme-settings">3. Theme settings<a class="anchor" href="#3-theme-settings" aria-label="Link to this section">#</a></h2>
+<p><strong>Settings → Design → Site-wide / Homepage / Post</strong></p>
+<p>Sixteen settings, all documented in the <a href="#settings">settings reference</a>. The
+four worth setting deliberately on day one:</p>
+<ul>
+<li><strong>Homepage layout</strong> — Call Sheet, Stacked or Grid</li>
+<li><strong>Homepage lead</strong> — what fills the large slot at the top</li>
+<li><strong>Post layout</strong> — the default for every post</li>
+<li><strong>Typeface pairing</strong> — the display face for headlines</li>
+</ul>
+<h2 id="4-feature-images">4. Feature images<a class="anchor" href="#4-feature-images" aria-label="Link to this section">#</a></h2>
+<p>The theme frames every feature image with a viewfinder bracket and crops it to
+the ratio you choose in <strong>Post → Feature image ratio</strong>. 16:9 is the default.</p>
+<p>A post without a feature image is fine — the layouts are built for it. In lists
+the media slot either fills with a hairline hatch or steps out of the way,
+depending on the layout, so a page of image-less posts still looks deliberate.</p>
+<h2 id="5-members">5. Members<a class="anchor" href="#5-members" aria-label="Link to this section">#</a></h2>
+<p>If you have memberships on, the theme shows a Subscribe button in the header and
+a newsletter band on the homepage. If you do not, neither appears — there is no
+setting to turn off, and nothing to hide.</p>
+
+  </div>
+</section>
+<section class="print-section">
+  <div class="page-head">
+    <p class="page-head__kicker slate">Reference · 03</p>
+    <h1>Settings</h1>
+    <p class="page-head__summary">All seventeen settings, what each one changes, and which four to set on day one.</p>
+  </div>
+  <div class="prose">
+<p>Every setting is in <strong>Settings → Design</strong>, split into three groups. None of them
+requires touching code, which is the rule the theme is built to: if you would
+reasonably want to change it, it is here.</p>
+<h2 id="site-wide">Site-wide<a class="anchor" href="#site-wide" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Options</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Colour scheme</strong></td>
+<td>System · Light · Dark</td>
+<td>What a first-time visitor sees. They can override it with the header toggle, and their choice is remembered.</td>
+</tr>
+<tr>
+<td><strong>Show colour scheme toggle</strong></td>
+<td>on / off</td>
+<td>The sun/moon control in the header. Turn it off to lock the site to your chosen scheme.</td>
+</tr>
+<tr>
+<td><strong>Typeface pairing</strong></td>
+<td>Grotesk &amp; Sans · Serif &amp; Sans · Mono &amp; Sans</td>
+<td>The display face used for headlines. Body text never changes.</td>
+</tr>
+<tr>
+<td><strong>Header style</strong></td>
+<td>Rule · Plate · Over Media</td>
+<td>Rule is a hairline underneath. Plate is a filled bar that lifts on scroll. Over Media sits transparently on a feature image and becomes a plate once you scroll past it.</td>
+</tr>
+<tr>
+<td><strong>Sidebar on lists</strong></td>
+<td>on / off</td>
+<td>A second column beside the homepage and archives, with topics, recent posts and the newsletter. Compare the two at <code>/home/sidebar/</code> and <code>/home/full/</code>.</td>
+</tr>
+<tr>
+<td><strong>Footer note</strong></td>
+<td>text</td>
+<td>A short line above the footer navigation. Blank hides it.</td>
+</tr>
+</tbody></table>
+<h2 id="homepage">Homepage<a class="anchor" href="#homepage" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Options</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Homepage layout</strong></td>
+<td>Call Sheet · Stacked · Grid</td>
+<td>Call Sheet is a numbered index with hairline rules. Stacked is one full-width card per row. Grid is three across.</td>
+</tr>
+<tr>
+<td><strong>Homepage lead</strong></td>
+<td>Featured Post · Latest Post · None</td>
+<td>What fills the large slot at the top. Featured Post falls back to your latest post when nothing is marked featured.</td>
+</tr>
+<tr>
+<td><strong>Homepage intro</strong></td>
+<td>text</td>
+<td>One or two sentences under the site title. Blank uses your site description instead.</td>
+</tr>
+<tr>
+<td><strong>Homepage shelf tags</strong></td>
+<td>text</td>
+<td>Tag slugs shown as horizontally scrolling shelves. <strong>Comma-separated, no spaces</strong> — <code>video,notes</code>, not <code>video, notes</code>.</td>
+</tr>
+<tr>
+<td><strong>Show subscribe band</strong></td>
+<td>on / off</td>
+<td>The newsletter block near the foot of the homepage. Only ever appears if memberships are on.</td>
+</tr>
+</tbody></table>
+<h2 id="post">Post<a class="anchor" href="#post" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Options</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Post layout</strong></td>
+<td>Standard · Wide · Immersive</td>
+<td>The default for every post. Individual posts override it — see <a href="#post-layouts">post layouts</a>.</td>
+</tr>
+<tr>
+<td><strong>Feature image ratio</strong></td>
+<td>auto · 16/9 · 3/2 · 4/3 · 1/1 · 21/9</td>
+<td>The crop applied to feature images. <code>auto</code> keeps each image&#39;s own shape.</td>
+</tr>
+<tr>
+<td><strong>Show reading time</strong></td>
+<td>on / off</td>
+<td>The estimate in the byline.</td>
+</tr>
+<tr>
+<td><strong>Show table of contents</strong></td>
+<td>on / off</td>
+<td>Built from the headings in each post. Posts with fewer than three headings never show one — a two-item contents list is noise.</td>
+</tr>
+<tr>
+<td><strong>Show author card</strong></td>
+<td>on / off</td>
+<td>The author block beneath a post.</td>
+</tr>
+<tr>
+<td><strong>Show read next</strong></td>
+<td>on / off</td>
+<td>Related posts beneath a post, drawn from the primary tag.</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>A note on renaming.</strong> If you fork the theme and rename a setting&#39;s options,
+rename them everywhere. Ghost compares the stored string exactly, so a site
+that already chose the old value will silently match nothing.</p>
+</blockquote>
+
+  </div>
+</section>
+<section class="print-section">
+  <div class="page-head">
+    <p class="page-head__kicker slate">Reference · 04</p>
+    <h1>Layouts</h1>
+    <p class="page-head__summary">Four post layouts and three homepage shapes, chosen without touching code.</p>
+  </div>
+  <div class="prose">
+<p>Four layouts. One is the site-wide default; the other three are chosen per post.</p>
+<h2 id="post-layouts">Post layouts<a class="anchor" href="#post-layouts" aria-label="Link to this section">#</a></h2>
+<h3 id="setting-the-default">Setting the default<a class="anchor" href="#setting-the-default" aria-label="Link to this section">#</a></h3>
+<p><strong>Settings → Design → Post → Post layout</strong> applies to every post that has not
+been given its own template.</p>
+<h3 id="overriding-one-post">Overriding one post<a class="anchor" href="#overriding-one-post" aria-label="Link to this section">#</a></h3>
+<p>Open the post, then in the settings sidebar (the cog, top right) find
+<strong>Template</strong>. The dropdown lists:</p>
+<ul>
+<li><strong>Default</strong> — whatever the site-wide setting says</li>
+<li><strong>Wide</strong> — a broader reading column and a 21:9 feature image, for posts
+carried by pictures</li>
+<li><strong>Immersive</strong> — the title set over a full-height feature image</li>
+<li><strong>Video</strong> — a player-first layout with a chapter list beside the writing</li>
+</ul>
+<p>The choice is saved with the post and survives renaming its slug.</p>
+<blockquote>
+<p><strong>Immersive without a feature image</strong> renders exactly like Standard. That is
+deliberate: a title floating on an empty grey block looks broken rather than
+dramatic. Add an image and the layout appears.</p>
+</blockquote>
+<h3 id="the-video-layout">The Video layout<a class="anchor" href="#the-video-layout" aria-label="Link to this section">#</a></h3>
+<p>A post on the Video template shows its feature image as a poster at the top, then
+the writing beside a chapter panel.</p>
+<p><strong>Chapters</strong> are ordinary list items in the post body that begin with a
+timestamp:</p>
+<pre><code>- 00:00 Introduction
+- 01:24 Setting up the shot
+- 04:50 The edit
+</code></pre>
+<p>The theme lifts them into the panel. Written as a plain list they still make
+sense in your RSS feed, in an email newsletter, and for anyone with JavaScript
+off — nothing about the post depends on the theme to be readable.</p>
+<p><strong>Marking a post as video</strong> anywhere else on the site — so its card gets a play
+badge — is done with the internal tag <code>#video</code>. Internal tags start with a <code>#</code>
+and are never shown to readers. Add it in the post&#39;s tag field alongside your
+normal tags.</p>
+<h2 id="homepage-shapes">Homepage shapes<a class="anchor" href="#homepage-shapes" aria-label="Link to this section">#</a></h2>
+<p><strong>Settings → Design → Homepage → Homepage layout</strong></p>
+<ul>
+<li><strong>Call Sheet</strong> — a numbered index with hairline rules and small media strips.
+The theme&#39;s own voice, and the best choice for a publication that writes more
+than it shoots.</li>
+<li><strong>Stacked</strong> — one full-width card per row, media above the words. Good when you
+have few posts and a grid would look sparse.</li>
+<li><strong>Grid</strong> — three cards across. The familiar magazine shape.</li>
+</ul>
+<h3 id="shelves">Shelves<a class="anchor" href="#shelves" aria-label="Link to this section">#</a></h3>
+<p><strong>Homepage shelf tags</strong> adds a horizontally scrolling row for each tag slug you
+name. <code>video,notes</code> gives two shelves, above the main feed, each linking through
+to its tag archive.</p>
+<p>Use the slug, not the name — <code>how-to</code>, not <code>How To</code>. Find it in
+<strong>Tags → (your tag) → Tag slug</strong>. No spaces anywhere in the list.</p>
+<h2 id="the-sidebar">The sidebar<a class="anchor" href="#the-sidebar" aria-label="Link to this section">#</a></h2>
+<p><strong>Settings → Design → Site-wide → Sidebar on lists</strong> adds a second column beside
+the homepage and every archive, holding four widgets: a short about line, your
+most-used topics, recent posts, and the newsletter form.</p>
+<p>Each widget removes itself when it has nothing to show, so a new site does not
+get a column of empty boxes. On a phone the sidebar moves below the feed rather
+than disappearing — hiding it would mean the topics and the newsletter simply do
+not exist where most people read.</p>
+<p>If you have uploaded the theme&#39;s <code>routes.yaml</code>, you can see both versions
+without changing the setting:</p>
+<ul>
+<li><code>/home/sidebar/</code> — the homepage with the sidebar</li>
+<li><code>/home/full/</code> — the homepage at full width</li>
+</ul>
+<h2 id="navigation-dropdowns">Navigation dropdowns<a class="anchor" href="#navigation-dropdowns" aria-label="Link to this section">#</a></h2>
+<p>Ghost&#39;s navigation is a flat list. The theme turns it into one level of
+dropdown using a convention: <strong>an item whose label starts with <code>- </code> becomes a
+child of the item above it.</strong></p>
+<p>In <strong>Settings → Navigation</strong>, this:</p>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Preview</code></td>
+<td><code>/preview/</code></td>
+</tr>
+<tr>
+<td><code>Home</code></td>
+<td><code>/</code></td>
+</tr>
+<tr>
+<td><code>- With sidebar</code></td>
+<td><code>/home/sidebar/</code></td>
+</tr>
+<tr>
+<td><code>- Without sidebar</code></td>
+<td><code>/home/full/</code></td>
+</tr>
+<tr>
+<td><code>About</code></td>
+<td><code>/about/</code></td>
+</tr>
+<tr>
+<td><code>Blog</code></td>
+<td><code>/blog/</code></td>
+</tr>
+<tr>
+<td><code>Contact</code></td>
+<td><code>/contact/</code></td>
+</tr>
+</tbody></table>
+<p>gives a header of five items, where Home carries a dropdown holding the two
+homepage layouts. The <code>- </code> is a marker only; it never appears on the page.</p>
+<p>The parent stays a real link, so Home still goes to <code>/</code>. The panel opens on
+hover and on keyboard focus, and needs no JavaScript.</p>
+<p>In the mobile drawer and the footer there is no panel to open: children are
+indented under their parent and always visible. A dropdown inside a drawer is a
+menu inside a menu.</p>
+<blockquote>
+<p>One level only. A label like <code>- - Deeper</code> will be treated as an ordinary
+child, not as a grandchild.</p>
+</blockquote>
+
+  </div>
+</section>
+<section class="print-section">
+  <div class="page-head">
+    <p class="page-head__kicker slate">Going further · 05</p>
+    <h1>The demo content</h1>
+    <p class="page-head__summary">Import the demo site and start from the same place the preview does.</p>
+  </div>
+  <div class="prose">
+<p>The demo site is real content, and you can have the same starting point.</p>
+<blockquote>
+<p><strong>Do this on a fresh Ghost install, not on your live site.</strong> Importing adds
+posts, pages, tags and an author. It does not delete anything, but untangling
+it afterwards is tedious.</p>
+</blockquote>
+<ol>
+<li>Download <code>demo/content.json</code> from the theme package.</li>
+<li>In Ghost admin: <strong>Settings → Import/Export → Import content</strong>.</li>
+<li>Select the file.</li>
+</ol>
+<p>You get twelve posts, three pages — About, Preview and Contact — and the tags they use.</p>
+<h2 id="feature-images">Feature images<a class="anchor" href="#feature-images" aria-label="Link to this section">#</a></h2>
+<p>The import contains no images. A Ghost import file can only reference URLs, and
+a portable one cannot assume where it will be imported.</p>
+<p>Add your own, or use the cover art in <code>demo/covers/</code> — twelve flat SVGs drawn in
+the theme&#39;s palette. Upload one per post through the editor&#39;s feature image
+field.</p>
+<h2 id="settings-the-demo-uses">Settings the demo uses<a class="anchor" href="#settings-the-demo-uses" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Homepage layout</td>
+<td>Call Sheet</td>
+</tr>
+<tr>
+<td>Homepage lead</td>
+<td>Featured Post</td>
+</tr>
+<tr>
+<td>Homepage shelf tags</td>
+<td><code>handlebars,layouts</code></td>
+</tr>
+<tr>
+<td>Post layout</td>
+<td>Standard</td>
+</tr>
+<tr>
+<td>Header style</td>
+<td>Rule</td>
+</tr>
+<tr>
+<td>Typeface pairing</td>
+<td>Grotesk &amp; Sans</td>
+</tr>
+<tr>
+<td>Accent colour</td>
+<td><code>#f04e2e</code></td>
+</tr>
+</tbody></table>
+<p>Navigation, in <strong>Settings → Navigation</strong> — note the <code>- </code> prefixes, which make
+the two indented items into a dropdown under Home:</p>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Preview</code></td>
+<td><code>/preview/</code></td>
+</tr>
+<tr>
+<td><code>Home</code></td>
+<td><code>/</code></td>
+</tr>
+<tr>
+<td><code>- With sidebar</code></td>
+<td><code>/home/sidebar/</code></td>
+</tr>
+<tr>
+<td><code>- Without sidebar</code></td>
+<td><code>/home/full/</code></td>
+</tr>
+<tr>
+<td><code>About</code></td>
+<td><code>/about/</code></td>
+</tr>
+<tr>
+<td><code>Blog</code></td>
+<td><code>/blog/</code></td>
+</tr>
+<tr>
+<td><code>Contact</code></td>
+<td><code>/contact/</code></td>
+</tr>
+</tbody></table>
+<p>Secondary navigation: a few tag archives and the author page.</p>
+<p>The <code>/blog/</code>, <code>/home/sidebar/</code> and <code>/home/full/</code> URLs need the theme&#39;s
+<code>routes.yaml</code> uploaded under <strong>Settings → Labs → Routes</strong>.</p>
+<h2 id="the-quotevery-layoutquot-page">The &quot;Every layout&quot; page<a class="anchor" href="#the-quotevery-layoutquot-page" aria-label="Link to this section">#</a></h2>
+<p>The demo includes a page that links to a live example of every template the
+theme ships. It is worth keeping while you are deciding which layouts you want —
+it is faster than switching settings back and forth.</p>
+
+  </div>
+</section>
+<section class="print-section">
+  <div class="page-head">
+    <p class="page-head__kicker slate">Going further · 06</p>
+    <h1>Customising</h1>
+    <p class="page-head__summary">Change fonts, widths and corners from code injection — no theme edits, no lost work on update.</p>
+  </div>
+  <div class="prose">
+<p>Everything below is optional. The theme is designed to be finished as shipped.</p>
+<h2 id="without-touching-files">Without touching files<a class="anchor" href="#without-touching-files" aria-label="Link to this section">#</a></h2>
+<p><strong>Settings → Code injection → Site header</strong> takes CSS that loads after the
+theme&#39;s own. This is the supported way to change things, and it survives theme
+updates — edits to the theme files do not.</p>
+<p>The theme&#39;s whole appearance is driven by custom properties. Override them and
+every component follows, in both colour schemes:</p>
+<pre><code class="language-html">&lt;style&gt;
+  :root {
+    --t-w-prose: 46rem;        /* wider reading column        */
+    --t-radius-card: 0.25rem;  /* squarer corners             */
+    --t-header-h: 5rem;        /* taller header               */
+    --t-bracket-size: 0;       /* turn the viewfinder off     */
+  }
+&lt;/style&gt;
+</code></pre>
+<p>Change the accent through <strong>Settings → Design → Brand</strong> rather than in CSS —
+the theme derives its hover and focus tints from it, so setting it there keeps
+all the states in step.</p>
+<h2 id="a-custom-font">A custom font<a class="anchor" href="#a-custom-font" aria-label="Link to this section">#</a></h2>
+<pre><code class="language-html">&lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.googleapis.com&quot;&gt;
+&lt;link href=&quot;https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;style&gt;
+  :root { --t-font-display: &#39;Fraunces&#39;, Georgia, serif; }
+&lt;/style&gt;
+</code></pre>
+<p>Set <code>--t-font-display</code> for headlines, <code>--t-font-body</code> for body text, and
+<code>--t-font-slate</code> for the monospaced metadata. Changing all three at once is
+usually a mistake — the theme&#39;s rhythm depends on the three being distinct.</p>
+<h2 id="editing-the-theme">Editing the theme<a class="anchor" href="#editing-the-theme" aria-label="Link to this section">#</a></h2>
+<p>If you do edit the files, the source lives in <code>assets/css/</code> and is compiled to
+<code>assets/built/index.css</code>. Editing the built file directly works until the next
+rebuild overwrites it.</p>
+<pre><code class="language-bash">npm install
+npm run dev      # watch
+npm run test     # gscan, before uploading anything
+</code></pre>
+<p>One rule matters more than the rest: <strong>component CSS reads <code>--t-*</code> tokens only.</strong>
+Those are defined in <code>assets/css/01-contract/tokens.css</code> and are the reason
+light and dark, and the typeface settings, work at all. Reaching past them to a
+raw colour is what makes a customised copy stop responding to its own settings.</p>
+
+  </div>
+</section>
+<section class="print-section">
+  <div class="page-head">
+    <p class="page-head__kicker slate">Help · 07</p>
+    <h1>Troubleshooting</h1>
+    <p class="page-head__summary">The eight things that actually go wrong, and what each one means.</p>
+  </div>
+  <div class="prose">
+<h2 id="the-homepage-is-a-plain-list-not-the-layout-i-chose">The homepage is a plain list, not the layout I chose<a class="anchor" href="#the-homepage-is-a-plain-list-not-the-layout-i-chose" aria-label="Link to this section">#</a></h2>
+<p>The homepage sections come from <code>home.hbs</code>, which Ghost uses automatically. If
+you are seeing a plain paginated list, a <code>routes.yaml</code> on your site is pointing
+<code>/</code> somewhere else. Check <strong>Settings → Labs → Routes</strong>.</p>
+<h2 id="a-shelf-is-empty-or-missing">A shelf is empty or missing<a class="anchor" href="#a-shelf-is-empty-or-missing" aria-label="Link to this section">#</a></h2>
+<p><strong>Homepage shelf tags</strong> takes tag <em>slugs</em>, comma-separated, with no spaces.
+<code>video, notes</code> fails because of the space; <code>video,notes</code> works. Find the slug
+under <strong>Tags → (your tag) → Tag slug</strong>.</p>
+<p>A shelf also needs published posts carrying that tag.</p>
+<h2 id="a-navigation-dropdown-does-not-open">A navigation dropdown does not open<a class="anchor" href="#a-navigation-dropdown-does-not-open" aria-label="Link to this section">#</a></h2>
+<p>Children are marked with a leading <code>- </code> and a space — <code>- With sidebar</code>, not
+<code>-With sidebar</code>. Without the space the item is treated as an ordinary top-level
+link, and the parent gets no chevron.</p>
+<p>Only one level is supported.</p>
+<h2 id="blog-or-homesidebar-gives-a-404">/blog/ or /home/sidebar/ gives a 404<a class="anchor" href="#blog-or-homesidebar-gives-a-404" aria-label="Link to this section">#</a></h2>
+<p>Those URLs come from the theme&#39;s <code>routes.yaml</code>, which Ghost does not install
+with a theme. Upload it under <strong>Settings → Labs → Routes</strong>.</p>
+<h2 id="the-table-of-contents-does-not-appear">The table of contents does not appear<a class="anchor" href="#the-table-of-contents-does-not-appear" aria-label="Link to this section">#</a></h2>
+<p>It needs at least three <code>##</code> or <code>###</code> headings in the post. Below that the theme
+removes it, because a two-item contents list is noise. Check the setting is on
+under <strong>Settings → Design → Post</strong>.</p>
+<h2 id="my-accent-colour-looks-wrong-in-dark-mode">My accent colour looks wrong in dark mode<a class="anchor" href="#my-accent-colour-looks-wrong-in-dark-mode" aria-label="Link to this section">#</a></h2>
+<p>The theme derives hover and focus tints from your accent, lightening them in
+dark mode and darkening them in light. Very dark accents have little room to
+darken further. If the hover state is invisible, pick a mid-tone accent — one
+that works as text on white <em>and</em> as a fill on near-black.</p>
+<h2 id="the-colour-scheme-flashes-on-load">The colour scheme flashes on load<a class="anchor" href="#the-colour-scheme-flashes-on-load" aria-label="Link to this section">#</a></h2>
+<p>It should not: the theme resolves the scheme in a small inline script before the
+page paints. If you see a flash, something in <strong>Code injection → Site header</strong>
+is loading a large blocking stylesheet ahead of it. Move it to the footer, or
+load it asynchronously.</p>
+<h2 id="posts-disappeared-after-uploading-routesyaml">Posts disappeared after uploading routes.yaml<a class="anchor" href="#posts-disappeared-after-uploading-routesyaml" aria-label="Link to this section">#</a></h2>
+<p>Almost always a <code>filter</code> on the root collection. Every post belongs to exactly
+one collection, and its URL comes from that collection — so a post excluded by a
+filter, with no other collection to catch it, has no URL at all. It is still in
+admin, still marked published, and unreachable.</p>
+<p>Either remove the filter or add a second, unfiltered collection beneath it.</p>
+<h2 id="an-update-did-not-change-anything">An update did not change anything<a class="anchor" href="#an-update-did-not-change-anything" aria-label="Link to this section">#</a></h2>
+<p>Ghost caches theme assets aggressively. After uploading a new version, hard
+refresh (<strong>Cmd/Ctrl + Shift + R</strong>). If you are behind a CDN, purge its cache too.</p>
+<h2 id="something-else">Something else<a class="anchor" href="#something-else" aria-label="Link to this section">#</a></h2>
+<p>Email the address in <code>package.json</code>. Include your Ghost version, the theme
+version from <strong>Settings → Design</strong>, and a link to the page that is wrong.</p>
+
+  </div>
+</section>
+</div>
+</body>
+</html>

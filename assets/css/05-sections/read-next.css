@@ -1,0 +1,38 @@
+/* =============================================================================
+   5 · SECTION — read next
+   =============================================================================
+   Related posts under a post. Ghost's `{{#get}}` fills it by primary tag, and
+   the template falls back to the latest posts when the tag has nothing else in
+   it — a new publication should not hit a dead end at the foot of its only
+   post.
+   ========================================================================== */
+
+.ghost-read-next {
+	margin-top: var(--t-space-20);
+	padding-top: var(--t-space-10);
+	border-top: 2px solid var(--t-fg);
+}
+
+.ghost-read-next__title {
+	margin: 0 0 var(--t-space-8);
+	font-family: var(--t-font-slate);
+	font-size: var(--t-text-lg);
+	font-weight: var(--t-weight-medium);
+	text-transform: uppercase;
+	letter-spacing: var(--t-tracking-slate);
+}
+
+.ghost-read-next__list {
+	display: grid;
+	gap: var(--t-space-8);
+	grid-template-columns: 1fr;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+@media (min-width: 48rem) {
+	.ghost-read-next__list {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}

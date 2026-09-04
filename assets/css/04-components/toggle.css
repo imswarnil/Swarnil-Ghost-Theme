@@ -1,0 +1,32 @@
+/* =============================================================================
+   4 · COMPONENT — colour scheme toggle
+   =============================================================================
+   A three-state control: system, light, dark. It is a real <button> that cycles
+   the state and writes it to localStorage; the inline script in default.hbs
+   applies the stored value before first paint.
+
+   Only the icon for the active state is shown. Rendering all three and hiding
+   two in CSS keeps the button width stable and avoids a swap flash.
+   ========================================================================== */
+
+.ghost-scheme {
+	position: relative;
+}
+
+.ghost-scheme__icon {
+	display: none;
+	width: 1.125rem;
+	height: 1.125rem;
+}
+
+:root[data-scheme='system'] .ghost-scheme__icon--system,
+:root[data-scheme='light'] .ghost-scheme__icon--light,
+:root[data-scheme='dark'] .ghost-scheme__icon--dark {
+	display: block;
+}
+
+/* Before the script runs, `data-scheme` is absent. Show the system icon so the
+   button is never blank. */
+:root:not([data-scheme]) .ghost-scheme__icon--system {
+	display: block;
+}

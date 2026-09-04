@@ -1,0 +1,44 @@
+{{!--
+    Newsletter band.
+
+    Only rendered when members are enabled, so a publication that has not turned
+    on memberships never shows a form that cannot work.
+
+    data-members-form is Ghost's own hook: it intercepts the submit, calls the
+    members API, and adds `loading`, `success` or `error` to the form's class
+    list. The three response messages are all in the DOM and revealed by CSS,
+    because Ghost only toggles the class — it does not write copy.
+--}}
+{{#if @site.members_enabled}}
+<section class="ghost-subscribe">
+    <div class="ghost-container ghost-subscribe__inner">
+
+        <div>
+            <h2 class="ghost-subscribe__title">Get it in your inbox</h2>
+            <p class="ghost-subscribe__text">
+                {{#if @site.description}}{{@site.description}}{{else}}New posts, sent as they are published. No more than that.{{/if}}
+            </p>
+        </div>
+
+        <form class="ghost-subscribe__form" data-members-form="subscribe">
+            <label class="ghost-sr" for="ghost-subscribe-email">Email address</label>
+            <input
+                class="ghost-subscribe__input"
+                id="ghost-subscribe-email"
+                type="email"
+                name="email"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+                data-members-email
+            >
+            <button class="ghost-button ghost-button--primary" type="submit">Subscribe</button>
+
+            <p class="ghost-subscribe__message ghost-subscribe__message--loading">Sending…</p>
+            <p class="ghost-subscribe__message ghost-subscribe__message--success">Check your inbox to confirm.</p>
+            <p class="ghost-subscribe__message ghost-subscribe__message--error">That did not work. Try again?</p>
+        </form>
+
+    </div>
+</section>
+{{/if}}
