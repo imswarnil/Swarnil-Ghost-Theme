@@ -1,7 +1,7 @@
 {{!--
     Icon set.
 
-    One partial rather than one file per glyph. The theme uses sixteen icons in
+    One partial rather than one file per glyph. The theme uses seventeen icons in
     total, so a folder of nine near-identical files would be filing for its own
     sake — the marketplace guidance is explicit about not making a partial of
     every snippet. Adding an icon means adding a branch here.
@@ -30,6 +30,8 @@
         <path d="M4 10.5L12 4l8 6.5V19a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/>
     {{else match name "book"}}
         <path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v14H6.5A1.5 1.5 0 0 0 5 18.5z"/><path d="M5 18.5A1.5 1.5 0 0 1 6.5 17H19v4H6.5A1.5 1.5 0 0 1 5 19.5z"/>
+    {{else match name "book-open"}}
+        <path d="M12 6.5C10.5 5 8.5 4.5 4 4.5V18c4.5 0 6.5.5 8 2 1.5-1.5 3.5-2 8-2V4.5c-4.5 0-6.5.5-8 2z"/><path d="M12 6.5V20"/>
     {{else match name "user"}}
         <circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/>
     {{else match name "mail"}}

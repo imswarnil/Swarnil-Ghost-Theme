@@ -24,6 +24,38 @@ For a theme, the version boundaries are worth stating plainly:
 
 ### Changed
 
+- **Fewer settings.** Eighteen became fifteen, and each one now earns its place.
+  Gone: the header style (three variants where two were used on about one page
+  each), the homepage kicker and intro, the featured-post selector, the tag
+  shelves, and the toggle that hid the colour toggle. What a publisher fills in
+  once — title, description, logo, cover, social accounts — the theme now reads
+  from Ghost rather than asking for again.
+- **No monospace face for metadata.** The slate voice is the body face with
+  weight and 0.14em of tracking instead of a third webfont for text that is
+  never more than four words long. Code stays monospace, where character
+  alignment carries meaning.
+- **The hero is built from the publication.** Logo, title, description, social
+  accounts and cover image, in three shapes: two columns, full-width background,
+  or plain. Both image shapes fall back to plain when there is no cover, which
+  is what a new Ghost has.
+- **The navigation lost its dropdown.** A nesting convention a publisher has to
+  be taught, in a menu five items long, is complexity nobody asked for. Labels
+  beginning with `- ` are skipped, so an upgrade does not print stray dashes.
+- One header style instead of three, with more room between navigation items.
+
+### Added
+
+- `hero_style`, `hero_cta_label`, `hero_cta_url`, `show_hero_signup`.
+
+### Removed
+
+- `header_style`, `homepage_intro`, `homepage_kicker`, `homepage_lead`,
+  `homepage_shelf_tags`, `show_subscribe_band`, `show_color_scheme_toggle`, and
+  the "Mono & Sans" typeface pairing.
+- The `/home/sidebar/` and `/home/full/` preview routes, and the Preview page.
+
+### Changed
+
 - The colour control is two modes, light and dark, instead of cycling through a
   third "system" position. The system preference still decides what a first-time
   visitor sees; it is just not a position on the switch, because pressing a

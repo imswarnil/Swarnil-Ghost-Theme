@@ -2,8 +2,13 @@
    4 · COMPONENT — slate
    =============================================================================
    The theme's metadata voice, named after the clapperboard slate that opens a
-   take: monospaced, uppercase, widely tracked, always small. Dates, reading
-   times, tag names, entry numbers and counts all wear it.
+   take: uppercase, widely tracked, always small. Dates, reading times, tag
+   names, entry numbers and counts all wear it.
+
+   It is the body face, not a monospace one. A third typeface for text that is
+   never more than four words long is a download nobody benefits from — size,
+   weight and 0.14em of tracking separate it from body copy just as clearly, and
+   numbers stay aligned through font-variant-numeric where alignment matters.
 
    Keeping every scrap of metadata in one visual register is most of what makes
    the pages feel like one document instead of a stack of cards.
@@ -16,7 +21,7 @@
 	gap: var(--t-space-2) var(--t-space-3);
 	font-family: var(--t-font-slate);
 	font-size: var(--t-text-2xs);
-	font-weight: var(--t-weight-regular);
+	font-weight: var(--t-weight-semibold);
 	line-height: 1.4;
 	text-transform: uppercase;
 	letter-spacing: var(--t-tracking-slate);
@@ -62,6 +67,7 @@
 /* The entry number. Big enough to scan down the left edge of a list. */
 .ghost-slate__number {
 	font-family: var(--t-font-slate);
+	font-weight: var(--t-weight-semibold);
 	font-size: var(--t-text-xs);
 	color: var(--t-fg-faint);
 	font-variant-numeric: tabular-nums;

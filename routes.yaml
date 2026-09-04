@@ -2,30 +2,19 @@
 #
 # Ghost reads this file only when a publisher uploads it under
 # Settings → Labs → Routes. Installing the theme does not apply it, so the theme
-# is built to work correctly without it: home.hbs is picked up for "/"
-# automatically, and every other template is reached by Ghost's own hierarchy.
+# is built to work correctly without it: Ghost picks up home.hbs for "/" on its
+# own, and every other template is reached by Ghost's own hierarchy.
 #
-# What it adds:
-#   /blog/           every post, paginated — a stable nav destination
-#   /home/sidebar/   the homepage with the list sidebar forced on
-#   /home/full/      the homepage with it forced off
+# All it adds is /blog/ — every post, paginated, at a stable URL you can put in
+# the navigation.
 #
-# The two /home/ routes exist for the demo, so both list layouts can be linked
-# side by side instead of being a setting you have to toggle twice to compare.
-# They are safe to delete on a real site.
-#
-# Note there is deliberately no `filter` on a collection anywhere below. Every
-# post belongs to exactly one collection and takes its URL from it, so filtering
-# the only collection leaves the excluded posts with no URL at all — still
-# published, still in admin, and unreachable. Channels, used here, do not own
-# permalinks and cannot cause that.
+# Note there is deliberately no `filter` on the collection. Every post belongs
+# to exactly one collection and takes its URL from it, so filtering the only
+# collection leaves the excluded posts with no URL at all — still published,
+# still in admin, and unreachable. A channel, used here, does not own permalinks
+# and cannot cause that.
 
 routes:
-  /home/sidebar/:
-    template: home-sidebar
-  /home/full/:
-    template: home-full
-
   /blog/:
     controller: channel
     template: index

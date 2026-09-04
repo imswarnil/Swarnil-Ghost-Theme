@@ -1,41 +1,22 @@
 {{!--
-    Primary and secondary navigation, with one level of dropdown.
+    Site navigation: one flat list of links, in the header, the drawer and the
+    footer.
 
-    Ghost's navigation is a flat list, so nesting is a convention: an item whose
-    label starts with "- " becomes a child of the item above it.
+    There is deliberately no dropdown. Ghost's navigation is a flat list, so
+    nesting has to be faked with a labelling convention — and a convention a
+    publisher has to be told about, in a menu that is five items long, buys
+    complexity nobody asked for. A header that fits on one line does not need
+    submenus.
 
-        Home                →  top level, links to /
-        - With sidebar      →  child of Home
-        - Without sidebar   →  child of Home
-        About               →  top level again
+    Items whose label begins with "- " are skipped rather than shown. That
+    marker was the old nesting convention; anyone upgrading with it still in
+    their navigation gets those items dropped instead of literal dashes on the
+    page.
 
-    A publisher sets this up entirely in Settings → Navigation; there is nothing
-    to configure in the theme.
-
-    ── Why the markup is written this way ──────────────────────────────────────
-
-    Handlebars cannot look ahead, so the template cannot ask "does a child
-    follow?" before deciding whether to open a panel. Instead every top-level
-    item opens a panel unconditionally, and the panel is closed by the *next*
-    top-level item — or after the loop. That balances the tags without any
-    lookahead, and CSS hides the panels that turn out to be empty with
-    :empty.
-
-    The parent stays a real link. The panel opens on hover and on focus-within,
-    so it works with a keyboard and needs no JavaScript at all.
-
-    The child's own label is printed through {{split}}, which drops empty parts —
-    so "- With sidebar" split on "- " yields just "With sidebar" and the marker
-    never reaches the page. Ghost has no string-replace helper; this is the way
-    to do it with what it ships.
-
-    ── {{this.url}}, not {{url}} ───────────────────────────────────────────────
-
-    Ghost registers `url` as a helper, and a helper wins over a context property
-    of the same name. Writing {{url}} inside this loop calls the helper and
-    returns the *current page's* URL, so every item in the menu links to the same
-    place — with no error anywhere to say so. The explicit `this.` is what makes
-    it read the navigation item's own url.
+    {{this.url}}, not {{url}}: Ghost registers `url` as a helper, and a helper
+    beats a context property of the same name — {{url}} inside this loop returns
+    the *current page's* URL, so every item would link to the same place, with
+    nothing in the logs to say so.
 
     Parameters
       variant   header | drawer | footer
@@ -45,39 +26,22 @@
 <nav class="ghost-nav ghost-nav--{{variant}}" aria-label="{{label}}">
     <ul class="ghost-nav__list">
         {{#match type "secondary"}}
-
             {{#foreach @site.secondary_navigation}}
                 <li class="ghost-nav__item">
                     <a class="ghost-nav__link{{link_class for=this.url activeClass=" ghost-nav__link--current"}}" href="{{this.url}}">{{label}}</a>
                 </li>
             {{/foreach}}
-
         {{else}}
-
             {{#foreach @site.navigation}}
-                {{#match label "~^" "- "}}
-                    {{!-- A child. It lands inside the panel the previous
-                         top-level item left open. --}}
-                    <li class="ghost-nav__sub-item">
-                        <a class="ghost-nav__sub-link{{link_class for=this.url activeClass=" ghost-nav__sub-link--current"}}" href="{{this.url}}">{{split label separator="- "}}</a>
-                    </li>
-                {{else}}
-                    {{!-- A top level item. Close the previous one's panel first,
-                         unless this is the first item and nothing is open. --}}
-                    {{#unless @first}}</ul></li>{{/unless}}
+                {{#match label "~^" "- "}}{{else}}
                     <li class="ghost-nav__item">
                         <a class="ghost-nav__link{{link_class for=this.url activeClass=" ghost-nav__link--current"}}" href="{{this.url}}">
                             <span class="ghost-nav__icon">{{> "nav-icon"}}</span>
                             {{label}}
-                            <span class="ghost-nav__chevron" aria-hidden="true">{{> "icon" name="chevron-down"}}</span>
                         </a>
-                        <ul class="ghost-nav__panel">
+                    </li>
                 {{/match}}
             {{/foreach}}
-
-            {{!-- Close the last item's panel. --}}
-            {{#if @site.navigation}}</ul></li>{{/if}}
-
         {{/match}}
     </ul>
 </nav>

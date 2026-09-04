@@ -1,0 +1,34 @@
+{{!--
+    An icon for one social platform.
+
+    {{#social_accounts}} yields a `type` — twitter, facebook, instagram and so
+    on. Anything without a glyph here falls through to a globe, so a platform
+    Ghost adds later still renders a working link rather than nothing at all.
+
+    Usage:  {{> "icon-social" type=type}}
+--}}
+<svg class="ghost-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+    {{#match type "twitter"}}
+        <path d="M4 4l7.5 9.5L4.5 20M20 4l-7.2 7.8L20 20h-4l-9-11.5"/>
+    {{else match type "x"}}
+        <path d="M4 4l7.5 9.5L4.5 20M20 4l-7.2 7.8L20 20h-4l-9-11.5"/>
+    {{else match type "facebook"}}
+        <path d="M14 8.5V7a1.5 1.5 0 0 1 1.5-1.5H17V3h-2.2A3.8 3.8 0 0 0 11 6.8v1.7H9V11h2v10h3V11h2.2l.5-2.5z" fill="currentColor" stroke="none"/>
+    {{else match type "instagram"}}
+        <rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="1.1" fill="currentColor" stroke="none"/>
+    {{else match type "youtube"}}
+        <rect x="2.5" y="6" width="19" height="12" rx="3.5"/><path d="M10.5 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="none"/>
+    {{else match type "linkedin"}}
+        <rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M8 10.5V17M8 7.4v.1M12 17v-3.6a2 2 0 0 1 4 0V17"/>
+    {{else match type "threads"}}
+        <path d="M16 8.5c-1-1.6-2.4-2.2-4-2.2-3.4 0-5.5 2.6-5.5 5.8s2 5.7 5.4 5.7c2.6 0 4.2-1.4 4.2-3.1 0-1.9-1.7-2.8-3.7-2.8-1.4 0-2.5.6-2.5 1.6"/>
+    {{else match type "mastodon"}}
+        <path d="M7 16c3 .8 7 .8 10-.4M6 13V8.5A3.5 3.5 0 0 1 9.5 5c1.2 0 2 .6 2.5 1.4C12.5 5.6 13.3 5 14.5 5A3.5 3.5 0 0 1 18 8.5V13"/><path d="M12 7.5V13"/>
+    {{else match type "bluesky"}}
+        <path d="M12 12C10 8.5 6.5 5.5 4.5 5.5c-1.3 0-1.8 1-1.5 2.6.4 2.2 1.7 4.6 3.6 5.4-1.7.4-2.3 1.6-1.6 2.8.8 1.4 3.3 1.4 4.6-.4.9-1.2 1.6-2.4 2.4-3.9"/><path d="M12 12c2-3.5 5.5-6.5 7.5-6.5 1.3 0 1.8 1 1.5 2.6-.4 2.2-1.7 4.6-3.6 5.4 1.7.4 2.3 1.6 1.6 2.8-.8 1.4-3.3 1.4-4.6-.4-.9-1.2-1.6-2.4-2.4-3.9"/>
+    {{else match type "tiktok"}}
+        <path d="M15 4v9.5a4 4 0 1 1-3.2-3.9"/><path d="M15 4c.4 2 1.9 3.4 4 3.6"/>
+    {{else}}
+        <circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 2.6 15.4 0 18M12 3c-2.6 2.6-2.6 15.4 0 18"/>
+    {{/match}}
+</svg>

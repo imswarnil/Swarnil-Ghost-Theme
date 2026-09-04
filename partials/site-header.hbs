@@ -1,12 +1,15 @@
 {{!--
     Site header.
 
-    One markup shape for all three header styles; the style setting only changes
-    which modifier class is applied. "Over Media" additionally requires a feature
-    image to sit on, so it falls back to "Rule" on any page without one —
-    a transparent header over a white background would be invisible.
+    One shape, on every page: brand left, navigation centred, actions right.
+
+    There used to be three header styles behind a setting. Two of them —
+    a filled plate, and a transparent bar over a feature image — earned their
+    complexity on maybe one page each, and the third was the one everybody
+    kept. A theme that only does one thing with its header does that thing
+    better, and it is one less decision on a publisher's first day.
 --}}
-<header class="ghost-header ghost-header--{{#match @custom.header_style "Plate"}}plate{{else match @custom.header_style "Over Media"}}{{#if feature_image}}over{{else}}rule{{/if}}{{else}}rule{{/match}}" data-header>
+<header class="ghost-header ghost-header--rule" data-header>
     <div class="ghost-container ghost-header__inner">
 
         {{!-- Brand: the uploaded logo if there is one, the site title if not. --}}
@@ -31,15 +34,17 @@
                 {{> "icon" name="search"}}
             </button>
 
-            {{#if @custom.show_color_scheme_toggle}}
-                {{!-- Two modes. The icon shows what pressing it gives you, not
-                     what you are currently in — a sun while dark, a moon while
-                     light — which is the reading almost everyone applies to it. --}}
-                <button class="ghost-button ghost-button--icon ghost-scheme" data-scheme-toggle aria-label="Switch colour mode">
-                    <span class="ghost-scheme__icon ghost-scheme__icon--light">{{> "icon" name="sun"}}</span>
-                    <span class="ghost-scheme__icon ghost-scheme__icon--dark">{{> "icon" name="moon"}}</span>
-                </button>
-            {{/if}}
+            {{!-- Two modes. The icon shows what pressing it gives you, not what
+                 you are currently in — a sun while dark, a moon while light —
+                 which is the reading almost everyone applies to it.
+
+                 Always present: a control this small does not need a setting to
+                 turn it off, and the publisher's default mode is the setting
+                 that actually matters. --}}
+            <button class="ghost-button ghost-button--icon ghost-scheme" data-scheme-toggle aria-label="Switch colour mode">
+                <span class="ghost-scheme__icon ghost-scheme__icon--light">{{> "icon" name="sun"}}</span>
+                <span class="ghost-scheme__icon ghost-scheme__icon--dark">{{> "icon" name="moon"}}</span>
+            </button>
 
             {{#if @site.members_enabled}}
                 {{#unless @member}}

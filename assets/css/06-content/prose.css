@@ -85,6 +85,7 @@
 	margin-top: var(--t-space-3);
 	font-family: var(--t-font-slate);
 	font-size: var(--t-text-2xs);
+	font-weight: var(--t-weight-semibold);
 	font-style: normal;
 	text-transform: uppercase;
 	letter-spacing: var(--t-tracking-slate);
@@ -186,6 +187,5 @@
 
 .ghost-prose hr::before {
 	content: '· · ·';
-	font-family: var(--t-font-slate);
 	letter-spacing: var(--t-tracking-slate);
 }

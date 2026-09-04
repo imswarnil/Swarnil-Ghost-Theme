@@ -81,8 +81,7 @@
 @import url('04-components/empty.css');
 
 /* 5 · Sections */
-@import url('05-sections/lead.css');
-@import url('05-sections/shelf.css');
+@import url('05-sections/hero.css');
 @import url('05-sections/index.css');
 @import url('05-sections/subscribe.css');
 @import url('05-sections/read-next.css');

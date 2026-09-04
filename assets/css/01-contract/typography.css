@@ -30,14 +30,3 @@
 	--t-display-tracking: var(--t-tracking-normal);
 	--t-display-weight: var(--t-weight-medium);
 }
-
-/* Mono & Sans — the most opinionated of the three. Headlines in the same face as
-   the metadata slate, which makes the whole page read as one document. Mono is
-   wide, so headline sizes are pulled back a step to stop them wrapping early. */
-:root[data-typeface='mono'] {
-	--t-font-display: var(--font-slate);
-	--t-display-tracking: -0.01em;
-	--t-display-weight: var(--t-weight-medium);
-	--t-text-4xl: var(--text-3xl);
-	--t-text-5xl: var(--text-4xl);
-}

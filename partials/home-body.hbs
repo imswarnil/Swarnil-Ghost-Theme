@@ -1,37 +1,26 @@
 {{!--
-    The homepage, assembled.
+    The homepage: a hero, then the posts.
 
-    Split out of home.hbs so the same page can be rendered three ways without
-    three copies: with the publisher's chosen sidebar setting, and — for the
-    preview routes — with it forced on or off.
-
-      home.hbs          sidebar=@custom.list_sidebar   (the site's setting)
-      home-sidebar.hbs  sidebar=true
-      home-full.hbs     sidebar=false
+    Split out of home.hbs so the sidebar can be forced on or off by a caller
+    without a second copy of the page.
 
     Parameters
       sidebar   whether to show the list sidebar
 --}}
 <div class="ghost-home">
 
-    {{> "lead"}}
-
-    {{!-- Shelves, one per tag slug in the setting. --}}
-    {{#if @custom.homepage_shelf_tags}}
-        {{#foreach (split @custom.homepage_shelf_tags)}}
-            {{> "shelf" slug=this}}
-        {{/foreach}}
-    {{/if}}
+    {{> "hero"}}
 
     <div class="ghost-container">
         <div class="ghost-list{{#if sidebar}} ghost-list--with-sidebar{{/if}}">
             <div class="ghost-list__main">
-                {{!-- {{#get}} renders its else block, not its body, when the query
-                     comes back empty — so the no-posts state has to live there. --}}
+                {{!-- {{#get}} renders its else block, not its body, when the
+                     query comes back empty — so the no-posts state has to live
+                     there. --}}
                 {{#get "posts" limit=12 include="authors,tags" as |feed|}}
                     {{> "post-list" posts=feed title="Latest" layout=@custom.homepage_layout}}
                 {{else}}
-                    <section class="ghost-index">
+                    <section class="ghost-index" id="latest">
                         <div class="ghost-index__head">
                             <h2 class="ghost-index__title">Latest</h2>
                         </div>
@@ -46,8 +35,6 @@
         </div>
     </div>
 
-    {{#if @custom.show_subscribe_band}}
-        {{> "subscribe"}}
-    {{/if}}
+    {{> "subscribe"}}
 
 </div>

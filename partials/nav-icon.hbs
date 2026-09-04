@@ -16,6 +16,7 @@
 {{#match this.url "/"}}{{> "icon" name="home"}}
 {{else match this.url "~" "/blog"}}{{> "icon" name="book"}}
 {{else match this.url "~" "/archive"}}{{> "icon" name="book"}}
+{{else match this.url "~" "/docs"}}{{> "icon" name="book-open"}}
 {{else match this.url "~" "/about"}}{{> "icon" name="user"}}
 {{else match this.url "~" "/contact"}}{{> "icon" name="mail"}}
 {{else match this.url "~" "/preview"}}{{> "icon" name="layout"}}
@@ -24,6 +25,8 @@
 {{else match this.label "~" "Home"}}{{> "icon" name="home"}}
 {{else match this.label "~" "Blog"}}{{> "icon" name="book"}}
 {{else match this.label "~" "Writing"}}{{> "icon" name="book"}}
+{{else match this.label "~" "Docs"}}{{> "icon" name="book-open"}}
+{{else match this.label "~" "Documentation"}}{{> "icon" name="book-open"}}
 {{else match this.label "~" "About"}}{{> "icon" name="user"}}
 {{else match this.label "~" "Contact"}}{{> "icon" name="mail"}}
 {{else match this.label "~" "Video"}}{{> "icon" name="play"}}

@@ -62,12 +62,22 @@
 	--t-link-hover: var(--t-accent);
 
 	/* ── Type ─────────────────────────────────────────────────────────────────
-	   Three roles. `slate` is the monospaced voice used for metadata — dates,
-	   counts, entry numbers — named after the clapperboard slate. The display
-	   face is re-pointed by the typeface_pairing setting in 01-contract/typography.css. */
+	   Two faces on the page, not three.
+
+	   `slate` is the metadata voice — dates, counts, entry numbers, labels,
+	   named after the clapperboard slate. It used to be a monospace face, which
+	   meant loading a third font for text that is never more than four words
+	   long. It is the body face now, separated by size, weight and tracking
+	   instead: uppercase at 0.14em reads as a different register without being
+	   a different typeface, and it costs nothing to download.
+
+	   `code` stays monospace, because code is the one place where character
+	   alignment carries meaning. It is only ever used inside post content, so
+	   most pages never reach for it. */
 	--t-font-display: var(--font-display);
 	--t-font-body: var(--font-body);
-	--t-font-slate: var(--font-slate);
+	--t-font-slate: var(--font-body);
+	--t-font-code: var(--font-slate);
 	--t-text-2xs: var(--text-2xs);
 	--t-text-xs: var(--text-xs);
 	--t-text-sm: var(--text-sm);

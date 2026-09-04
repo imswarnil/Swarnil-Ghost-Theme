@@ -100,41 +100,49 @@
 					"Dark"
 				],
 				"default": "System",
-				"description": "Which colour scheme new visitors see before they choose one."
-			},
-			"show_color_scheme_toggle": {
-				"type": "boolean",
-				"default": true,
-				"description": "Let readers switch between light and dark from the header."
+				"description": "The mode new visitors see. They can switch it in the header."
 			},
 			"typeface_pairing": {
 				"type": "select",
 				"options": [
 					"Grotesk & Sans",
-					"Serif & Sans",
-					"Mono & Sans"
+					"Serif & Sans"
 				],
 				"default": "Grotesk & Sans",
-				"description": "The display face used for headlines. Body text stays the same."
-			},
-			"header_style": {
-				"type": "select",
-				"options": [
-					"Rule",
-					"Plate",
-					"Over Media"
-				],
-				"default": "Rule",
-				"description": "How the site header sits on the page."
-			},
-			"list_sidebar": {
-				"type": "boolean",
-				"default": false,
-				"description": "Show a sidebar beside the homepage and archives, with topics, recent posts and the newsletter."
+				"description": "The face used for headlines. Body text stays the same."
 			},
 			"footer_note": {
 				"type": "text",
 				"description": "A short line above the footer navigation. Leave blank to hide it."
+			},
+			"hero_style": {
+				"type": "select",
+				"options": [
+					"Two Columns",
+					"Full Width",
+					"Simple"
+				],
+				"default": "Two Columns",
+				"group": "homepage",
+				"description": "Two Columns puts the cover beside the title, Full Width behind it, Simple uses no image."
+			},
+			"hero_cta_label": {
+				"type": "text",
+				"default": "Start reading",
+				"group": "homepage",
+				"description": "The button in the hero. Leave blank to hide it."
+			},
+			"hero_cta_url": {
+				"type": "text",
+				"default": "#latest",
+				"group": "homepage",
+				"description": "Where that button goes. #latest jumps to the post list."
+			},
+			"show_hero_signup": {
+				"type": "boolean",
+				"default": true,
+				"group": "homepage",
+				"description": "Show the email signup in the hero. Needs memberships on."
 			},
 			"homepage_layout": {
 				"type": "select",
@@ -145,39 +153,13 @@
 				],
 				"default": "Call Sheet",
 				"group": "homepage",
-				"description": "The overall shape of the homepage."
+				"description": "Call Sheet is a numbered index, Stacked one card per row, Grid three across."
 			},
-			"homepage_lead": {
-				"type": "select",
-				"options": [
-					"Latest Post",
-					"Featured Post",
-					"None"
-				],
-				"default": "Featured Post",
-				"group": "homepage",
-				"description": "What occupies the large lead slot at the top."
-			},
-			"homepage_kicker": {
-				"type": "text",
-				"group": "homepage",
-				"description": "A short label above the site title in the hero, e.g. \"Ghost theme\". Leave blank to hide it."
-			},
-			"homepage_intro": {
-				"type": "text",
-				"group": "homepage",
-				"description": "One or two sentences under the site title. Leave blank to hide it."
-			},
-			"homepage_shelf_tags": {
-				"type": "text",
-				"group": "homepage",
-				"description": "Tag slugs shown as horizontal shelves. Comma-separated, no spaces, e.g. video,notes"
-			},
-			"show_subscribe_band": {
+			"list_sidebar": {
 				"type": "boolean",
-				"default": true,
+				"default": false,
 				"group": "homepage",
-				"description": "Show the newsletter band near the foot of the homepage."
+				"description": "A second column with topics, recent posts and the newsletter."
 			},
 			"post_layout": {
 				"type": "select",
@@ -188,7 +170,7 @@
 				],
 				"default": "Standard",
 				"group": "post",
-				"description": "Default layout for posts. Individual posts can override this with an internal tag."
+				"description": "The default for every post. Each post can override it."
 			},
 			"feature_image_ratio": {
 				"type": "select",
@@ -202,25 +184,25 @@
 				],
 				"default": "16/9",
 				"group": "post",
-				"description": "Crop applied to feature images."
+				"description": "The crop applied to feature images. auto keeps each image as it is."
 			},
 			"show_reading_time": {
 				"type": "boolean",
 				"default": true,
 				"group": "post",
-				"description": "Show estimated reading time in the post byline."
+				"description": "Show the reading estimate in the byline."
 			},
 			"show_table_of_contents": {
 				"type": "boolean",
 				"default": true,
 				"group": "post",
-				"description": "Build a contents list from the headings in each post."
+				"description": "Contents from each post’s headings. Needs three or more."
 			},
 			"show_author_card": {
 				"type": "boolean",
 				"default": true,
 				"group": "post",
-				"description": "Show the author card beneath the post."
+				"description": "Show the author block beneath the post."
 			},
 			"show_read_next": {
 				"type": "boolean",

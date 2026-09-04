@@ -1,13 +1,9 @@
 /* =============================================================================
    3 · LAYOUT — site header
    =============================================================================
-   Three styles, chosen by the `header_style` custom setting, all built from the
-   same markup so no template branches on them:
-
-     Rule        a hairline underneath, no background. The default.
-     Plate       a filled bar that lifts off the page as you scroll.
-     Over Media  transparent, sitting on top of a feature image, and only
-                 becoming a plate once you have scrolled past that image.
+   One style: a hairline underneath, no background, and a shadow once the page
+   has moved. There were three behind a setting; two of them earned their
+   complexity on about one page each.
 
    The scrolled state is a `data-scrolled` attribute set by assets/js/header.js.
    ========================================================================== */
@@ -61,57 +57,14 @@
 	gap: var(--t-space-2);
 }
 
-/* ── Rule ─────────────────────────────────────────────────────────────────── */
 .ghost-header--rule {
 	border-bottom-color: var(--t-line);
 }
 
-/* ── Plate ────────────────────────────────────────────────────────────────── */
-.ghost-header--plate {
-	background-color: color-mix(in srgb, var(--t-bg) 82%, transparent);
+/* A shadow only once the page has moved, so the header separates from content
+   scrolling under it without drawing a box at rest. */
+.ghost-header--rule[data-scrolled='true'] {
+	background-color: color-mix(in srgb, var(--t-bg) 86%, transparent);
 	backdrop-filter: blur(12px);
-	border-bottom-color: var(--t-line-subtle);
-}
-
-.ghost-header--plate[data-scrolled='true'] {
-	border-bottom-color: var(--t-line);
 	box-shadow: var(--t-shadow-raised);
-}
-
-/* ── Over Media ───────────────────────────────────────────────────────────────
-   Transparent while it overlaps the image, which means the links have to be
-   forced to the light foreground — the image behind them is unknown, so
-   inheriting `--t-fg` would be a coin toss. A scrim carries the contrast. */
-.ghost-header--over {
-	position: fixed;
-	inset-inline: 0;
-	background-color: transparent;
-	color: var(--t-fg-on-inverse);
-}
-
-.ghost-header--over::before {
-	content: '';
-	position: absolute;
-	inset: 0;
-	background: linear-gradient(
-		to bottom,
-		rgb(0 0 0 / 0.55),
-		rgb(0 0 0 / 0)
-	);
-	pointer-events: none;
-}
-
-.ghost-header--over > * {
-	position: relative;
-}
-
-.ghost-header--over[data-scrolled='true'] {
-	position: sticky;
-	background-color: var(--t-bg);
-	color: var(--t-fg);
-	border-bottom-color: var(--t-line);
-}
-
-.ghost-header--over[data-scrolled='true']::before {
-	opacity: 0;
 }

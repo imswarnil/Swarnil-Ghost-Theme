@@ -29,6 +29,7 @@ h5 { font-size: var(--t-text-lg); }
 h6 {
 	font-size: var(--t-text-sm);
 	font-family: var(--t-font-slate);
+	font-weight: var(--t-weight-semibold);
 	text-transform: uppercase;
 	letter-spacing: var(--t-tracking-slate);
 	color: var(--t-fg-muted);
@@ -52,7 +53,7 @@ code,
 kbd,
 samp,
 pre {
-	font-family: var(--t-font-slate);
+	font-family: var(--t-font-code);
 	font-size: 0.9em;
 }
 
